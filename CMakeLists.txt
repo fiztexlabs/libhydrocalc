@@ -19,7 +19,7 @@ include(GNUInstallDirs)
 string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}" is_top_level)
 
 # uncomment for shared build
-set(HR_SHARED_LIBS " ")
+# set(HR_SHARED_LIBS " ")
 
 set(CMAKE_BUILD_TYPE Debug)
 option(HR_BUILD_TESTS "Build libhydrocalc tests" ON)
@@ -55,6 +55,20 @@ include(GoogleTest)
 
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}")
 
+set(MATH_BUILD_TESTS OFF CACHE BOOL "Build libmath tests" FORCE)
+set(MATH_BUILD_EXAMPLES OFF CACHE BOOL "Build libmath examples" FORCE)
+set(MATH_SHARED_LIBS FALSE CACHE BOOL "STATIC" FORCE)
+
+find_package(libmath QUIET)
+
+if(libmath_FOUND)
+    message("-- Found libmath")
+else()
+    message("-- libmath not found, use local version of libmath")
+    add_subdirectory(libs/libmath)
+endif()
+target_link_libraries(libhydrocalc PRIVATE libmath::libmath)
+
 
 #----------------------------------------------------------------------------------------------------------------------
 # libhydrocalc sources
@@ -70,8 +84,21 @@ endif()
 generate_export_header(libhydrocalc EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/${export_file_name})
 
 set(sources
+    libhydrocalc/settings.h
+    libhydrocalc/service.h
+    libhydrocalc/service.cpp
+    libhydrocalc/exceptions.h
+
     libhydrocalc/hydraulic_resistance.h
-    libhydrocalc/hydraulic_resistance.cpp
+
+    libhydrocalc/hydraulic_resistance_base.h
+    libhydrocalc/hydraulic_resistance_base.cpp
+
+    libhydrocalc/friction.h
+    libhydrocalc/friction.cpp
+    
+    libhydrocalc/cylindrical_friction.h
+    libhydrocalc/cylindrical_friction.cpp
 )
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 
@@ -83,7 +110,8 @@ include(CMakePackageConfigHelpers)
 
 target_sources(libhydrocalc PRIVATE ${sources})
 target_compile_definitions(libhydrocalc 
-    PUBLIC 
+    PUBLIC
+        _USE_MATH_DEFINES=1
         "$<$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>:HR_STATIC_DEFINE>"
         "$<$<BOOL:${HR_USE_DOUBLE_PRECISION}>:HR_DOUBLE_PRECISION_DEFINE>")
 
@@ -164,7 +192,7 @@ endif()
 # --------------------------------------------------------
 add_library(static-libhydrocalc STATIC ${sources})
 
-# target_link_libraries(static-libhydrocalc PRIVATE libmath::libmath)
+target_link_libraries(static-libhydrocalc PRIVATE libmath::libmath)
 
 generate_export_header(static-libhydrocalc
     EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/export_static.h
@@ -173,13 +201,14 @@ generate_export_header(static-libhydrocalc
 
 target_compile_definitions(static-libhydrocalc
     PUBLIC
-    HR_STATIC_DEFINE
-    "$<$<BOOL:${HR_USE_DOUBLE_PRECISION}>:HR_DOUBLE_PRECISION_DEFINE>")
+        _USE_MATH_DEFINES=1
+        HR_STATIC_DEFINE
+        "$<$<BOOL:${HR_USE_DOUBLE_PRECISION}>:HR_DOUBLE_PRECISION_DEFINE>")
 
 target_include_directories(static-libhydrocalc
     PUBLIC
-    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
-    "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>")
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>")
 
 set_target_properties(static-libhydrocalc PROPERTIES
     SOVERSION ${PROJECT_VERSION_MAJOR}
