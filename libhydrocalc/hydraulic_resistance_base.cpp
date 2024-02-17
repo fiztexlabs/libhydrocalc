@@ -1,6 +1,8 @@
 #include <libhydrocalc/hydraulic_resistance_base.h>
 #include <libhydrocalc/exceptions.h>
 #include <iostream>
+#include <limits>
+#include <cmath>
 
 using namespace hydrocalc;
 
