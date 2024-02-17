@@ -123,6 +123,8 @@ namespace hydrocalc
 
 			// disable check parameters for internal part
 			FrictionPart_.CurrentSettings_.checkInputs = 0;
+			FrictionPart_.CurrentSettings_.GeometryOutOfRangeMode = settings::GeometryOutOfRangeBehaviorMode::NoCheck;
+			FrictionPart_.CurrentSettings_.FlowOutOfRangeMode = settings::FlowOutOfRangeBehaviorMode::NoCheck;
 
 		};
 
