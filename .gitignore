@@ -1,0 +1,28 @@
+# Build folders
+build/
+build*/
+_build*/
+out/
+out*/
+_out*/
+cmake-build*/
+doc/doxygen*/
+rsp.egg-info/
+rsp.egg-info*/
+
+# CMake
+CMakeUserPresets.json
+CMakeLists.txt.user
+
+# IDEs
+.idea/
+.vs/
+.vscode/
+_ReSharper.Caches/
+Win32-Debug/
+Win32-Release/
+x64-Debug/
+x64-Release/
+
+# Mac
+.DS_Store

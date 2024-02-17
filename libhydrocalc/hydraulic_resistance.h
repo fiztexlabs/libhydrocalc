@@ -1,0 +1,699 @@
+#pragma once
+#include <vector>
+#include <string>
+#include <service/ServiceHS.h>
+
+/**
+* @defgroup InterfaceHRCpp Interface HR C++
+* @{
+* @brief Interface for hydraulic resistance calculations in C++
+*/
+
+/**
+* @brief Interface IBaseHydraulicResistance define the C++ interface for calculation
+of local hydraulic resistance element for C++.
+* @details Correlation from diagrams (I.E. Idelchik, 1992) were used. Possible error codes:
+*	- 1: invalid size of vector of geometry characteristic
+*	- 2: one of element characteristics have an invalid value
+*	- 3: function does not exist
+*	- 4: element does not exist
+*	- 5: HydraulicComposite doesnt contain element
+*	- 6: 
+Note, that API macros must be correct defined by compiler.
+* Example of calling from C++
+* @code
+* #include <iostream>
+* #include "..\HydraulicResistances\IBaseHydraulicResistance.h"
+* 
+* int main()
+* {
+* 	// create cylindrical friction element
+* 	IBaseHydraulicResistance* CF1 = CylindricalFrictionFab("CF2", 3187.0, { 2.e-5,0.02,1.0 });
+* 
+* 	if (CF1)
+* 	{
+* 		// print relative friction coefficient
+* 		std::cout << CF1->getRelFrictionCoeff() << " in elment id " << CF1->getId() << "\n";
+* 
+* 		// print local resistance coefficient
+* 		std::cout << CF1->getLocalResistanceCoeff() << " in elment id " << CF1->getId() << "\n";
+* 
+* 		// print number of diagram
+* 		std::string diagram;
+* 		CF1->getDiagram(diagram);
+* 		std::cout << "diagram " << diagram << "\n";
+* 
+* 		// print geometry
+* 		std::vector<HSReal> G;
+* 		CF1->getGeometry(G);
+* 		std::cout << "geometry:\n";
+* 		for (int i = 0; i < G.size(); i++)
+* 		{
+* 			std::cout << G[i] << "\n";
+* 		}
+* 	}
+* 
+* 	// Example HydraulicComposite
+* 	// create first bend element
+* 	IBaseHydraulicResistance* B1 = CylindricalBendFab("bend1", 51089.0, { 2.e-5,0.05,0.21,90.0, 10.0 });
+* 
+* 	// create second bend element
+* 	IBaseHydraulicResistance* B2 = CylindricalBendFab("bend2", 51089.0, { 2.e-5,0.05,0.21,90.0, 10.0 });
+* 
+* 	// create HydraulicComposite element
+* 	IBaseHydraulicResistance* composite = CompositeFab("branch", { 0.05 }, { B1, CF1, B2 });
+* 	if (composite)
+* 	{ 
+* 		// call method from HydraulicComposite
+* 		std::cout << composite->getLocalResistanceCoeff() << " id " << composite->getId() << "\n";
+* 	}
+* 
+* }
+* @endcode
+* @author Ilya Konovalov
+* @date Released 01.08.2022
+* @copyright KonovalovIA 2022
+*/
+struct IBaseHydraulicResistance
+{
+	/**
+	* @brief Clone hydraulic resistance object
+	* @details For Composite elements also clone each element in composite
+	* @return HR: Pointer to clone of hydraulic resistance
+	*/
+	virtual IBaseHydraulicResistance* copy() const = 0;
+
+	/**
+	* @brief Calculate hydraulic resistance element.
+	* @details For HydraulicComposite element call calculateElement() 
+	for each element in HydraulicComposite.
+	* @see HydraulicComposite
+	*/
+	virtual void calculateElement() = 0;
+
+	/**
+	* @brief Set geometry characteristics to element.
+	* @details Vector G may have variable size for each element.
+	* @param G: Vector of geometry characteristics of the hydraulic resistance element:
+	*	- for composite elment:
+	*		- G[0]: Hydraulic diameter [m]. All hydraulic resistances will be reduced
+	* to this hydraulic diameter
+	*	- for cylindrical friction element:
+	*		- G[0]: Roughness [m]
+	*		- G[1]: Diameter of cross-section [m]
+	*		- G[2]: Length of element [m]
+	*	- for ring cylindrical friction element:
+	*		- G[0]: Roughness [m]
+	*		- G[1]: External diameter [m]
+	*		- G[2]: Internal diameter [m]
+	*		- G[3]: Excentric		  [m]
+	*		- G[4]: Length of element [m]
+	*	- for cylindrical bend element:
+	*		- G[0]: Roughness [m]
+	*		- G[1]: Diameter of cross-section [m]
+	*		- G[2]: Bending radius [m]
+	*		- G[3]: Bending angle [deg]; in the case, when G[3] < 0, bending angle 
+	calculates as 360 - G[3]
+	*		- G[4]: length of section before bend [m]; G[4] = 0 means, that
+	bend located after collector, however G[4] > 0 means, that straight section L = G[4]
+	located before bend.
+	*	- for straight cylindrical diffuser element:
+	*		- G[0]: Roughness [m]
+	*		- G[1]: Hydraulic diameter of diffuser [m]
+	*		- G[2]: Turbulence intensity, @f$ I=\frac{w_0}{w_max} @f$. If @f$ I=1 @f$
+	* velocity profile before diffuser is straight and influece of hit coefficient @f$ k_d @f$
+	* doesn't matter. Otherwise @f$ k_d @f$ should be taken into account with diagram 5-2
+	*		- G[3]: Length of inlet section of diffuser [m]
+	*		- G[4]: Length of diffuser [m]
+	*		- G[5]: Length of outlet section of diffuser [m]
+	*		- G[6]: Diameter of the outlet of diffuser[m]
+	*		- G[7]: Hydraulic diameter of outlet section of diffuser [m]
+	*		- G[8]: Angle of diffuser [deg]
+	*	- for curve cylindrical diffuser element:
+	*		- G[0]: Roughness [m]
+	*		- G[1]: Hydraulic diameter of diffuser [m]
+	*		- G[2]: Length of diffuser [m]
+	*		- G[3]: Length of outlet section of diffuser [m]
+	*		- G[4]: Hydraulic diameter of outlet section of diffuser [m]
+	*	- for straight cylindrical confuser element:
+	*		- G[0]: Roughness [m]
+	*		- G[1]: Hydraulic diameter of confuser [m]
+	*		- G[2]: Length of outlet section of confuser [m]
+	*		- G[3]: Length of confuser [m]
+	*		- G[4]: Hydraulic diameter of outlet section of confuser [m]
+	*		- G[5]: Angle of confuser [deg]
+	*	- for curve cylindrical confuser element:
+	*		- G[0]: Roughness [m]
+	*		- G[1]: Hydraulic diameter of confuser [m]
+	*		- G[2]: Length of outlet section of confuser [m]
+	*		- G[3]: Length of confuser [m]
+	*		- G[4]: Hydraulic diameter of outlet section of confuser [m]
+	*		- G[5]: Curve radius [m]
+	*	- for unexpected size changes with sharp edges:
+	*		- G[0]: Roughness [m]
+	*		- G[1]: Diameter 1 [m]
+	*		- G[2]: Diameter 2 [m]
+	*/
+	virtual void setGeometry(const std::vector<HSReal>& G) = 0;
+
+	/**
+	* @brief Set Reynolds number of hydraulic resistance element.
+	* @details Negative Re correspond to negative flow, in elements with direction
+	independent geometry Re computse as @f$ Re = |Re| @f$. Otherwise element create correspond
+	element (or set of elements) for negative flow and calculate it.
+	In HydraulicComposite element for each element in HydraulicComposite Re 
+	calculated as @f$ Re_i=Re\frac{(D_0)_i}{D_0}@f$, where @f$i@f$ - index of element.
+	* @param Re: Reynolds number
+	* @see HydraulicComposite
+	*/
+	virtual void setRe(const HSReal Re) = 0;
+
+	/**
+	* @brief Set roughness of hydraulic resistance element.
+	* @details In HydraulicComposite element set roughness for all elements in composite.
+	* @param rou: Roughness [m]
+	* @see HydraulicComposite
+	*/
+	virtual void setRou(const HSReal rou) = 0;
+
+	/**
+	* @brief Set name to element.
+	* @details By default element name generated as
+	ClassName + number.
+	* @param name: Name of element
+	*/
+	virtual void setName(const std::string& name) = 0;
+
+	/**
+	* @brief Set automatic calculations for elements (flag autocalc).
+	* @details By default, autocalc = 1 for all elements, but this
+	function provide possibility to set this flag for each element separately.
+	Note, that changing this flag will affect all internal objects of this element.
+	For HydraulicComposite element set automatic calculations for all elements in HydraulicComposite.
+	* @param flag: Value, passed to autocalc
+	* @see HydraulicComposite
+	*/
+	virtual void setAutocalc(const bool flag) = 0;
+
+	/**
+	* @brief Enable or disable warnings surch as out of range of correlations etc.
+	* @details For HydraulicComposite element enable or disable warnings for all 
+	elements in HydraulicComposite.
+	* @param flag: Value, passed to flagHandleWarnings
+	* @see HydraulicComposite
+	*/
+	virtual void setHandleWarnings(const bool flag) = 0;
+
+	/**
+	* @brief Get number of element geometry type.
+	* @return Geometry type [-]:
+	*	- 0: Cylindrical channels
+	*	- 1: Ring channels
+	*	- 2: Elliptic channels
+	*	- 3: Triangular tube bundles
+	*	- 4: Rectangular tube bundles
+	*	- 5: Rectangular channels
+	*/
+	virtual unsigned int getType() = 0;
+
+	/**
+	* @brief Put vector, contains geometry characteristics of element to G.
+	* @param[out] G: vector of geometry characteristics:
+	*	- for composite elment:
+	*		- G[0]: Roughness [m]
+	*		- G[1]: Hydraulic diameter [m]
+	*	- for cylindrical friction element:
+	*		- G[0]: Roughness [m]
+	*		- G[1]: Diameter of cross-section [m]
+	*		- G[2]: Length of element [m]
+	*		- G[3]: Cross-section area, [m2]
+	*	- for ring cylindrical friction element:
+	*		- G[0]: Roughness [m]
+	*		- G[1]: External diameter [m]
+	*		- G[2]: Internal diameter [m]
+	*		- G[3]: Excentric		  [m]
+	*		- G[4]: Length of element [m]
+	*		- G[5]: Cross-section area, [m2]
+	*	- for cylindrical bend element:
+	*		- G[0]: Roughness [m]
+	*		- G[1]: Diameter of cross-section [m]
+	*		- G[2]: Bending radius [m]
+	*		- G[3]: Bending angle [deg]; in the case, when G[3] < 0, bending angle 
+	calculates as 360 - G[3]
+	*		- G[4]: Length of section before bend [m]; G[4] = 0 means, that
+	bend located after collector, however G[4] > 0 means, that straight section L = G[4]
+	located before bend
+	*		- G[5]: Cross-section area, [m2]
+	*	- for straight cylindrical diffuser element:
+	*		- G[0]: Roughness [m]
+	*		- G[1]: Hydraulic diameter of diffuser [m]
+	*		- G[2]: Length of inlet section of diffuser [m]
+	*		- G[3]: Length of diffuser [m]
+	*		- G[4]: Length of outlet section of diffuser [m]
+	*		- G[5]: Diameter of the outlet of diffuser[m]
+	*		- G[6]: Hydraulic diameter of outlet section of diffuser [m]
+	*		- G[7]: Angle of diffuser [deg]
+	*		- G[8]: Cross-section area of diffuser inlet, [m2]
+	*		- G[9]: Cross-section area of diffuser outlet, [m2]
+	*	- for curve cylindrical diffuser element:
+	*		- G[0]: Roughness [m]
+	*		- G[1]: Hydraulic diameter of diffuser [m]
+	*		- G[2]: Length of diffuser [m]
+	*		- G[3]: Length of outlet section of diffuser [m]
+	*		- G[4]: Hydraulic diameter of outlet section of diffuser [m]
+	*		- G[5]: Cross-section area of diffuser inlet, [m2]
+	*		- G[6]: Cross-section area of diffuser outlet, [m2]
+	*	- for straight cylindrical confuser element:
+	*		- G[0]: Roughness [m]
+	*		- G[1]: Hydraulic diameter of diffuser [m]
+	*		- G[2]: Length of outlet section of diffuser [m]
+	*		- G[3]: Length of diffuser [m]
+	*		- G[4]: Hydraulic diameter of outlet section of diffuser [m]
+	*		- G[5]: Cross-section area of diffuser inlet, [m2]
+	*		- G[6]: Cross-section area of diffuser outlet, [m2]
+	*	- for curve cylindrical confuser element:
+	*		- G[0]: Roughness [m]
+	*		- G[1]: Hydraulic diameter of diffuser [m]
+	*		- G[2]: Length of outlet section of diffuser [m]
+	*		- G[3]: Length of diffuser [m]
+	*		- G[4]: Hydraulic diameter of outlet section of diffuser [m]
+	*		- G[5]: Curve radius of confuser [m]
+	*		- G[6]: Cross-section area of diffuser inlet, [m2]
+	*		- G[7]: Cross-section area of diffuser outlet, [m2]
+	*	- forunexpected size changes with sharp edges:
+	*		- G[0]: Roughness [m]
+	*		- G[1]: Diameter 1 [m]
+	*		- G[2]: Diameter 2 [m]
+	*		- G[4]: Cross-section area 1 [m2]
+	*		- G[5]: Cross-section area 2 [m2]
+	*/
+	virtual void getGeometry(std::vector<HSReal>& G) = 0;
+
+	/**
+	* @brief Get hydraulic diameter of hydraulic resistance element.
+	* @return Hydraulic diameter D0 [m]
+	*/
+	virtual HSReal getHydraulicDiameter() = 0;
+
+	/**
+	* @brief Set legth of element
+	* @details Length of element use in network calculations. If length = 0
+	* (e.a. for friction elements), return value 1e-6 [m]. For HydraulicComposite
+	* return summ of length of components.
+	*	- for CylindricalFriction set length of channel;
+	*	- for CylindricalBend set length of bend section;
+	*	- for CurveCylindricalConfuser set length of confuser;
+	*	- for CurveCylindricalDiffuser set length of diffuser;
+	*	- for StraightCylindricalConfuser set length of confuser;
+	*	- for StraightCylindricalDiffuser set length of diffuser;
+	*	- for SharpUnexpectedSizeChange set 1e-6 m;
+	* @param L: Length of element [m]
+	*/
+	virtual void setLength(const HSReal L) = 0;
+
+	/**
+	* @brief Get legth of element
+	* @details Length of element use in network calculations. If length = 0
+	* (e.a. for friction elements), return value 1e-6 [m]. For HydraulicComposite
+	* return summ of length of components.
+	*	- for CylindricalFriction return length of channel;
+	*	- for CylindricalBend return length of bend section;
+	*	- for CurveCylindricalConfuser return length of confuser;
+	*	- for CurveCylindricalDiffuser return length of diffuser;
+	*	- for StraightCylindricalConfuser return length of confuser;
+	*	- for StraightCylindricalDiffuser return length of diffuser;
+	*	- for SharpUnexpectedSizeChange return 1e-6 m;
+	* @return L: Length of element [m]
+	*/
+	virtual HSReal getLength() = 0;
+
+	/**
+	* @brief Get Reynolds number for hydraulic resistance element.
+	* @return Reynolds number [-]
+	*/
+	virtual HSReal getRe() = 0;
+
+	/**
+	* @brief Get roughness.
+	* @return Roughness [m]
+	*/
+	virtual HSReal getRou() = 0;
+
+	/**
+	* @brief Get name of element.
+	* @param[out] name: String name of element
+	*/
+	virtual void getName(std::string& name) = 0;
+
+	/**
+	* @brief Get unique id of element
+	* @return id: Id of element
+	*/
+	virtual unsigned int getId() = 0;
+
+	/**
+	* @brief Get the friction part of loss coefficient of element.
+	* @details Function return friction part of the loss coefficient
+	of the element, so friction part of loss for this element calculated as
+	@f$\Delta P=\xi_\lambda\big(\frac{\rho w^2}{2}\big)@f$.
+	For HydraulicComposite element this function return reduced friction part of loss coefficient calculated as
+	@f$ \xi_\lambda=\displaystyle\sum_{i=0}^{n} \bigg[(\xi_\lambda)_i\bigg(\frac{(D_0)_i}{D_0}\bigg)^4\bigg] @f$,
+	where @f$n@f$ - number of elements in HydraulicComposite. With each calling from HydraulicComposite function also call 
+	calculateElement() to check actual state of each element in composit, for example,
+	if anything parameter in element in composite was changed like this:
+	* @code
+	* //C++
+	* element->setRe(1.e6);
+	* @endcode
+	* @return Friction part of loss coefficient @f$ \xi_\lambda @f$ [-]
+	* @see getHydraulicDiameter()
+	* @see getGeometry()
+	* @see HydraulicComposite
+	*/
+	virtual HSReal getFrictionPartCoeff() = 0;
+
+	/**
+	* @brief Get the geometry part of loss coefficient of element.
+	* @details Function return geometry part of th loss coefficient
+	of the element. For friction elements @f$ \xi_l = 0.0 @f$.
+	For HydraulicComposite element this function return reduced geometry part of loss coefficient calculated as 
+	@f$ \xi_l=\displaystyle\sum_{i=0}^{n} \bigg[(\xi_l)_i\bigg(\frac{(D_0)_i}{D_0}\bigg)^4\bigg] @f$
+	where @f$n@f$ - number of elements in HydraulicComposite. With each calling from HydraulicComposite function also call calculateElement() 
+	to check actual state of each element in composit, for example, if anything parameter in element in 
+	composite was changed like this:
+	* @code
+	* //C++
+	* element->setRe(1.e6);
+	* @endcode
+	* @return Geometry part of loss coefficient @f$ \xi_l @f$ [-]
+	* @see HydraulicComposite
+	*/
+	virtual HSReal getGeometryPartCoeff() = 0;
+
+	/**
+	* @brief Get relative friction loss coefficient of element.
+	* @details Function return relative friction loss coefficient,
+	so friction part of loss for this element calculated as
+	@f$ \Delta P =\lambda\big(\frac{L}{D_0}\big)\big(\frac{\rho w^2}{2}\big) @f$, 
+	where @f$ D_0 @f$ is hydraulic diameter and @f$ L @f$ - is length of element. 
+	For HydraulicComposite element this function return averaged friction loss coefficient calculated as 
+	@f$\lambda=\frac{1}{n}\displaystyle\sum_{i=0}^{n} \lambda_i\bigg(\frac{(D_0)_i}{D_0}\bigg)^3 @f$,
+	where @f$ n @f$ - number of	elements in HydraulicComposite. With each calling from HydraulicComposite function also call 
+	calculateElement() to check actual state of each element in composit, for example, if anything 
+	parameter in element in composite was changed like this:
+	* @code
+	* //C++
+	* element->setRe(1.e6);
+	* @endcode
+	* @return Relative friction loss coefficient [-]
+	* @see getHydraulicDiameter()
+	* @see getGeometry()
+	* @see HydraulicComposite
+	*/
+	virtual HSReal getRelFrictionCoeff() = 0;
+
+	/**
+	* @brief Get value of local resistance coefficient.
+	* @details For lonley friction defined as @f$ \xi = \xi_\lambda = \lambda\big(\frac{L}{D_0}\big) @f$, 
+	@f$ L @f$ - length of element, so for friction element getFrictionPartCoeff() = getLocalResistanceCoeff(). 
+	Othervise @f$ \xi = \xi_l + \xi_\lambda + excess @f$, @f$ \xi_l @f$ - local resistance part,
+	@f$ \xi_\lambda @f$ - local friction part, @f$ excess @f$ - part of other effects.
+	For HydraulicComposite element this function return reduced local resistance coefficient	calculated as 
+	@f$ \xi=\displaystyle\sum_{i=0}^{n} \bigg[(\xi)_i\bigg(\frac{(D_0)_i}{D_0}\bigg)^4\bigg] @f$
+	where @f$ n @f$ - number of elements in HydraulicComposite. With each calling from HydraulicComposite function also call 
+	calculateElement() to check actual state of each element in composit, for example, if anything parameter
+	in element in HydraulicComposite was changed like this:
+	* @code
+	* //C++
+	* element->setRe(1.e6);
+	* @endcode
+	* @return Local resistance coefficient CSI [-]
+	* @see HydraulicComposite
+	*/
+	virtual HSReal getLocalResistanceCoeff() = 0;
+
+	/**
+	* @brief Get value of cross-section area of the element.
+	* @return A [m2]
+	*/
+	virtual HSReal getCrossSectionArea() = 0;
+
+	/**
+	* @brief Get name of correlations diagram.
+	* @details For HydraulicComposite element return string, contains diagrams, wich was used 
+	for calculation each of element in HydraulicComposite.
+	* @param[out] diagram: String number of diagram, which was used for calculations
+	* @see HydraulicComposite
+	*/
+	virtual void getDiagram(std::string& diagram) = 0;
+
+	/**
+	* @brief Estimation of correlations error.
+	* @todo Add calculations of error of correlations with current Re
+	* ang geometry characteristics
+	* @return err [%]: Relative error
+	*/
+	virtual HSReal getError() = 0;
+
+	/**
+	* @brief Delete this element object
+	*/
+	virtual void deleteElement() = 0;
+
+	/**
+	* @brief Get internal element (valid for composite elements).
+	* @warning Only for HydraulicComposite elements.
+	* @param Element: Pointer to the element
+	* @return Pointer to hydraulic resistance element
+	* @see HydraulicComposite
+	*/
+	virtual IBaseHydraulicResistance* getElement(IBaseHydraulicResistance* Element) = 0;
+
+	/**
+	* @brief Add elements to HydraulicComposite.
+	* @warning Only for HydraulicComposite elements.
+	* @param elementsToComposite: Vector of pointers to objects to add to
+	* HydraulicComposite
+	* @see HydraulicComposite
+	*/
+	virtual void addToComposite(const std::vector< IBaseHydraulicResistance*>& elementsToComposite) = 0;
+
+	/**
+	* @brief Delete elements from HydraulicComposite.
+	* @warning Only for HydraulicComposite elements.
+	* @param elementsToDelete: Vector of pointers to objects to add to
+	* HydraulicComposite
+	* @see HydraulicComposite
+	*/
+	virtual void deleteFromComposite(const std::vector< IBaseHydraulicResistance*>& elementsToDelete) = 0;
+};
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+	/**
+	* @brief Fabrication method for cylindrical friction element
+	* @details Automatically check inputs, initialize fields and calculate element
+	(if autocalc = 1).
+	* This elemnt has a direction independent 
+	* geometry, so Re computse as @f$ Re=|Re| @f$.
+	* @param name: Name of element
+	* @param Re: Reynolds number, negative value correspond to negative flow
+	* @param G: Vector of geometry characteristics of friction element:
+	*	- G[0]: Roughness [m]
+	*	- G[1]: Diameter of cross-section [m]
+	*	- G[2]: Length of element [m]
+	* @return Pointer to hydraulic resistance (IBaseHydraulicResistance) object
+	* @see CylindricalFriction
+	*/
+	__HSAPI IBaseHydraulicResistance* __HSAPIENTRY CylindricalFrictionFab(const std::string& name, const HSReal Re, const std::vector<HSReal>& G);
+
+	/**
+	* @brief Fabrication method for ring cylindrical friction element
+	* @details Automatically check inputs, initialize fields and calculate element
+	(if autocalc = 1).
+	* This elemnt has a direction independent
+	* geometry, so Re computse as @f$ Re=|Re| @f$.
+	* @param name: Name of element
+	* @param Re: Reynolds number, negative value correspond to negative flow
+	* @param G: Vector of geometry characteristics of friction element:
+	*		- G[0]: Roughness [m]
+	*		- G[1]: External diameter [m]
+	*		- G[2]: Internal diameter [m]
+	*		- G[3]: Excentric		  [m]
+	*		- G[4]: Length of element [m]
+	* @return Pointer to hydraulic resistance (IBaseHydraulicResistance) object
+	* @see CylindricalFriction
+	*/
+	__HSAPI IBaseHydraulicResistance* __HSAPIENTRY RingFrictionFab(const std::string& name, const HSReal Re, const std::vector<HSReal>& G);
+
+	/**
+	* @brief Fabrication method for cylindrical bend element
+	* @details Automatically check inputs, initialize fields and calculate element
+	(if autocalc = 1).
+	* This elemnt has a direction independent geometry, so Re computes as @f$ Re=|Re| @f$.
+	* @param name: Name of element
+	* @param Re: Reynolds number, negative value correspond to negative flow
+	* @param G: Vector of geometry characteristics of bend element:
+	*	- G[0]: Roughness [m]
+	*	- G[1]: Diameter of cross-section [m]
+	*	- G[2]: Bending radius [m]
+	*	- G[3]: Bending angle [deg]; in the case, when G[3] < 0, bending angle
+	calculates as 360 - G[3]
+	*	- G[4]: Length of section before bend [m]; G[4] = 0 means, that
+	bend located after collector, however G[4] > 0 means, that straight section L = G[4]
+	located before bend
+	* @return Pointer to hydraulic resistance (IBaseHydraulicResistance) object
+	* @see CylindricalBend
+	*/
+	__HSAPI IBaseHydraulicResistance* __HSAPIENTRY CylindricalBendFab(const std::string& name, const HSReal Re, const std::vector<HSReal>& G);
+
+	/**
+	* @brief Fabrication method for cylindrical bend with niche element
+	* @details Automatically check inputs, initialize fields and calculate element
+	(if autocalc = 1).
+	* This elemnt has a direction independent geometry, so Re computes as @f$ Re=|Re| @f$.
+	* @param name: Name of element
+	* @param Re: Reynolds number, negative value correspond to negative flow
+	* @param G: Vector of geometry characteristics of bend element:
+	*	- G[0]: Roughness [m]
+	*	- G[1]: Diameter of cross-section [m]
+	*	- G[2]: Bending radius [m]
+	*	- G[3]: Bending angle [deg]; in the case, when G[3] < 0, bending angle
+	calculates as 360 - G[3]
+	*	- G[4]: Length of section before bend [m]; G[4] = 0 means, that
+	bend located after collector, however G[4] > 0 means, that straight section L = G[4]
+	located before bend
+	* @return Pointer to hydraulic resistance (IBaseHydraulicResistance) object
+	* @see CylindricalBendNiche
+	*/
+	__HSAPI IBaseHydraulicResistance* __HSAPIENTRY CylindricalBendNicheFab(const std::string& name, const HSReal Re, const std::vector<HSReal>& G);
+
+	/**
+	* @brief Fabrication method for straight cylindrical diffuser element
+	* @details Automatically check inputs, initialize fields and calculate element
+	* (if autocalc = 1). 
+	* This elemnt has a direction dependent geometry, so in the case of negative flow @f$ (Re < 0) @f$, 
+	* if diagram 5-9 used for calculation, element create StraightCylindricalConfuser and 
+	* SharpUnexpectedSizeChange elements and calculate it. Othervise for @f$ (Re < 0) @f$ created only
+	* StraightCylindricalConfuser.
+	* @param name: String name of element
+	* @param Re: Reynolds number. Negative value correspond to negative flow
+	* @param G: Vector of geometry characteristics of the bend element:
+	*	- G[0]: Roughness [m]
+	*	- G[1]: Hydraulic diameter of diffuser [m]
+	*	- G[2]: Turbulence intensity, @f$ I=\frac{w_0}{w_max} @f$. If @f$ I=1 @f$
+	* velocity profile before diffuser is straight and influece of hit coefficient @f$ k_d @f$
+	* doesn't matter. Otherwise @f$ k_d @f$ should be taken into account with diagram 5-2
+	*	- G[3]: Length of inlet section of diffuser [m]
+	*	- G[4]: Length of diffuser [m]
+	*	- G[5]: Length of outlet section of diffuser [m]
+	*	- G[6]: Diameter of the outlet of diffuser[m]
+	*	- G[7]: Hydraulic diameter of outlet section of diffuser [m]
+	*	- G[8]: Angle of diffuser [deg]
+	* @return Pointer to hydraulic resistance (IBaseHydraulicResistance) object
+	* @see StraightCylindricalDiffuser
+	*/
+	__HSAPI IBaseHydraulicResistance* __HSAPIENTRY StraightCylindricalDiffuserFab(const std::string& name, const HSReal Re, const std::vector<HSReal>& G);
+
+	/**
+	* @brief Fabrication method for straight cylindrical confuser element
+	* @details Automatically check inputs, initialize fields and calculate element
+	(if autocalc = 1).
+	* This elemnt has a direction dependent geometry, so in the case of negative flow @f$ (Re < 0) @f$ 
+	* element create StraightCylindricalDiffuser in function createDiffuser and calculate it.
+	* @param name: String name of element
+	* @param Re: Reynolds number. Negative value correspond to negative flow
+	* @param G: Vector of geometry characteristics of the bend element:
+	*	- G[0]: Roughness [m]
+	*	- G[1]: Hydraulic diameter of confuser [m]
+	*	- G[2]: Length of outlet section of confuser [m]
+	*	- G[3]: Length of confuser [m]
+	*	- G[4]: Hydraulic diameter of outlet section of confuser [m]
+	*	- G[5]: Angle of confuser [deg]
+	* @return Pointer to hydraulic resistance (IBaseHydraulicResistance) object
+	* @see StraightCylindricalConfuser
+	*/
+	__HSAPI IBaseHydraulicResistance* __HSAPIENTRY StraightCylindricalConfuserFab(const std::string& name, const HSReal Re, const std::vector<HSReal>& G);
+
+	/**
+	* @brief Fabrication method for curve cylindrical diffuser element
+	* @details Automatically check inputs, initialize fields and calculate element
+	(if autocalc = 1).
+	* This elemnt has a direction dependent geometry, so in the case of negative flow @f$ (Re < 0) @f$ 
+	* element create StraightCylindricalConfuser with createConfuser() and calculate it.
+	* @param name: String name of element
+	* @param Re: Reynolds number. Negative value correspond to negative flow
+	* @param G: Vector of geometry characteristics of the bend element:
+	*	- G[0]: Roughness [m]
+	*	- G[1]: Hydraulic diameter of diffuser [m]
+	*	- G[2]: Length of diffuser [m]
+	*	- G[3]: Length of outlet section of diffuser [m]
+	*	- G[4]: Hydraulic diameter of outlet section of diffuser [m]
+	*	- G[5]: Curve radius [m]
+	* @return Pointer to hydraulic resistance (IBaseHydraulicResistance) object
+	* @see CurveCylindricalDiffuser
+	*/
+	__HSAPI IBaseHydraulicResistance* __HSAPIENTRY CurveCylindricalDiffuserFab(const std::string& name, const HSReal Re, const std::vector<HSReal>& G);
+
+	/**
+	* @brief Fabrication method for curve cylindrical confuser element
+	* @details Automatically check inputs, initialize fields and calculate element
+	(if autocalc = 1).
+	* This elemnt has a direction dependent geometry, so in the case of negative flow @f$ (Re < 0) @f$
+	* element create CurveCylindricalDiffuser in function createDiffuser and calculate it.
+	* @param name: String name of element
+	* @param Re: Reynolds number. Negative value correspond to negative flow
+	* @param G: Vector of geometry characteristics of the bend element:
+	*	- G[0]: Roughness [m]
+	*	- G[1]: Hydraulic diameter of confuser [m]
+	*	- G[2]: Length of outlet section of confuser [m]
+	*	- G[3]: Length of confuser [m]
+	*	- G[4]: Hydraulic diameter of outlet section of confuser [m]
+	*	- G[5]: Curve radius [m]
+	* @return Pointer to hydraulic resistance (IBaseHydraulicResistance) object
+	* @see CurveCylindricalConfuser
+	*/
+	__HSAPI IBaseHydraulicResistance* __HSAPIENTRY CurveCylindricalConfuserFab(const std::string& name, const HSReal Re, const std::vector<HSReal>& G);
+
+	/**
+	* @brief Fabrication method for unexpected size change with sharp edges
+	* @details Automatically check inputs, initialize fields and calculate element
+	(if autocalc = 1).
+	* This elemnt has a direction dependent geometry, so in the case of negative flow @f$ (Re < 0) @f$ 
+	* if element is expansion, than it turns to constriction and vice versa. Also if @f$ D_0 < D_1 @f$
+	* @param name: String name of element
+	* @param Re: Reynolds number, negative value correspond to negative flow
+	* @param G: Vector of geometry characteristics of element:
+	*	- G[0]: Roughness [m]
+	*	- G[1]: Diameter 1 [m] (expansion: smaller diameter, constriction: bigger diameter)
+	*	- G[2]: Diameter 2 [m] (expansion: bigger diameter, constriction: smaller diameter)
+	* @return Pointer to hydraulic resistance (IBaseHydraulicResistance) object
+	* @see SharpUnexpectedSizeChange
+	*/
+	__HSAPI IBaseHydraulicResistance* __HSAPIENTRY SharpUnexpectedSizeChangeFab(const std::string& name, const HSReal Re, const std::vector<HSReal>& G);
+	
+	/**
+	* @brief Fabrication method for composite element
+	* @details Automatically check inputs, initialize fields and calculate element
+	(if autocalc = 1)
+	* @param name: Name of element
+	* @param G: Vector of geometry characteristics of element:
+	*	- G[0]: Hydraulic diameter [m]. All hydraulic resistances will be reduced
+	* to this hydraulic diameter.
+	* @param ptrCompositeElements: Vector of objects to include in composite
+	* @return Pointer to hydraulic resistance (IBaseHydraulicResistance) object
+	* @see HydraulicComposite
+	*/
+	__HSAPI IBaseHydraulicResistance* __HSAPIENTRY CompositeFab(const std::string& name, const std::vector<HSReal>& G, const std::vector<IBaseHydraulicResistance*>& ptrCompositeElements);
+
+#ifdef __cplusplus
+}
+#endif
+
+/**
+* @}
+*/
+
