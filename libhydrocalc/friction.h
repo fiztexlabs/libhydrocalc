@@ -13,8 +13,6 @@ namespace hydrocalc
 		public HydraulicResistanceBase
 	{
 	protected:
-		/// @brief Length of element [m]
-		real L_ = 0.0;
 	public:
 		/**
 		* @brief Default constructor
@@ -30,6 +28,7 @@ namespace hydrocalc
 		* @param Re: Reynolds number
 		* @param D0: Hydraulic diameter [m]
 		* @param A: Cross-section area [m2]
+		* @param L: Element length [m]
 		* @param rou: Roughness [m]
 		*/
 		Friction(
@@ -40,8 +39,7 @@ namespace hydrocalc
 			const real A,
 			const real L,
 			const Type type) :
-			HydraulicResistanceBase(name, Re, D0, rou, A, type),
-			L_(L)
+			HydraulicResistanceBase(name, Re, D0, rou, A, L, type)
 		{};
 
 		virtual ~Friction() {};

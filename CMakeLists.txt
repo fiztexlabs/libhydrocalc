@@ -99,6 +99,9 @@ set(sources
     
     libhydrocalc/cylindrical_friction.h
     libhydrocalc/cylindrical_friction.cpp
+    
+    libhydrocalc/cylindrical_bend.h
+    libhydrocalc/cylindrical_bend.cpp
 )
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 

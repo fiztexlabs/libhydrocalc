@@ -54,6 +54,9 @@ namespace hydrocalc
 		/// @brief type of geometry (cylinrical, rectangular etc.)
 		Type type_ = Type::cylindrical;
 
+		/// @brief Length of element [m]
+		real L_ = 0.0;
+
 		/**
 		* @bpief Proceed InvalidValue accidents
 		* @param msg: Error message
@@ -91,13 +94,22 @@ namespace hydrocalc
 		real checkReversedFlow(const std::string& msg, const Exception& exec);
 
 		/**
-		* @bpief Proceed OutOfRange accidents
+		* @bpief Proceed GeometryOutOfRange accidents
 		* @param msg: Error message
 		* @param nearest: Nearest valid value
 		* @param exec: Type of exception to raise
 		* @return NaN or 0.0 correspond to CurrentSettings_.OutOfRangeMode
 		*/
-		real procOutOfRange(const std::string& msg, const Exception& exec, const real nearest = 0.0);
+		real procGeometryOutOfRange(const std::string& msg, const Exception& exec, const real nearest = 0.0);
+
+		/**
+		* @bpief Proceed FlowOutOfRange accidents
+		* @param msg: Error message
+		* @param nearest: Nearest valid value
+		* @param exec: Type of exception to raise
+		* @return NaN or 0.0 correspond to CurrentSettings_.OutOfRangeMode
+		*/
+		real procFlowOutOfRange(const std::string& msg, const Exception& exec, const real nearest = 0.0);
 
 	public:
 		/// @brief Default constructor
@@ -116,6 +128,7 @@ namespace hydrocalc
 		* @param D0: Hydraulic diameter [m]
 		* @param A: Cross-section area [m2]
 		* @param rou: Roughness [m]
+		* @param L: Element length [m]
 		* @param type: Type of geometry (hydrocalc::Type)
 		*/
 		HydraulicResistanceBase(
@@ -124,6 +137,7 @@ namespace hydrocalc
 			const real D0, 
 			const real rou,
 			const real A,
+			const real L,
 			const Type type) :
 			id_(count),
 			name_(name),
@@ -132,10 +146,37 @@ namespace hydrocalc
 			A_(A),
 			rou_(rou),
 			relRou_(rou/D0),
+			L_(L),
 			type_(type)
 		{
 			++count;
 		};
+
+		/**
+		* @brief COpy constructor
+		*/
+		HydraulicResistanceBase(const HydraulicResistanceBase& HR) :
+			id_(count)
+		{
+			CurrentSettings_ = HR.CurrentSettings_;
+			name_ = HR.name_;
+			Re_ = HR.Re_;
+			D0_ = HR.D0_;
+			A_ = HR.A_;
+			rou_ = HR.rou_;
+			relRou_ = HR.relRou_;
+			L_ = HR.L_;
+			type_ = HR.type_;
+			lf_ = HR.lf_;
+			CSIlf_ = HR.CSIlf_;
+			CSIlr_ = HR.CSIlr_;
+			CSI_ = HR.CSI_;
+
+			++count;
+		};
+
+		/// @brief Reload copy operator, because id_ is const
+		HydraulicResistanceBase& operator=(const HydraulicResistanceBase& HR);
 
 		virtual ~HydraulicResistanceBase() {};
 
@@ -156,6 +197,12 @@ namespace hydrocalc
 
 		/// @see HydraulicResistance::getRou()
 		virtual real getRou() override;
+
+		/// @see HydraulicResistance::getLength()
+		virtual real getLength() override;
+
+		/// @see HydraulicResistance::setLength()
+		virtual void setLength(const real L) override;
 
 		/// @see HydraulicResistance::getType()
 		virtual Type getType() override;
@@ -188,10 +235,10 @@ namespace hydrocalc
 		virtual HydraulicResistance* getElement(HydraulicResistance* Element) override;
 
 		/// @see HydraulicResistance::addToComposite()
-		virtual void addToComposite(const std::vector< HydraulicResistance*>& elementsToComposite) override;
+		virtual void addToComposite(const std::vector<HydraulicResistance*>& elementsToComposite) override;
 
 		/// @see HydraulicResistance::deleteFromComposite()
-		virtual void deleteFromComposite(const std::vector< HydraulicResistance*>& elementsToDelete) override;
+		virtual void deleteFromComposite(const std::vector<HydraulicResistance*>& elementsToDelete) override;
 	};
 
 	/// @brief Initialize counter of HR elements

@@ -8,6 +8,8 @@
 
 namespace hydrocalc
 {
+	class CylindricalBend;
+
 	/**
 	* @brief Class for calculating hydraulic resistance of friction in
 	* cylindrical elements.
@@ -47,6 +49,8 @@ namespace hydrocalc
 
 		/// @brief Evaluate relative friction loss coefficient (lf_) with respect to diagram 2-4
 		void diagram24();
+
+		friend CylindricalBend;
 
 	public:
 		/**
@@ -103,16 +107,10 @@ namespace hydrocalc
 		/// @see HydraulicResistance::calculateElement()
 		virtual void evaluate() override;
 
-		/// @see HydraulicResistance::setGeometry()
-		virtual void setGeometry(const std::vector<real>& G) override;
-
 		/// @see HydraulicResistance::getGeometry()
 		virtual void getGeometry(std::vector<real>& G) override;
 
-		/// @see HydraulicResistance::getLength()
-		virtual real getLength() override;
-
-		/// @see HydraulicResistance::setLength()
-		virtual void setLength(const real L) override;
+		/// @see HydraulicResistance::setGeometry()
+		virtual void setGeometry(const std::vector<real>& G) override;
 	};
 }

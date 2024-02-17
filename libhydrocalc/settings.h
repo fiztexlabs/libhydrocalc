@@ -57,13 +57,32 @@ namespace hydrocalc::settings
 		NoCheck = 3
 	};
 
-	/// @brief Behavior on OutOfRange accidents
-	enum class OutOfRangeRangeBehaviorMode
+	/// @brief Behavior on GeometryOutOfRange accidents
+	enum class GeometryOutOfRangeBehaviorMode
 	{
 		/// @brief Return quiet NaN value
 		QuietNaN = 0,
 		/// @brief Return NaN value and rise warning
 		WarnNaN= 1,
+		/// @brief Do nothing
+		NoCheck = 2,
+		/// @brief Generate warning without stop execution
+		Warn = 3,
+		/// @brief Stop code execution
+		Stop = 4,
+		/// @brief Nearest neigboor valid value without warning
+		NearestValidWithNoWarn = 5,
+		/// @brief Nearest neigboor valid with warning
+		NearestValidWithWarn = 6
+	};
+
+	/// @brief Behavior on FlowOutOfRange accidents
+	enum class FlowOutOfRangeBehaviorMode
+	{
+		/// @brief Return quiet NaN value
+		QuietNaN = 0,
+		/// @brief Return NaN value and rise warning
+		WarnNaN = 1,
 		/// @brief Do nothing
 		NoCheck = 2,
 		/// @brief Generate warning without stop execution
@@ -87,6 +106,7 @@ namespace hydrocalc::settings
 		Stop = 2
 	};
 
+	/// @brief Behavior on ReversedFlow accidents
 	enum class ReversedFlowBehaviorMode
 	{
 		/// @brief Do nothing
@@ -113,13 +133,19 @@ namespace hydrocalc::settings
 		/// @brief Behavior on UnphysicalValue accidents
 		UnphysicalValueBehaviorMode UnphysicalMode = UnphysicalValueBehaviorMode::Stop;
 
-		/// @brief Behavior on OutOfRange accidents
-		OutOfRangeRangeBehaviorMode OutOfRangeMode = OutOfRangeRangeBehaviorMode::Warn;
+		/// @brief Behavior on GeometryOutOfRange accidents
+		GeometryOutOfRangeBehaviorMode GeometryOutOfRangeMode = GeometryOutOfRangeBehaviorMode::Warn;
+
+		/// @brief Behavior on FlowOutOfRange accidents
+		FlowOutOfRangeBehaviorMode FlowOutOfRangeMode = FlowOutOfRangeBehaviorMode::Warn;
 
 		/// @brief Behavior on NonExistentFunction accidents
 		NonExistentFuncBehaviorMode NonExistentFunc = NonExistentFuncBehaviorMode::Stop;
 
 		/// @brief Behavior on ReversedFlows accidents
 		ReversedFlowBehaviorMode ReversedFlowMode = ReversedFlowBehaviorMode::Quiet;
+
+		/// @brief Enable or disable check inputs
+		bool checkInputs = 1;
 	};
 }

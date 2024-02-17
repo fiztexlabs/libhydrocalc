@@ -41,16 +41,16 @@ namespace hydrocalc
 	};
 
 	/**
-	* @brief Exception on Re number out of range accidents
+	* @brief Exception on flow parameters out of range accidents
 	*/
-	class ExceptionReOutOfRange :
+	class ExceptionFlowOutOfRange :
 		public ExceptionOutOfRange
 	{
 	public:
-		ExceptionReOutOfRange(const std::string& m)
+		ExceptionFlowOutOfRange(const std::string& m)
 			: ExceptionOutOfRange(m)
 		{
-			type_ = "ReOutOfRange";
+			type_ = "FlowOutOfRange";
 		}
 	};
 

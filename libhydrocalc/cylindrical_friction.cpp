@@ -2,12 +2,16 @@
 #include <libmath/boolean.h>
 #include <libhydrocalc/exceptions.h>
 #include <cmath>
+#include <algorithm>
 
 using namespace hydrocalc;
 
 void CylindricalFriction::evaluate()
 {
-	real reversed = checkReversedFlow("Re < 0.0", ExceptionReversedFlow("reversed flow in the friction element " + name_));
+	A_ = M_PI * std::pow(0.5 * D0_, 2.0);
+	relRou_ = rou_ / D0_;
+
+	real reversed = checkReversedFlow("Re < 0.0", ExceptionReversedFlow("reversed flow in the cylindrical friction element " + name_));
 
 	if (std::isnan(reversed))
 	{
@@ -20,9 +24,6 @@ void CylindricalFriction::evaluate()
 	{
 		// direction independent
 		real Re = std::abs(Re_);
-
-		A_ = M_PI * std::pow(0.5 * D0_, 2.0);
-		relRou_ = rou_ / D0_;
 
 		if (math::isEqual<real, real>(Re, static_cast<real>(0.0)))
 		{
@@ -113,11 +114,11 @@ void hydrocalc::CylindricalFriction::diagram23()
 	real Re2 = 2090.0 * std::pow((1.0 / relRou_), 0.0635);
 	if ((Re > Re0) && (Re < Re1))
 	{
-		if (CurrentSettings_.OutOfRangeMode != settings::OutOfRangeRangeBehaviorMode::NoCheck)
+		if (CurrentSettings_.GeometryOutOfRangeMode != settings::GeometryOutOfRangeBehaviorMode::NoCheck)
 		{
 			if (relRou_ < 0.007)
 			{
-				relRou_ = procOutOfRange("rou/D0 < 0.007", ExceptionGeometryOutOfRange("%%err Friction element:" + name_ + ": rou/D0 < 0.007"), 0.007);
+				relRou_ = procGeometryOutOfRange("rou/D0 (relative roughness)  < 0.007", ExceptionGeometryOutOfRange("%%err Cylindrical friction element:" + name_ + ": rou/D0 (relative roughness) < 0.007"), 0.007);
 			}
 		}
 
@@ -187,17 +188,20 @@ real CylindricalFriction::checkGeometry(const std::vector<real>& G)
 {
 	real err = 0.0;
 
-	if (G.at(0) < 0.0)
+	if (CurrentSettings_.checkInputs)
 	{
-		err = procInvalidValue("rou < 0.0", ExceptionInvalidValue("Friction element " + name_ + ": try to set rou < 0.0"));
-	}
-	if (G.at(1) <= 0.0)
-	{
-		err = procInvalidValue("D < 0.0", ExceptionInvalidValue("Friction element " + name_ + ": try to set D < 0.0"));
-	}
-	if (G.at(2) < 0.0)
-	{
-		err = procInvalidValue("L < 0.0", ExceptionInvalidValue("Friction element " + name_ + ": try to set L < 0.0"));
+		if (G.at(0) < 0.0)
+		{
+			err = procInvalidValue("rou (roughness) < 0.0", ExceptionInvalidValue("Cylindrical friction element " + name_ + ": try to set rou (roughness) < 0.0"));
+		}
+		if (G.at(1) <= 0.0)
+		{
+			err = procInvalidValue("D0 (hydraulic diameter) < 0.0", ExceptionInvalidValue("Cylindrical friction element " + name_ + ": try to set D0 (hydraulic diameter) < 0.0"));
+		}
+		if (G.at(2) < 0.0)
+		{
+			err = procInvalidValue("L (element length) < 0.0", ExceptionInvalidValue("Cylindrical friction element " + name_ + ": try to set L (element length) < 0.0"));
+		}
 	}
 
 	return err;
@@ -230,29 +234,4 @@ void CylindricalFriction::getGeometry(std::vector<real>& G)
 		L_,
 		A_
 	};
-}
-
-real CylindricalFriction::getLength()
-{
-	return L_;
-}
-
-void CylindricalFriction::setLength(const real L)
-{
-	real err{ 0.0 };
-
-	if (L < 0.0)
-	{
-		err = procInvalidValue("setLength L < 0.0", ExceptionInvalidValue("Friction element " + name_ + ": try to set L < 0.0"));
-
-		if (std::isnan(err))
-		{
-			L_ = err;
-		}
-	}
-	else
-	{
-		L_ = L;
-	}
-
 }

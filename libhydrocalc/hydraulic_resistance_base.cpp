@@ -112,30 +112,30 @@ real hydrocalc::HydraulicResistanceBase::checkReversedFlow(const std::string& ms
 	return real();
 }
 
-real hydrocalc::HydraulicResistanceBase::procOutOfRange(const std::string& msg, const Exception& exec, const real nearest)
+real hydrocalc::HydraulicResistanceBase::procGeometryOutOfRange(const std::string& msg, const Exception& exec, const real nearest)
 {
-	switch (CurrentSettings_.OutOfRangeMode)
+	switch (CurrentSettings_.GeometryOutOfRangeMode)
 	{
-	case settings::OutOfRangeRangeBehaviorMode::NoCheck:
+	case settings::GeometryOutOfRangeBehaviorMode::NoCheck:
 		break;
-	case settings::OutOfRangeRangeBehaviorMode::Warn:
-		std::cerr << "%%err Value out of range in element: " << name_ << ": " << msg << std::endl;
+	case settings::GeometryOutOfRangeBehaviorMode::Warn:
+		std::cerr << "%%err Geometry value out of range in element: " << name_ << ": " << msg << std::endl;
 		break;
-	case settings::OutOfRangeRangeBehaviorMode::QuietNaN:
+	case settings::GeometryOutOfRangeBehaviorMode::QuietNaN:
 		return std::numeric_limits<real>::quiet_NaN();
 		break;
-	case settings::OutOfRangeRangeBehaviorMode::WarnNaN:
-		std::cerr << "%%err Value out of range in element: " << name_ << ": " << msg << std::endl;
+	case settings::GeometryOutOfRangeBehaviorMode::WarnNaN:
+		std::cerr << "%%err Geometry value out of range in element: " << name_ << ": " << msg << std::endl;
 		return std::numeric_limits<real>::quiet_NaN();
 		break;
-	case settings::OutOfRangeRangeBehaviorMode::NearestValidWithNoWarn:
+	case settings::GeometryOutOfRangeBehaviorMode::NearestValidWithNoWarn:
 		return nearest;
 		break;
-	case settings::OutOfRangeRangeBehaviorMode::NearestValidWithWarn:
-		std::cerr << "%%err Value out of range in element: " << name_ << " and was set to nearest valid (" << nearest << "): " << msg << std::endl;
+	case settings::GeometryOutOfRangeBehaviorMode::NearestValidWithWarn:
+		std::cerr << "%%err Geometry value out of range in element: " << name_ << " and was set to nearest valid (" << nearest << "): " << msg << std::endl;
 		return nearest;
 		break;
-	case settings::OutOfRangeRangeBehaviorMode::Stop:
+	case settings::GeometryOutOfRangeBehaviorMode::Stop:
 		throw(exec);
 		break;
 	default:
@@ -146,6 +146,39 @@ real hydrocalc::HydraulicResistanceBase::procOutOfRange(const std::string& msg, 
 	return real();
 }
 
+real hydrocalc::HydraulicResistanceBase::procFlowOutOfRange(const std::string& msg, const Exception& exec, const real nearest)
+{
+	switch (CurrentSettings_.FlowOutOfRangeMode)
+	{
+	case settings::FlowOutOfRangeBehaviorMode::NoCheck:
+		break;
+	case settings::FlowOutOfRangeBehaviorMode::Warn:
+		std::cerr << "%%err Flow value out of range in element: " << name_ << ": " << msg << std::endl;
+		break;
+	case settings::FlowOutOfRangeBehaviorMode::QuietNaN:
+		return std::numeric_limits<real>::quiet_NaN();
+		break;
+	case settings::FlowOutOfRangeBehaviorMode::WarnNaN:
+		std::cerr << "%%err Flow value out of range in element: " << name_ << ": " << msg << std::endl;
+		return std::numeric_limits<real>::quiet_NaN();
+		break;
+	case settings::FlowOutOfRangeBehaviorMode::NearestValidWithNoWarn:
+		return nearest;
+		break;
+	case settings::FlowOutOfRangeBehaviorMode::NearestValidWithWarn:
+		std::cerr << "%%err Flow value out of range in element: " << name_ << " and was set to nearest valid (" << nearest << "): " << msg << std::endl;
+		return nearest;
+		break;
+	case settings::FlowOutOfRangeBehaviorMode::Stop:
+		throw(exec);
+		break;
+	default:
+		throw(exec);
+		break;
+	}
+
+	return real();
+}
 void HydraulicResistanceBase::setName(const std::string& name)
 {
 	name_ = name;
@@ -158,9 +191,16 @@ void HydraulicResistanceBase::setRe(const real Re)
 
 void HydraulicResistanceBase::setRou(const real rou)
 {
-	if (rou < 0.0)
+	if (CurrentSettings_.checkInputs)
 	{
-		rou_ = procInvalidValue("Try to set rou < 0.0", ExceptionInvalidRou("%%err element: " + name_ + " Try to set rou < 0.0"));
+		if (rou < 0.0)
+		{
+			rou_ = procInvalidValue("Try to set rou < 0.0", ExceptionInvalidRou("%%err element: " + name_ + " Try to set rou < 0.0"));
+		}
+		else
+		{
+			rou_ = rou;
+		}
 	}
 	else
 	{
@@ -228,6 +268,27 @@ void HydraulicResistanceBase::getDiagram(std::string& diagram)
 	diagram = diagram_;
 }
 
+HydraulicResistanceBase& hydrocalc::HydraulicResistanceBase::operator=(const HydraulicResistanceBase& HR)
+{
+	if (this != &HR)
+	{
+		CurrentSettings_ = HR.CurrentSettings_;
+		name_ = HR.name_;
+		Re_ = HR.Re_;
+		D0_ = HR.D0_;
+		A_ = HR.A_;
+		rou_ = HR.rou_;
+		relRou_ = HR.relRou_;
+		L_ = HR.L_;
+		type_ = HR.type_;
+		lf_ = HR.lf_;
+		CSIlf_ = HR.CSIlf_;
+		CSIlr_ = HR.CSIlr_;
+		CSI_ = HR.CSI_;
+	}
+	return *this;
+}
+
 HydraulicResistance* HydraulicResistanceBase::getElement(HydraulicResistance* Element)
 {
 	real err = procNonExixtantFunc("getElement", ExceptionCompositeFunction("Try to call composite only function ""getElement"" for element: " + name_));
@@ -247,4 +308,35 @@ void HydraulicResistanceBase::deleteFromComposite(const std::vector<HydraulicRes
 	real err = procNonExixtantFunc("deleteFromComposite", ExceptionCompositeFunction("Try to call composite only function ""deleteFromComposite"" for element: " + name_));
 
 	return void();
+}
+
+real hydrocalc::HydraulicResistanceBase::getLength()
+{
+	return L_;
+}
+
+void hydrocalc::HydraulicResistanceBase::setLength(const real L)
+{
+	real err{ 0.0 };
+
+	if (CurrentSettings_.checkInputs)
+	{
+		if (L < 0.0)
+		{
+			err = procInvalidValue("setLength L < 0.0", ExceptionInvalidValue("Friction element " + name_ + ": try to set L < 0.0"));
+
+			if (std::isnan(err))
+			{
+				L_ = err;
+			}
+		}
+		else
+		{
+			L_ = L;
+		}
+	}
+	else
+	{
+		L_ = L;
+	}
 }
