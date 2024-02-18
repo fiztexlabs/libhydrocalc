@@ -37,7 +37,7 @@ real hydrocalc::HydraulicResistanceBase::procUnphysicalValue(const real val, con
 		return true_val;
 		break;
 	case settings::UnphysicalValueBehaviorMode::WarnTrue:
-		std::cerr << "%%err " + msg << std::endl;
+		std::cerr << "%%warn " + msg << std::endl;
 		return true_val;
 		break;
 	case settings::UnphysicalValueBehaviorMode::Stop:
@@ -47,7 +47,7 @@ real hydrocalc::HydraulicResistanceBase::procUnphysicalValue(const real val, con
 		return val;
 		break;
 	case settings::UnphysicalValueBehaviorMode::WarnCalc:
-		std::cerr << "%%err " + msg << std::endl;
+		std::cerr << "%%warn " + msg << std::endl;
 		return val;
 		break;
 	default:
@@ -89,7 +89,7 @@ real hydrocalc::HydraulicResistanceBase::checkReversedFlow(const std::string& ms
 		case settings::ReversedFlowBehaviorMode::Quiet:
 			break;
 		case settings::ReversedFlowBehaviorMode::Warn:
-			std::cerr << "%%err Reversed flow detected in element: " << name_ << ": " << msg << std::endl;
+			std::cerr << "%%warn Reversed flow detected in element: " << name_ << ": " << msg << std::endl;
 			break;
 		case settings::ReversedFlowBehaviorMode::QuietNaN:
 			return std::numeric_limits<real>::quiet_NaN();
@@ -121,7 +121,7 @@ real hydrocalc::HydraulicResistanceBase::procGeometryOutOfRange(const std::strin
 	case settings::GeometryOutOfRangeBehaviorMode::NoCheck:
 		break;
 	case settings::GeometryOutOfRangeBehaviorMode::Warn:
-		std::cerr << "%%err Geometry value out of range in element: " << name_ << ": " << msg << std::endl;
+		std::cerr << "%%warn Geometry value out of range in element: " << name_ << ": " << msg << std::endl;
 		break;
 	case settings::GeometryOutOfRangeBehaviorMode::QuietNaN:
 		return std::numeric_limits<real>::quiet_NaN();
@@ -134,7 +134,7 @@ real hydrocalc::HydraulicResistanceBase::procGeometryOutOfRange(const std::strin
 		return nearest;
 		break;
 	case settings::GeometryOutOfRangeBehaviorMode::NearestValidWithWarn:
-		std::cerr << "%%err Geometry value out of range in element: " << name_ << " and was set to nearest valid (" << nearest << "): " << msg << std::endl;
+		std::cerr << "%%warn Geometry value out of range in element: " << name_ << " and was set to nearest valid (" << nearest << "): " << msg << std::endl;
 		return nearest;
 		break;
 	case settings::GeometryOutOfRangeBehaviorMode::Stop:
