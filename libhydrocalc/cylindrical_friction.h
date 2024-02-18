@@ -9,6 +9,7 @@
 namespace hydrocalc
 {
 	class CylindricalBend;
+	class CylindricalDiffuserStraightDirect;
 
 	/**
 	* @brief Class for calculating hydraulic resistance of friction in
@@ -32,8 +33,6 @@ namespace hydrocalc
 		/**
 		* @brief Check cylindrical friction input values and raise exeptions or warnings
 		* @details Error codes:
-		*	- 1: Invalid size of vector of geometry characteristic
-		*	- 2: One of element characteristics have an invalid value
 		* @param G: Input vector of geometry characteristics
 		*/
 		real checkGeometry(const std::vector<real>& G);
@@ -51,6 +50,7 @@ namespace hydrocalc
 		void diagram24();
 
 		friend CylindricalBend;
+		friend CylindricalDiffuserStraightDirect;
 
 	public:
 		/**

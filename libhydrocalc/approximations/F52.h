@@ -81,7 +81,7 @@ Training Time               :
   Finish                    : 2022-08-08 10:18:32.903221
   Total                     : 0:03:45.049173
  */
-#include <service/ServiceHS.h>
+#include <libhydrocalc/settings.h>
 
 #define F52_sizeX 2 /* input dimensionality */
 #define F52_sizeF 1 /* model output dimensionality */
@@ -95,29 +95,29 @@ extern "C" {
 #endif
 
 int F52( const int N /* number of input vectors (N >= 0) */
-        , const HSReal* input /* pointer to the input vectors (N == 0 || input != NULL) */
+        , const hydrocalc::real* input /* pointer to the input vectors (N == 0 || input != NULL) */
         , const int ldInput /* distance (in doubles) between input vectors (ldInput >= {input vector size}) */
-        , HSReal* output /* pointer to the output vectors (N == 0 || output != NULL) */
+        , hydrocalc::real* output /* pointer to the output vectors (N == 0 || output != NULL) */
         , const int ldOutput /* distance (in doubles) between output vectors (ldOutput >= {output vector size} * ({input vector size} + 1))) */
         );
 
 int F52AE( const int N /* number of input vectors (N >= 0) */
-        , const HSReal* input /* pointer to the input vectors (N == 0 || input != NULL) */
+        , const hydrocalc::real* input /* pointer to the input vectors (N == 0 || input != NULL) */
         , const int ldInput /* distance (in doubles) between input vectors (ldInput >= {input vector size}) */
-        , HSReal* output /* pointer to the output vectors (N == 0 || output != NULL) */
+        , hydrocalc::real* output /* pointer to the output vectors (N == 0 || output != NULL) */
         , const int ldOutput /* distance (in doubles) between output vectors (ldOutput >= {output vector size} * ({input vector size} + 1))) */
         );
 
 /* Calculates value and/or gradient of the function F52 at the single point. */
 /* Returns 0 on success or 1-based index of the invalid input parameter */
 int F52Calc( 
-          const HSReal* input  /* [in] pointer to the input vector, requires input != NULL */
+          const hydrocalc::real* input  /* [in] pointer to the input vector, requires input != NULL */
         , const int inputInc   /* [in] distance (in doubles) between elements of the input vector) */
-        , HSReal* value        /* [out] optional pointer to the function value. */
+        , hydrocalc::real* value        /* [out] optional pointer to the function value. */
                                /* Set this pointer to NULL to avoid calculation of the function value */
         , const int valueInc   /* [in] distance (in doubles) between elements of vector 'value'. */
                                /* Ignored if function has 1-dimensional output or value==NULL */
-        , HSReal* grad         /* [out] optional pointer to the function gradient dF_i/dX_j. */
+        , hydrocalc::real* grad         /* [out] optional pointer to the function gradient dF_i/dX_j. */
                                /* Set this pointer to NULL to avoid calculation of the function gradient */
         , const int gradNextDF /* [in] distance (in doubles) between dF_i/dX_k and dF_{i+1}/dX_k */
                                /* elements of the array 'grad'. Ignored if function has 1-dimensional */
@@ -130,13 +130,13 @@ int F52Calc(
 /* Calculates value and/or gradient of the function AE F52 at the single point. */
 /* Returns 0 on success or 1-based index of the invalid input parameter */
 int F52CalcAE( 
-          const HSReal* input  /* [in] pointer to the input vector, requires input != NULL */
+          const hydrocalc::real* input  /* [in] pointer to the input vector, requires input != NULL */
         , const int inputInc   /* [in] distance (in doubles) between elements of the input vector) */
-        , HSReal* value        /* [out] optional pointer to the function AE. Set this pointer to NULL */
+        , hydrocalc::real* value        /* [out] optional pointer to the function AE. Set this pointer to NULL */
                                /* to avoid calculation of the function AE */
         , const int valueInc   /* [in] distance (in doubles) between elements of vector 'value'. */
                                /* Ignored if function has 1-dimensional output or value==NULL */
-        , HSReal* grad         /* [out] optional pointer to the gradient of the function AE dAE_i/dX_j. */
+        , hydrocalc::real* grad         /* [out] optional pointer to the gradient of the function AE dAE_i/dX_j. */
                                /* Set this pointer to NULL to avoid calculation of the gradient of */
                                /* the function AE. */
         , const int gradNextDF /* [in] distance (in doubles) between dAE_i/dX_k and dAE_{i+1}/dX_k */

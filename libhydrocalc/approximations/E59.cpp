@@ -111,11 +111,10 @@ Training Time               :
   Finish                    : 2022-08-08 13:02:16.783116
   Total                     : 0:00:35.377987
  */
-#include <pch.h>
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-#include <HydraulicResistances/approximations/E59.h>
+#include <libhydrocalc/approximations/e59.h>
 
 #ifdef __TINYC__
 #undef NAN
@@ -137,11 +136,11 @@ struct DACalculationOptions {
 extern "C" {
 #endif
 
-void _E59(/*[in] */ const HSReal* X /* input vector of size 2 */
+void _E59(/*[in] */ const hydrocalc::real* X /* input vector of size 2 */
        , /*[in] */ int incX /* distance between elements of the vector X */
-       , /*[out]*/ HSReal* F /* optional (may be NULL) output vector of size 1 */
+       , /*[out]*/ hydrocalc::real* F /* optional (may be NULL) output vector of size 1 */
        , /*[in] */ int incF /* distance between elements of the vector F */
-       , /*[out]*/ HSReal* gradF /* optional (may be NULL) array to store partial derivatives of  */
+       , /*[out]*/ hydrocalc::real* gradF /* optional (may be NULL) array to store partial derivatives of  */
                                  /* the output vector F with respect to elements of the input vector X (dF_i/dX_j)  */
                                  /* see declaration of struct DACalculationOptions for details */
        , /*[in] */ int ldGradF /* Leading dimension of the matrix gradF */
@@ -156,9 +155,9 @@ extern "C" {
 #endif
 
 int E59( const int N /* number of input vectors (N >= 0) */
-        , const HSReal* input /* pointer to the input vectors (N == 0 || input != NULL) */
+        , const hydrocalc::real* input /* pointer to the input vectors (N == 0 || input != NULL) */
         , const int ldInput /* distance (in doubles) between input vectors (ldInput >= {input vector size}) */
-        , HSReal* output /* pointer to the output vectors (N == 0 || output != NULL) */
+        , hydrocalc::real* output /* pointer to the output vectors (N == 0 || output != NULL) */
         , const int ldOutput /* distance (in doubles) between output vectors (ldOutput >= {output vector size} * ({input vector size} + 1))) */
         ) {
   static const int daXDimensionality = 2;
@@ -190,9 +189,9 @@ int E59( const int N /* number of input vectors (N >= 0) */
 
 
 int E59AE( const int N /* number of input vectors (N >= 0) */
-        , const HSReal* input /* pointer to the input vectors (N == 0 || input != NULL) */
+        , const hydrocalc::real* input /* pointer to the input vectors (N == 0 || input != NULL) */
         , const int ldInput /* distance (in doubles) between input vectors (ldInput >= {input vector size}) */
-        , HSReal* output /* pointer to the output vectors (N == 0 || output != NULL) */
+        , hydrocalc::real* output /* pointer to the output vectors (N == 0 || output != NULL) */
         , const int ldOutput /* distance (in doubles) between output vectors (ldOutput >= {output vector size} * ({input vector size} + 1))) */
         ) {
   static const int daXDimensionality = 2;
@@ -231,13 +230,13 @@ int E59AE( const int N /* number of input vectors (N >= 0) */
 /* Calculates value and/or gradient of the function E59 at the single point. */
 /* Returns 0 on success or 1-based index of the invalid input parameter */
 int E59Calc( 
-          const HSReal* input  /* [in] pointer to the input vector, requires input != NULL */
+          const hydrocalc::real* input  /* [in] pointer to the input vector, requires input != NULL */
         , const int inputInc   /* [in] distance (in doubles) between elements of the input vector) */
-        , HSReal* value        /* [out] optional pointer to the function value. */
+        , hydrocalc::real* value        /* [out] optional pointer to the function value. */
                                /* Set this pointer to NULL to avoid calculation of the function value */
         , const int valueInc   /* [in] distance (in doubles) between elements of vector 'value'. */
                                /* Ignored if function has 1-dimensional output or value==NULL */
-        , HSReal* grad         /* [out] optional pointer to the function gradient dF_i/dX_j. */
+        , hydrocalc::real* grad         /* [out] optional pointer to the function gradient dF_i/dX_j. */
                                /* Set this pointer to NULL to avoid calculation of the function gradient */
         , const int gradNextDF /* [in] distance (in doubles) between dF_i/dX_k and dF_{i+1}/dX_k */
                                /* elements of the array 'grad'. Ignored if function has 1-dimensional */
@@ -279,7 +278,7 @@ int E59Calc(
       _E59(input, inputInc, value, valueInc, grad, gradNextDX, &options);
     } else {
       int dx, df;
-      HSReal contiguousGrad[2*1];
+      hydrocalc::real contiguousGrad[2*1];
       options._gradientMatrixFMajor = 1;
       _E59(input, inputInc, value, valueInc, contiguousGrad, 2, &options);
       for(df = 0; df < 1; ++ df) {
@@ -296,13 +295,13 @@ int E59Calc(
 /* Calculates value and/or gradient of the function AE E59 at the single point. */
 /* Returns 0 on success or 1-based index of the invalid input parameter */
 int E59CalcAE( 
-          const HSReal* input  /* [in] pointer to the input vector, requires input != NULL */
+          const hydrocalc::real* input  /* [in] pointer to the input vector, requires input != NULL */
         , const int inputInc   /* [in] distance (in doubles) between elements of the input vector) */
-        , HSReal* value        /* [out] optional pointer to the function AE. Set this pointer to NULL */
+        , hydrocalc::real* value        /* [out] optional pointer to the function AE. Set this pointer to NULL */
                                /* to avoid calculation of the function AE */
         , const int valueInc   /* [in] distance (in doubles) between elements of vector 'value'. */
                                /* Ignored if function has 1-dimensional output or value==NULL */
-        , HSReal* grad         /* [out] optional pointer to the gradient of the function AE dAE_i/dX_j. */
+        , hydrocalc::real* grad         /* [out] optional pointer to the gradient of the function AE dAE_i/dX_j. */
                                /* Set this pointer to NULL to avoid calculation of the gradient of */
                                /* the function AE. */
         , const int gradNextDF /* [in] distance (in doubles) between dAE_i/dX_k and dAE_{i+1}/dX_k */
@@ -345,7 +344,7 @@ int E59CalcAE(
       _E59(input, inputInc, value, valueInc, grad, gradNextDX, &options);
     } else {
       int dx, df;
-      HSReal contiguousGrad[2*1];
+      hydrocalc::real contiguousGrad[2*1];
       options._gradientMatrixFMajor = 1;
       _E59(input, inputInc, value, valueInc, contiguousGrad, 2, &options);
       for(df = 0; df < 1; ++ df) {
@@ -367,39 +366,39 @@ extern "C" {
 #endif
 
 
-void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_normalizeInput(/*[in] */ const HSReal* X /* input (unscaled) vector of size 2 */
+void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_normalizeInput(/*[in] */ const hydrocalc::real* X /* input (unscaled) vector of size 2 */
                  , /*[in] */ int incX /* distance between elements of the vector X */
-                 , /*[out]*/ HSReal* Y /* output (normalized) vector of size 2 */
+                 , /*[out]*/ hydrocalc::real* Y /* output (normalized) vector of size 2 */
                  , /*[in] */ int incY /* distance between elements of the vector Y */);
 
-void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_reverseOutputGradNormalization1(/*[in] */ const HSReal* gradIn /* input gradient */
+void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_reverseOutputGradNormalization1(/*[in] */ const hydrocalc::real* gradIn /* input gradient */
                                   , /*[in] */ int ldGradIn /* Leading dimension of the matrix gradIn */
                                   , /*[in] */ const int gradInFMajor /* is input gradient has F-major order */
-                                  , /*[out]*/ HSReal* gradOut /* output gradient */
+                                  , /*[out]*/ hydrocalc::real* gradOut /* output gradient */
                                   , /*[in] */ int ldGradOut /* Leading dimension of the matrix gradOut */
                                   , /*[in] */ const int gradOutFMajor /* is output gradient has F-major order */);
 
-void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_reverseOutputNormalization1(/*[in] */ const HSReal* X /* input (normalized) vector of size 1 */
+void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_reverseOutputNormalization1(/*[in] */ const hydrocalc::real* X /* input (normalized) vector of size 1 */
                               , /*[in] */ int incX /* distance between elements of the vector X */
-                              , /*[out]*/ HSReal* Y /* output (unscaled) vector of size 1 */
+                              , /*[out]*/ hydrocalc::real* Y /* output (unscaled) vector of size 1 */
                               , /*[in] */ int incY /* distance between elements of the vector Y */);
 
-void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1(/*[in] */ const HSReal* X /* input vector of size 2 */
+void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1(/*[in] */ const hydrocalc::real* X /* input vector of size 2 */
                         , /*[in] */ int incX /* distance between elements of the vector X */
-                        , /*[out]*/ HSReal* F /* optional (may be NULL) output vector of size 1 */
+                        , /*[out]*/ hydrocalc::real* F /* optional (may be NULL) output vector of size 1 */
                         , /*[in] */ int incF /* distance between elements of the vector F */
-                        , /*[out]*/ HSReal* gradF /* optional (may be NULL) array to store partial derivatives of  */
+                        , /*[out]*/ hydrocalc::real* gradF /* optional (may be NULL) array to store partial derivatives of  */
                                                   /* the output vector F with respect to elements of the input vector X (dF_i/dX_j)  */
                                                   /* see declaration of struct DACalculationOptions for details */
                         , /*[in] */ int ldGradF /* Leading dimension of the matrix gradF */
                         , /*[in] */ const struct DACalculationOptions* options);
 
-void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_covarianceFunction2(/*[in] */ const HSReal* X /* left vector */
+void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_covarianceFunction2(/*[in] */ const hydrocalc::real* X /* left vector */
                       , /*[in] */ int incX /* distance between elements of the vector X */
-                      , /*[in] */ const HSReal* Y /* right vector */
+                      , /*[in] */ const hydrocalc::real* Y /* right vector */
                       , /*[in] */ int incY /* distance between elements of the vector Y */
-                      , /*[out]*/ HSReal* covarianceValue /* calculated covariance value cov(X,Y) */
-                      , /*[out]*/ HSReal* covarianceDerivative /* derivative of cov(X,Y) */
+                      , /*[out]*/ hydrocalc::real* covarianceValue /* calculated covariance value cov(X,Y) */
+                      , /*[out]*/ hydrocalc::real* covarianceDerivative /* derivative of cov(X,Y) */
                       , /*[in] */ int incCovarianceDerivative /* distance between elements of the vector covarianceDerivative */);
 
 
@@ -413,33 +412,33 @@ enum CBLAS_DIAG {CblasNonUnit=131, CblasUnit=132};
 
 #if DA_CBLAS /* use external cblas */
 
-HSReal cblas_ddot(const int N, const HSReal *X, const int incX,
-                  const HSReal *Y, const int incY);
+hydrocalc::real cblas_ddot(const int N, const hydrocalc::real *X, const int incX,
+                  const hydrocalc::real *Y, const int incY);
 
 #else /* use local cblas routines implementation */
 
-static HSReal cblas_ddot(const int N, const HSReal *X, const int incX,
-                  const HSReal *Y, const int incY);
+static hydrocalc::real cblas_ddot(const int N, const hydrocalc::real *X, const int incX,
+                  const hydrocalc::real *Y, const int incY);
 
 #endif /* DA_CBLAS */
 
 #endif /* DA_CBLAS_DECLARED */
 
 
-void _E59(/*[in] */ const HSReal* X /* input vector of size 2 */
+void _E59(/*[in] */ const hydrocalc::real* X /* input vector of size 2 */
        , /*[in] */ int incX /* distance between elements of the vector X */
-       , /*[out]*/ HSReal* F /* optional (may be NULL) output vector of size 1 */
+       , /*[out]*/ hydrocalc::real* F /* optional (may be NULL) output vector of size 1 */
        , /*[in] */ int incF /* distance between elements of the vector F */
-       , /*[out]*/ HSReal* gradF /* optional (may be NULL) array to store partial derivatives of  */
+       , /*[out]*/ hydrocalc::real* gradF /* optional (may be NULL) array to store partial derivatives of  */
                                  /* the output vector F with respect to elements of the input vector X (dF_i/dX_j)  */
                                  /* see declaration of struct DACalculationOptions for details */
        , /*[in] */ int ldGradF /* Leading dimension of the matrix gradF */
        , /*[in] */ const struct DACalculationOptions* options) {
   /* Normalization wrapper for the Tensored GP approximation */
 
-  HSReal normalizedX[2];
-  HSReal normalizedF[1] = {0.};
-  HSReal normalizedGradF[4] = {0., 0., 0., 0.};
+  hydrocalc::real normalizedX[2];
+  hydrocalc::real normalizedF[1] = {0.};
+  hydrocalc::real normalizedGradF[4] = {0., 0., 0., 0.};
   const int  isGradientFMajor = (0 == options || options->_gradientMatrixFMajor);
   const int  predictValues = (0 != F) || (0 != options && options->_estimateError);
   struct DACalculationOptions tensoredGPCalculatorOptions;
@@ -484,9 +483,9 @@ void _E59(/*[in] */ const HSReal* X /* input vector of size 2 */
 }
 
 
-void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_reverseOutputNormalization1(/*[in] */ const HSReal* X /* input (normalized) vector of size 1 */
+void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_reverseOutputNormalization1(/*[in] */ const hydrocalc::real* X /* input (normalized) vector of size 1 */
                               , /*[in] */ int incX /* distance between elements of the vector X */
-                              , /*[out]*/ HSReal* Y /* output (unscaled) vector of size 1 */
+                              , /*[out]*/ hydrocalc::real* Y /* output (unscaled) vector of size 1 */
                               , /*[in] */ int incY /* distance between elements of the vector Y */) {
   /* reverse standard normalization */
 
@@ -496,9 +495,9 @@ void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_reverseOutputNormalization1(/*[in] */ con
 }
 
 
-void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_normalizeInput(/*[in] */ const HSReal* X /* input (unscaled) vector of size 2 */
+void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_normalizeInput(/*[in] */ const hydrocalc::real* X /* input (unscaled) vector of size 2 */
                  , /*[in] */ int incX /* distance between elements of the vector X */
-                 , /*[out]*/ HSReal* Y /* output (normalized) vector of size 2 */
+                 , /*[out]*/ hydrocalc::real* Y /* output (normalized) vector of size 2 */
                  , /*[in] */ int incY /* distance between elements of the vector Y */) {
   /* apply standard normalization */
 
@@ -509,19 +508,19 @@ void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_normalizeInput(/*[in] */ const HSReal* X 
 }
 
 
-void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_covarianceFunction1(/*[in] */ const HSReal* X /* left vector */
+void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_covarianceFunction1(/*[in] */ const hydrocalc::real* X /* left vector */
                       , /*[in] */ int incX /* distance between elements of the vector X */
-                      , /*[in] */ const HSReal* Y /* right vector */
+                      , /*[in] */ const hydrocalc::real* Y /* right vector */
                       , /*[in] */ int incY /* distance between elements of the vector Y */
-                      , /*[out]*/ HSReal* covarianceValue /* calculated covariance value cov(X,Y) */
-                      , /*[out]*/ HSReal* covarianceDerivative /* derivative of cov(X,Y) */
+                      , /*[out]*/ hydrocalc::real* covarianceValue /* calculated covariance value cov(X,Y) */
+                      , /*[out]*/ hydrocalc::real* covarianceDerivative /* derivative of cov(X,Y) */
                       , /*[in] */ int incCovarianceDerivative /* distance between elements of the vector covarianceDerivative */) {
   /* weighted L_p (p=1.4) covariance function */
-  static const HSReal variance[1] = { 0.45578569892634407,  };
-  static const HSReal derivativeScale[1] = { 0.63809997849688171,  };
+  static const hydrocalc::real variance[1] = { 0.45578569892634407,  };
+  static const hydrocalc::real derivativeScale[1] = { 0.63809997849688171,  };
 
-  HSReal calculatedCovariance;
-  HSReal delta[1] = {Y[0] - X[0]};
+  hydrocalc::real calculatedCovariance;
+  hydrocalc::real delta[1] = {Y[0] - X[0]};
 
   calculatedCovariance = 0.   + variance[0] * pow(fabs(delta[0]), 1.39999999999999991e+00);
 
@@ -539,10 +538,10 @@ void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_covarianceFunction1(/*[in] */ const HSRea
 }
 
 
-void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_reverseOutputGradNormalization1(/*[in] */ const HSReal* gradIn /* input gradient */
+void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_reverseOutputGradNormalization1(/*[in] */ const hydrocalc::real* gradIn /* input gradient */
                                   , /*[in] */ int ldGradIn /* Leading dimension of the matrix gradIn */
                                   , /*[in] */ const int gradInFMajor /* is input gradient has F-major order */
-                                  , /*[out]*/ HSReal* gradOut /* output gradient */
+                                  , /*[out]*/ hydrocalc::real* gradOut /* output gradient */
                                   , /*[in] */ int ldGradOut /* Leading dimension of the matrix gradOut */
                                   , /*[in] */ const int gradOutFMajor /* is output gradient has F-major order */) {
   /* consider derivatives of input and output normalization */
@@ -557,29 +556,29 @@ void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_reverseOutputGradNormalization1(/*[in] */
 }
 
 
-void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1(/*[in] */ const HSReal* X /* input vector of size 2 */
+void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1(/*[in] */ const hydrocalc::real* X /* input vector of size 2 */
                         , /*[in] */ int incX /* distance between elements of the vector X */
-                        , /*[out]*/ HSReal* F /* optional (may be NULL) output vector of size 1 */
+                        , /*[out]*/ hydrocalc::real* F /* optional (may be NULL) output vector of size 1 */
                         , /*[in] */ int incF /* distance between elements of the vector F */
-                        , /*[out]*/ HSReal* gradF /* optional (may be NULL) array to store partial derivatives of  */
+                        , /*[out]*/ hydrocalc::real* gradF /* optional (may be NULL) array to store partial derivatives of  */
                                                   /* the output vector F with respect to elements of the input vector X (dF_i/dX_j)  */
                                                   /* see declaration of struct DACalculationOptions for details */
                         , /*[in] */ int ldGradF /* Leading dimension of the matrix gradF */
                         , /*[in] */ const struct DACalculationOptions* options) {
   /* Tensored GP approximation */
-  extern const HSReal _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_cartesianFactor1_[10][1];
-  extern const HSReal _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_cartesianFactor2_[9][1];
-  extern const HSReal _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_eigenvaluesFactor1_[10];
-  extern const HSReal _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_eigenvectorsFactor1_[10][10];
-  extern const HSReal _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_eigenvaluesFactor2_[9];
-  extern const HSReal _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_eigenvectorsFactor2_[9][9];
-  extern const HSReal _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_alpha[1][90];
+  extern const hydrocalc::real _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_cartesianFactor1_[10][1];
+  extern const hydrocalc::real _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_cartesianFactor2_[9][1];
+  extern const hydrocalc::real _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_eigenvaluesFactor1_[10];
+  extern const hydrocalc::real _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_eigenvectorsFactor1_[10][10];
+  extern const hydrocalc::real _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_eigenvaluesFactor2_[9];
+  extern const hydrocalc::real _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_eigenvectorsFactor2_[9][9];
+  extern const hydrocalc::real _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_alpha[1][90];
 
-  HSReal crossCovariance1[10];
-  HSReal crossCovarianceGrad1[10];
-  HSReal crossCovariance2[9];
-  HSReal crossCovarianceGrad2[9];
-  HSReal testPoint[2];
+  hydrocalc::real crossCovariance1[10];
+  hydrocalc::real crossCovarianceGrad1[10];
+  hydrocalc::real crossCovariance2[9];
+  hydrocalc::real crossCovarianceGrad2[9];
+  hydrocalc::real testPoint[2];
   int k;
   
   if(0 == gradF && 0 == F) {
@@ -607,11 +606,11 @@ void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1(/*[in] */ const HSR
   
   if((0 != options && options->_estimateError)) {
     /* error prediction */
-    HSReal semiInversedCovariance1[10];
-    HSReal semiInversedCovariance2[9];
-    HSReal explainedCovariance[1] = {0.};
-    HSReal inversedEigenvalues[1];
-    HSReal currentCovarianceEigenvalue, currentSemiInversedCovariance;
+    hydrocalc::real semiInversedCovariance1[10];
+    hydrocalc::real semiInversedCovariance2[9];
+    hydrocalc::real explainedCovariance[1] = {0.};
+    hydrocalc::real inversedEigenvalues[1];
+    hydrocalc::real currentCovarianceEigenvalue, currentSemiInversedCovariance;
     int k;
     const int incGradX = (0 == options || options->_gradientMatrixFMajor)? 1 : ldGradF; /* distance between dF[i]/dX[j+1] and dF[i]/dX[j] elements of derivatives matrix */
     const int incGradF = (0 == options || options->_gradientMatrixFMajor)? ldGradF : 1; /* distance between dF[i+1]/dX[j] and dF[i]/dX[j] elements of derivatives matrix */
@@ -625,9 +624,9 @@ void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1(/*[in] */ const HSR
     }
     
     if (0 != gradF) {
-      HSReal semiInversedCovarianceGrad1[1][10];
-      HSReal semiInversedCovarianceGrad2[1][9];
-      HSReal explainedCovarianceGrad[2][1] = { {0.},
+      hydrocalc::real semiInversedCovarianceGrad1[1][10];
+      hydrocalc::real semiInversedCovarianceGrad2[1][9];
+      hydrocalc::real explainedCovarianceGrad[2][1] = { {0.},
                                                {0.} };
     
       /* calculate matrix-matrix product between transposed matrix of learning sample covariances eigenvectors and test point cross covariances derivatives */
@@ -677,13 +676,13 @@ void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1(/*[in] */ const HSR
       const int incGradF = (0 == options || options->_gradientMatrixFMajor)? ldGradF : 1; /* distance between dF[i+1]/dX[j] and dF[i]/dX[j] elements of derivatives matrix */
       {
         const int offset2 = 0;  /* just to make code generation easer */
-        HSReal accum2 = 0.;
-        HSReal grad2_0 = 0.;
-        HSReal grad2_1 = 0.;
+        hydrocalc::real accum2 = 0.;
+        hydrocalc::real grad2_0 = 0.;
+        hydrocalc::real grad2_1 = 0.;
         int i1, offset1;
         for(i1 = 0, offset1 = offset2; i1 < 9; ++ i1, offset1 += 10) {
-          const HSReal accum1 = cblas_ddot(10, _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_alpha[0]+offset1, 1, crossCovariance1, 1);
-          const HSReal grad1_1 = cblas_ddot(10, _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_alpha[0]+offset1, 1, crossCovarianceGrad1+0, 1);
+          const hydrocalc::real accum1 = cblas_ddot(10, _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_alpha[0]+offset1, 1, crossCovariance1, 1);
+          const hydrocalc::real grad1_1 = cblas_ddot(10, _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_alpha[0]+offset1, 1, crossCovarianceGrad1+0, 1);
           accum2 += accum1 * crossCovariance2[i1];
           grad2_0 += accum1 * crossCovarianceGrad2[i1 + 0 * 9];
           grad2_1 += grad1_1 * crossCovariance2[i1];
@@ -697,10 +696,10 @@ void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1(/*[in] */ const HSR
     } else if(0 != F) {
       {
         const int offset2 = 0;  /* just to make code generation easer */
-        HSReal accum2 = 0.;
+        hydrocalc::real accum2 = 0.;
         int i1, offset1;
         for(i1 = 0, offset1 = offset2; i1 < 9; ++ i1, offset1 += 10) {
-          const HSReal accum1 = cblas_ddot(10, _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_alpha[0]+offset1, 1, crossCovariance1, 1);
+          const hydrocalc::real accum1 = cblas_ddot(10, _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_alpha[0]+offset1, 1, crossCovariance1, 1);
           accum2 += accum1 * crossCovariance2[i1];
         }
         F[0 * incF] = accum2;
@@ -711,19 +710,19 @@ void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1(/*[in] */ const HSR
 }
 
 
-void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_covarianceFunction2(/*[in] */ const HSReal* X /* left vector */
+void _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_covarianceFunction2(/*[in] */ const hydrocalc::real* X /* left vector */
                       , /*[in] */ int incX /* distance between elements of the vector X */
-                      , /*[in] */ const HSReal* Y /* right vector */
+                      , /*[in] */ const hydrocalc::real* Y /* right vector */
                       , /*[in] */ int incY /* distance between elements of the vector Y */
-                      , /*[out]*/ HSReal* covarianceValue /* calculated covariance value cov(X,Y) */
-                      , /*[out]*/ HSReal* covarianceDerivative /* derivative of cov(X,Y) */
+                      , /*[out]*/ hydrocalc::real* covarianceValue /* calculated covariance value cov(X,Y) */
+                      , /*[out]*/ hydrocalc::real* covarianceDerivative /* derivative of cov(X,Y) */
                       , /*[in] */ int incCovarianceDerivative /* distance between elements of the vector covarianceDerivative */) {
   /* weighted L_p (p=1.4) covariance function */
-  static const HSReal variance[1] = { 0.259401587857435,  };
-  static const HSReal derivativeScale[1] = { 0.36316222300040896,  };
+  static const hydrocalc::real variance[1] = { 0.259401587857435,  };
+  static const hydrocalc::real derivativeScale[1] = { 0.36316222300040896,  };
 
-  HSReal calculatedCovariance;
-  HSReal delta[1] = {Y[0] - X[0]};
+  hydrocalc::real calculatedCovariance;
+  hydrocalc::real delta[1] = {Y[0] - X[0]};
 
   calculatedCovariance = 0.   + variance[0] * pow(fabs(delta[0]), 1.39999999999999991e+00);
 
@@ -756,9 +755,9 @@ extern "C" {
 
 #else /* use local cblas routines implementation */
 
-static HSReal cblas_ddot(const int N, const HSReal *X, const int incX,
-                  const HSReal *Y, const int incY) {
-  HSReal accum = 0.;
+static hydrocalc::real cblas_ddot(const int N, const hydrocalc::real *X, const int incX,
+                  const hydrocalc::real *Y, const int incY) {
+  hydrocalc::real accum = 0.;
   int j;
   
   if(1 == incX && 1 == incY) {

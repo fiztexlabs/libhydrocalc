@@ -94,15 +94,12 @@ namespace hydrocalc
 		*	- for straight cylindrical diffuser element:
 		*		- G[0]: Roughness [m]
 		*		- G[1]: Hydraulic diameter of diffuser [m]
-		*		- G[2]: Turbulence intensity, @f$ I=\frac{w_0}{w_max} @f$. If @f$ I=1 @f$
-		* velocity profile before diffuser is straight and influece of hit coefficient @f$ k_d @f$
-		* doesn't matter. Otherwise @f$ k_d @f$ should be taken into account with diagram 5-2
-		*		- G[3]: Length of inlet section of diffuser [m]
-		*		- G[4]: Length of diffuser [m]
-		*		- G[5]: Length of outlet section of diffuser [m]
-		*		- G[6]: Diameter of the outlet of diffuser[m]
-		*		- G[7]: Hydraulic diameter of outlet section of diffuser [m]
-		*		- G[8]: Angle of diffuser [deg]
+		*		- G[2]: Length of inlet section of diffuser [m]
+		*		- G[3]: Length of diffuser [m]
+		*		- G[4]: Length of outlet section of diffuser [m]
+		*		- G[5]: Diameter of the outlet of diffuser[m]
+		*		- G[6]: Hydraulic diameter of outlet section of diffuser [m]
+		*		- G[7]: Angle of diffuser [deg]
 		*	- for curve cylindrical diffuser element:
 		*		- G[0]: Roughness [m]
 		*		- G[1]: Hydraulic diameter of diffuser [m]

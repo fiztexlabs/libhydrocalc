@@ -192,15 +192,15 @@ real CylindricalFriction::checkGeometry(const std::vector<real>& G)
 	{
 		if (G.at(0) < 0.0)
 		{
-			err = procInvalidValue("rou (roughness) < 0.0", ExceptionInvalidValue("Cylindrical friction element " + name_ + ": try to set rou (roughness) < 0.0"));
+			err += procInvalidValue("rou (roughness) < 0.0", ExceptionInvalidValue("Cylindrical friction element " + name_ + ": try to set rou (roughness) < 0.0"));
 		}
 		if (G.at(1) <= 0.0)
 		{
-			err = procInvalidValue("D0 (hydraulic diameter) < 0.0", ExceptionInvalidValue("Cylindrical friction element " + name_ + ": try to set D0 (hydraulic diameter) < 0.0"));
+			err += procInvalidValue("D0 (hydraulic diameter) <= 0.0", ExceptionInvalidValue("Cylindrical friction element " + name_ + ": try to set D0 (hydraulic diameter) <= 0.0"));
 		}
 		if (G.at(2) < 0.0)
 		{
-			err = procInvalidValue("L (element length) < 0.0", ExceptionInvalidValue("Cylindrical friction element " + name_ + ": try to set L (element length) < 0.0"));
+			err += procInvalidValue("L (element length) < 0.0", ExceptionInvalidValue("Cylindrical friction element " + name_ + ": try to set L (element length) < 0.0"));
 		}
 	}
 

@@ -19,7 +19,7 @@ include(GNUInstallDirs)
 string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}" is_top_level)
 
 # uncomment for shared build
-# set(HR_SHARED_LIBS " ")
+set(HR_SHARED_LIBS " ")
 
 set(CMAKE_BUILD_TYPE Debug)
 option(HR_BUILD_TESTS "Build libhydrocalc tests" ON)
@@ -102,6 +102,14 @@ set(sources
     
     libhydrocalc/cylindrical_bend.h
     libhydrocalc/cylindrical_bend.cpp
+
+    libhydrocalc/cylindrical_diffuser_straight_direct.h
+    libhydrocalc/cylindrical_diffuser_straight_direct.cpp
+    libhydrocalc/approximations/f52.h
+    libhydrocalc/approximations/f52.cpp
+    libhydrocalc/approximations/e59.h
+    libhydrocalc/approximations/e59.cpp
+
 )
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 
@@ -124,6 +132,7 @@ target_include_directories(libhydrocalc
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>")
 
 set_target_properties(libhydrocalc PROPERTIES
+    PREFIX ""
     SOVERSION ${PROJECT_VERSION_MAJOR}
     VERSION ${PROJECT_VERSION})
 
@@ -214,6 +223,7 @@ target_include_directories(static-libhydrocalc
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>")
 
 set_target_properties(static-libhydrocalc PROPERTIES
+    PREFIX ""
     SOVERSION ${PROJECT_VERSION_MAJOR}
     VERSION ${PROJECT_VERSION})
 

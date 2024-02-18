@@ -78,11 +78,10 @@ Training Time               :
   Finish                    : 2022-08-08 10:18:32.903221
   Total                     : 0:03:45.049173
  */
-#include <pch.h>
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-#include <HydraulicResistances/approximations/F52.h>
+#include <libhydrocalc/approximations/f52.h>
 
 #ifdef __TINYC__
 #undef NAN
@@ -104,11 +103,11 @@ struct DACalculationOptions {
 extern "C" {
 #endif
 
-void _F52(/*[in] */ const HSReal* X /* input vector of size 2 */
+void _F52(/*[in] */ const hydrocalc::real* X /* input vector of size 2 */
        , /*[in] */ int incX /* distance between elements of the vector X */
-       , /*[out]*/ HSReal* F /* optional (may be NULL) output vector of size 1 */
+       , /*[out]*/ hydrocalc::real* F /* optional (may be NULL) output vector of size 1 */
        , /*[in] */ int incF /* distance between elements of the vector F */
-       , /*[out]*/ HSReal* gradF /* optional (may be NULL) array to store partial derivatives of  */
+       , /*[out]*/ hydrocalc::real* gradF /* optional (may be NULL) array to store partial derivatives of  */
                                  /* the output vector F with respect to elements of the input vector X (dF_i/dX_j)  */
                                  /* see declaration of struct DACalculationOptions for details */
        , /*[in] */ int ldGradF /* Leading dimension of the matrix gradF */
@@ -123,9 +122,9 @@ extern "C" {
 #endif
 
 int F52( const int N /* number of input vectors (N >= 0) */
-        , const HSReal* input /* pointer to the input vectors (N == 0 || input != NULL) */
+        , const hydrocalc::real* input /* pointer to the input vectors (N == 0 || input != NULL) */
         , const int ldInput /* distance (in doubles) between input vectors (ldInput >= {input vector size}) */
-        , HSReal* output /* pointer to the output vectors (N == 0 || output != NULL) */
+        , hydrocalc::real* output /* pointer to the output vectors (N == 0 || output != NULL) */
         , const int ldOutput /* distance (in doubles) between output vectors (ldOutput >= {output vector size} * ({input vector size} + 1))) */
         ) {
   static const int daXDimensionality = 2;
@@ -157,9 +156,9 @@ int F52( const int N /* number of input vectors (N >= 0) */
 
 
 int F52AE( const int N /* number of input vectors (N >= 0) */
-        , const HSReal* input /* pointer to the input vectors (N == 0 || input != NULL) */
+        , const hydrocalc::real* input /* pointer to the input vectors (N == 0 || input != NULL) */
         , const int ldInput /* distance (in doubles) between input vectors (ldInput >= {input vector size}) */
-        , HSReal* output /* pointer to the output vectors (N == 0 || output != NULL) */
+        , hydrocalc::real* output /* pointer to the output vectors (N == 0 || output != NULL) */
         , const int ldOutput /* distance (in doubles) between output vectors (ldOutput >= {output vector size} * ({input vector size} + 1))) */
         ) {
   static const int daXDimensionality = 2;
@@ -198,13 +197,13 @@ int F52AE( const int N /* number of input vectors (N >= 0) */
 /* Calculates value and/or gradient of the function F52 at the single point. */
 /* Returns 0 on success or 1-based index of the invalid input parameter */
 int F52Calc( 
-          const HSReal* input  /* [in] pointer to the input vector, requires input != NULL */
+          const hydrocalc::real* input  /* [in] pointer to the input vector, requires input != NULL */
         , const int inputInc   /* [in] distance (in doubles) between elements of the input vector) */
-        , HSReal* value        /* [out] optional pointer to the function value. */
+        , hydrocalc::real* value        /* [out] optional pointer to the function value. */
                                /* Set this pointer to NULL to avoid calculation of the function value */
         , const int valueInc   /* [in] distance (in doubles) between elements of vector 'value'. */
                                /* Ignored if function has 1-dimensional output or value==NULL */
-        , HSReal* grad         /* [out] optional pointer to the function gradient dF_i/dX_j. */
+        , hydrocalc::real* grad         /* [out] optional pointer to the function gradient dF_i/dX_j. */
                                /* Set this pointer to NULL to avoid calculation of the function gradient */
         , const int gradNextDF /* [in] distance (in doubles) between dF_i/dX_k and dF_{i+1}/dX_k */
                                /* elements of the array 'grad'. Ignored if function has 1-dimensional */
@@ -246,7 +245,7 @@ int F52Calc(
       _F52(input, inputInc, value, valueInc, grad, gradNextDX, &options);
     } else {
       int dx, df;
-      HSReal contiguousGrad[2*1];
+      hydrocalc::real contiguousGrad[2*1];
       options._gradientMatrixFMajor = 1;
       _F52(input, inputInc, value, valueInc, contiguousGrad, 2, &options);
       for(df = 0; df < 1; ++ df) {
@@ -263,13 +262,13 @@ int F52Calc(
 /* Calculates value and/or gradient of the function AE F52 at the single point. */
 /* Returns 0 on success or 1-based index of the invalid input parameter */
 int F52CalcAE( 
-          const HSReal* input  /* [in] pointer to the input vector, requires input != NULL */
+          const hydrocalc::real* input  /* [in] pointer to the input vector, requires input != NULL */
         , const int inputInc   /* [in] distance (in doubles) between elements of the input vector) */
-        , HSReal* value        /* [out] optional pointer to the function AE. Set this pointer to NULL */
+        , hydrocalc::real* value        /* [out] optional pointer to the function AE. Set this pointer to NULL */
                                /* to avoid calculation of the function AE */
         , const int valueInc   /* [in] distance (in doubles) between elements of vector 'value'. */
                                /* Ignored if function has 1-dimensional output or value==NULL */
-        , HSReal* grad         /* [out] optional pointer to the gradient of the function AE dAE_i/dX_j. */
+        , hydrocalc::real* grad         /* [out] optional pointer to the gradient of the function AE dAE_i/dX_j. */
                                /* Set this pointer to NULL to avoid calculation of the gradient of */
                                /* the function AE. */
         , const int gradNextDF /* [in] distance (in doubles) between dAE_i/dX_k and dAE_{i+1}/dX_k */
@@ -312,7 +311,7 @@ int F52CalcAE(
       _F52(input, inputInc, value, valueInc, grad, gradNextDX, &options);
     } else {
       int dx, df;
-      HSReal contiguousGrad[2*1];
+      hydrocalc::real contiguousGrad[2*1];
       options._gradientMatrixFMajor = 1;
       _F52(input, inputInc, value, valueInc, contiguousGrad, 2, &options);
       for(df = 0; df < 1; ++ df) {
@@ -539,7 +538,7 @@ enum CBLAS_DIAG {CblasNonUnit=131, CblasUnit=132};
 #ifndef DA_DOUBLE_QNAN_DECL
 #define DA_DOUBLE_QNAN_DECL
 #ifdef NAN
-static HSReal doubleQNAN() {
+static hydrocalc::real doubleQNAN() {
   return NAN;
 }
 #else
@@ -549,10 +548,10 @@ static HSReal doubleQNAN() {
 #  define NAN (HUGE_VAL*HUGE_VAL-(HUGE_VAL*HUGE_VAL/HUGE_VAL))
 # endif
 
-static HSReal doubleQNAN() {
+static hydrocalc::real doubleQNAN() {
   static const char* stringNAN = "NAN";
   char* endptr = 0;
-  HSReal doubleNAN = strtod(stringNAN, &endptr);
+  hydrocalc::real doubleNAN = strtod(stringNAN, &endptr);
   if (0 == endptr || 0 != *endptr || doubleNAN == doubleNAN) {
     /* Some compilers (e.g. MSVC) does not support NAN as a valid strtod() input, sad but true */
     /* So let's initialize quiet NAN according to the IEEEE 754 standard */
@@ -563,16 +562,16 @@ static HSReal doubleQNAN() {
 #endif
 #endif
 
-static void aux_fillnan(int sizeF, int sizeX, HSReal* F, int incF, HSReal* dFdX, int nextDF, int nextDX);
+static void aux_fillnan(int sizeF, int sizeX, hydrocalc::real* F, int incF, hydrocalc::real* dFdX, int nextDF, int nextDX);
 
 #endif /* DA_CBLAS_DECLARED */
 
 
-void _F52(/*[in] */ const HSReal* X /* input vector of size 2 */
+void _F52(/*[in] */ const hydrocalc::real* X /* input vector of size 2 */
        , /*[in] */ int incX /* distance between elements of the vector X */
-       , /*[out]*/ HSReal* F /* optional (may be NULL) output vector of size 1 */
+       , /*[out]*/ hydrocalc::real* F /* optional (may be NULL) output vector of size 1 */
        , /*[in] */ int incF /* distance between elements of the vector F */
-       , /*[out]*/ HSReal* gradF /* optional (may be NULL) array to store partial derivatives of  */
+       , /*[out]*/ hydrocalc::real* gradF /* optional (may be NULL) array to store partial derivatives of  */
                                  /* the output vector F with respect to elements of the input vector X (dF_i/dX_j)  */
                                  /* see declaration of struct DACalculationOptions for details */
        , /*[in] */ int ldGradF /* Leading dimension of the matrix gradF */
@@ -10043,11 +10042,11 @@ extern "C" {
 /* internal BLAS and BLAS-like routines */
 
 
-static void aux_fillnan(int sizeF, int sizeX, HSReal* F, int incF, HSReal* dFdX, int nextDF, int nextDX) {
+static void aux_fillnan(int sizeF, int sizeX, hydrocalc::real* F, int incF, hydrocalc::real* dFdX, int nextDF, int nextDX) {
 #ifdef NAN
-  const HSReal NaN = NAN;
+  const hydrocalc::real NaN = NAN;
 #else
-  const HSReal NaN = doubleQNAN();
+  const hydrocalc::real NaN = doubleQNAN();
 #endif
 
   if (F) {

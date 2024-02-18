@@ -114,7 +114,7 @@ Training Time               :
   Finish                    : 2022-08-08 13:02:16.783116
   Total                     : 0:00:35.377987
  */
-#include <service/ServiceHS.h>
+#include <libhydrocalc/settings.h>
 
 #define E59_sizeX 2 /* input dimensionality */
 #define E59_sizeF 1 /* model output dimensionality */
@@ -128,29 +128,29 @@ extern "C" {
 #endif
 
 int E59( const int N /* number of input vectors (N >= 0) */
-        , const HSReal* input /* pointer to the input vectors (N == 0 || input != NULL) */
+        , const hydrocalc::real* input /* pointer to the input vectors (N == 0 || input != NULL) */
         , const int ldInput /* distance (in doubles) between input vectors (ldInput >= {input vector size}) */
-        , HSReal* output /* pointer to the output vectors (N == 0 || output != NULL) */
+        , hydrocalc::real* output /* pointer to the output vectors (N == 0 || output != NULL) */
         , const int ldOutput /* distance (in doubles) between output vectors (ldOutput >= {output vector size} * ({input vector size} + 1))) */
         );
 
 int E59AE( const int N /* number of input vectors (N >= 0) */
-        , const HSReal* input /* pointer to the input vectors (N == 0 || input != NULL) */
+        , const hydrocalc::real* input /* pointer to the input vectors (N == 0 || input != NULL) */
         , const int ldInput /* distance (in doubles) between input vectors (ldInput >= {input vector size}) */
-        , HSReal* output /* pointer to the output vectors (N == 0 || output != NULL) */
+        , hydrocalc::real* output /* pointer to the output vectors (N == 0 || output != NULL) */
         , const int ldOutput /* distance (in doubles) between output vectors (ldOutput >= {output vector size} * ({input vector size} + 1))) */
         );
 
 /* Calculates value and/or gradient of the function E59 at the single point. */
 /* Returns 0 on success or 1-based index of the invalid input parameter */
 int E59Calc( 
-          const HSReal* input  /* [in] pointer to the input vector, requires input != NULL */
+          const hydrocalc::real* input  /* [in] pointer to the input vector, requires input != NULL */
         , const int inputInc   /* [in] distance (in doubles) between elements of the input vector) */
-        , HSReal* value        /* [out] optional pointer to the function value. */
+        , hydrocalc::real* value        /* [out] optional pointer to the function value. */
                                /* Set this pointer to NULL to avoid calculation of the function value */
         , const int valueInc   /* [in] distance (in doubles) between elements of vector 'value'. */
                                /* Ignored if function has 1-dimensional output or value==NULL */
-        , HSReal* grad         /* [out] optional pointer to the function gradient dF_i/dX_j. */
+        , hydrocalc::real* grad         /* [out] optional pointer to the function gradient dF_i/dX_j. */
                                /* Set this pointer to NULL to avoid calculation of the function gradient */
         , const int gradNextDF /* [in] distance (in doubles) between dF_i/dX_k and dF_{i+1}/dX_k */
                                /* elements of the array 'grad'. Ignored if function has 1-dimensional */
@@ -163,13 +163,13 @@ int E59Calc(
 /* Calculates value and/or gradient of the function AE E59 at the single point. */
 /* Returns 0 on success or 1-based index of the invalid input parameter */
 int E59CalcAE( 
-          const HSReal* input  /* [in] pointer to the input vector, requires input != NULL */
+          const hydrocalc::real* input  /* [in] pointer to the input vector, requires input != NULL */
         , const int inputInc   /* [in] distance (in doubles) between elements of the input vector) */
-        , HSReal* value        /* [out] optional pointer to the function AE. Set this pointer to NULL */
+        , hydrocalc::real* value        /* [out] optional pointer to the function AE. Set this pointer to NULL */
                                /* to avoid calculation of the function AE */
         , const int valueInc   /* [in] distance (in doubles) between elements of vector 'value'. */
                                /* Ignored if function has 1-dimensional output or value==NULL */
-        , HSReal* grad         /* [out] optional pointer to the gradient of the function AE dAE_i/dX_j. */
+        , hydrocalc::real* grad         /* [out] optional pointer to the gradient of the function AE dAE_i/dX_j. */
                                /* Set this pointer to NULL to avoid calculation of the gradient of */
                                /* the function AE. */
         , const int gradNextDF /* [in] distance (in doubles) between dAE_i/dX_k and dAE_{i+1}/dX_k */
@@ -180,12 +180,12 @@ int E59CalcAE(
                                /* or grad==NULL */
         );
 
-const HSReal _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_eigenvaluesFactor2_[9] = { 7.2347480549628234, 1.1234412963882627, 0.44394232157536828, 0.1123781844652387, 0.039760209654051588, 0.025087996276393559, 0.011418341601368941, 0.0060338287005216934, 0.0031897663759680914, };
+const hydrocalc::real _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_eigenvaluesFactor2_[9] = { 7.2347480549628234, 1.1234412963882627, 0.44394232157536828, 0.1123781844652387, 0.039760209654051588, 0.025087996276393559, 0.011418341601368941, 0.0060338287005216934, 0.0031897663759680914, };
 
-const HSReal _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_eigenvaluesFactor1_[10] = { 6.5740275366889431, 1.9231836615320586, 0.77615344493517202, 0.35715524095609719, 0.15851937559657783, 0.087985672320840411, 0.054524804318761597, 0.031437715295838567,
+const hydrocalc::real _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_eigenvaluesFactor1_[10] = { 6.5740275366889431, 1.9231836615320586, 0.77615344493517202, 0.35715524095609719, 0.15851937559657783, 0.087985672320840411, 0.054524804318761597, 0.031437715295838567,
       0.021705111512314156, 0.015307436843394273, };
 
-const HSReal _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_alpha[1][90] = {
+const hydrocalc::real _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_alpha[1][90] = {
     { -79.212146271425695, -4.1445506633830096, 71.888779132225991, -10.579660780983566, 8.0746647686932551, -15.570632717537483, 6.4924309155783533, 16.01971534933918,
       -7.105736309958214, 17.344619802295774, -21.333193229740068, 74.44370369532696, -36.322912418884734, 9.3527724933787972, -42.466499079909212, 33.206715137176367,
       -16.522919855253743, -20.813039601518511, 22.192938807022017, -19.519855742927724, 39.973961644129261, -10.029677350620943, -77.536643191438074, 31.19127629979123,
@@ -200,19 +200,19 @@ const HSReal _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_alpha[1][90] = {
       0.12777831691274458, 0.0077194248294869539,  }
 };
 
-const HSReal _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_cartesianFactor1_[10][1] = {
+const hydrocalc::real _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_cartesianFactor1_[10][1] = {
     { -1.1872457305531967,  }, { -1.0648492634858568,  }, { -0.82005632935117712,  }, { -0.57526339521649739,  },
     { -0.3304704610818176,  }, { -0.08567752694713783,  }, { 0.15911540718754194,  }, { 0.64870127545690148,  },
     { 1.1382871437262609,  }, { 2.1174588802649801,  }
 };
 
-const HSReal _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_cartesianFactor2_[9][1] = {
+const hydrocalc::real _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_cartesianFactor2_[9][1] = {
     { -0.84484227152674118,  }, { -0.75538838395332164,  }, { -0.66593449637990199,  }, { -0.57648060880648233,  },
     { -0.39757283365964302,  }, { -0.21866505851280374,  }, { 0.31805826692771411,  }, { 0.67587381722139261,  },
     { 2.4649515686897856,  }
 };
 
-const HSReal _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_eigenvectorsFactor1_[10][10] = {
+const hydrocalc::real _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_eigenvectorsFactor1_[10][10] = {
     { 0.30987704118899928, 0.32575981114903435, 0.34971521550924617, 0.36375982575990096, 0.36736191904598658, 0.36060119170361721, 0.34429220473347444, 0.29491625951144324,
       0.23649363691875513, 0.1296335616181569,  },
     { -0.33238189254340444, -0.32148215770901384, -0.26580543192037426, -0.17526838500965899, -0.060255882353454346, 0.065850408907519392, 0.18882044491020744, 0.39356421107660428,
@@ -235,7 +235,7 @@ const HSReal _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_eigenvector
       0.00036195408695135838, -4.2813283599504806e-05,  }
 };
 
-const HSReal _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_eigenvectorsFactor2_[9][9] = {
+const hydrocalc::real _5ED102M07W7GS9NWJQHJKCUFP0ML3A50_tensoredGPCalculator1_eigenvectorsFactor2_[9][9] = {
     { 0.34869280865398361, 0.35495313813711937, 0.35956322430286269, 0.36246273365999093, 0.36402921400086735, 0.36086707764712739, 0.3339998737338476, 0.30622013388790675, 0.15390791704146517,  },
     { 0.23665356956747069, 0.21980699424976866, 0.19633841315959244, 0.16664725911953648, 0.093821049411709462, 0.010008161683998554, -0.25887407075813662, -0.40794582935127016, -0.76617344970103451,  },
     { 0.25385061216656696, 0.22035323478209645, 0.17296798543157535, 0.11407878263402492, -0.021707297592240282, -0.15796769780193687, -0.46289661290970541, -0.4750534462621297, 0.61538473707575869,  },
