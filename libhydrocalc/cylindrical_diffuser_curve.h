@@ -5,7 +5,7 @@
 namespace hydrocalc
 {
 	class CylindricalDiffuserCurve :
-		CylindricalDiffuserCurveDirect
+		public CylindricalDiffuserCurveDirect
 	{
 	private:
 		/// @brief Confuser, for reverse flow calculations
