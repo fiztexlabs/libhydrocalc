@@ -42,10 +42,8 @@ namespace hydrocalc
 
 		/**
 		* @brief Check input values and raise exeptions or warnings
-		* @details Error codes:
-		*	- 1: Invalid size of vector of geometry characteristic
-		*	- 2: One of element characteristics have an invalid value
 		* @param G: Input vector of geometry characteristics
+		* @throw ExceptionInvalidValue
 		*/
 		real checkGeometry(const std::vector<real>& G);
 
@@ -62,8 +60,6 @@ namespace hydrocalc
 
 		/**
 		* @brief Recommended constructor of cylindrical bend element.
-		* @details Automatically check inputs, initialize fields and calculate element
-		* (if autocalc = 1).
 		* @param name: String name of element
 		* @param Re: Reynolds number. Negative value correspond to negative flow
 		* @param G: Vector of geometry characteristics of the bend element:
@@ -71,11 +67,11 @@ namespace hydrocalc
 		*	- G[1]: Diameter of cross-section [m]
 		*	- G[2]: Bending radius [m]
 		*	- G[3]: Bending angle [deg]; in the case, when G[3] < 0, bending angle
-		calculates as 360 - G[3]
+		* calculates as 360 - G[3]
 		*	- G[4]: Length of section before bend [m]; G[4] = 0 means, that
-		bend located after collector, however G[4] > 0 means, that straight section L = G[4]
-		located before bend
-		* @see Service
+		* bend located after collector, however G[4] > 0 means, that straight section L = G[4]
+		* located before bend
+		* @throw ExceptionInvalidValue
 		*/
 		CylindricalBend(const real Re, const std::vector<real>& G, const std::string& name = "")
 			: HydraulicResistanceBase(name, Re, G.at(1), G.at(1), M_PI* std::pow(0.5 * G.at(1), 2.0), 0.0, Type::cylindrical)

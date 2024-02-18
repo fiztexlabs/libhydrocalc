@@ -27,10 +27,10 @@ void CylindricalFriction::evaluate()
 
 		if (math::isEqual<real, real>(Re, static_cast<real>(0.0)))
 		{
-			lf_ = 0.0;
-			CSI_ = 0.0;
-			CSIlr_ = 0.0;
+			CSI_ = CurrentSettings_.MAX_CSI;
 			CSIlf_ = 0.0;
+			CSIlr_ = CurrentSettings_.MAX_CSI;
+			lf_ = 0.0;
 		}
 		else
 		{

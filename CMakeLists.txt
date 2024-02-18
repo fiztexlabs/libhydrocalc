@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 project(libhydrocalc
-    VERSION 0.0.1
+    VERSION 2.0.1
     DESCRIPTION "Library of hydraulic resistances"
     LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
@@ -109,6 +109,18 @@ set(sources
     libhydrocalc/approximations/f52.cpp
     libhydrocalc/approximations/e59.h
     libhydrocalc/approximations/e59.cpp
+
+    libhydrocalc/cylindrical_diffuser_straight.h
+    libhydrocalc/cylindrical_diffuser_straight.cpp
+
+    libhydrocalc/cylindrical_confuser_straight_direct.h
+    libhydrocalc/cylindrical_confuser_straight_direct.cpp
+
+    libhydrocalc/cylindrical_confuser_straight.h
+    libhydrocalc/cylindrical_confuser_straight.cpp
+
+    libhydrocalc/cylindrical_diffuser_curve_direct.h
+    libhydrocalc/cylindrical_diffuser_curve_direct.cpp
 
 )
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})

@@ -1,6 +1,7 @@
 #pragma once
 #include <libhydrocalc/hydraulic_resistance.h>
 #include <libhydrocalc/exceptions.h>
+#include <libhydrocalc/settings.h>
 #include <string>
 
 namespace hydrocalc

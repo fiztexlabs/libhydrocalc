@@ -29,7 +29,9 @@ namespace hydrocalc
 		* @brief Calculate hydraulic resistance element.
 		* @details For HydraulicComposite element call evaluate() 
 		* for each element in HydraulicComposite.
-		* @see HydraulicComposite
+		* @throw ExceptionReversedFlow
+		* @throw ExceptionGeometryOutOfRange
+		* @throw ExceptionFlowOutOfRange
 		*/
 		virtual void evaluate() = 0;
 
@@ -111,7 +113,7 @@ namespace hydrocalc
 		*		- G[1]: Hydraulic diameter of confuser [m]
 		*		- G[2]: Length of outlet section of confuser [m]
 		*		- G[3]: Length of confuser [m]
-		*		- G[4]: Hydraulic diameter of outlet section of confuser [m]
+		*		- G[4]: Hydraulic diameter of inlet section of confuser [m]
 		*		- G[5]: Angle of confuser [deg]
 		*	- for curve cylindrical confuser element:
 		*		- G[0]: Roughness [m]
@@ -124,6 +126,8 @@ namespace hydrocalc
 		*		- G[0]: Roughness [m]
 		*		- G[1]: Diameter 1 [m]
 		*		- G[2]: Diameter 2 [m]
+		* @throw ExceptionInvalidValue
+		* @throw ExceptionGeometryOutOfRange
 		*/
 		virtual void setGeometry(const std::vector<real> &G) = 0;
 
@@ -176,21 +180,21 @@ namespace hydrocalc
 		*		- G[6]: Cross-section area of diffuser outlet, [m2]
 		*	- for straight cylindrical confuser element:
 		*		- G[0]: Roughness [m]
-		*		- G[1]: Hydraulic diameter of diffuser [m]
-		*		- G[2]: Length of outlet section of diffuser [m]
+		*		- G[1]: Hydraulic diameter of confuser [m]
+		*		- G[2]: Length of outlet section of confuser [m]
 		*		- G[3]: Length of diffuser [m]
-		*		- G[4]: Hydraulic diameter of outlet section of diffuser [m]
-		*		- G[5]: Cross-section area of diffuser inlet, [m2]
-		*		- G[6]: Cross-section area of diffuser outlet, [m2]
+		*		- G[4]: Hydraulic diameter of inlet section of confuser [m]
+		*		- G[5]: Cross-section area of confuser inlet, [m2]
+		*		- G[6]: Cross-section area of confuser outlet, [m2]
 		*	- for curve cylindrical confuser element:
 		*		- G[0]: Roughness [m]
-		*		- G[1]: Hydraulic diameter of diffuser [m]
-		*		- G[2]: Length of outlet section of diffuser [m]
+		*		- G[1]: Hydraulic diameter of confuser [m]
+		*		- G[2]: Length of outlet section of confuser [m]
 		*		- G[3]: Length of diffuser [m]
-		*		- G[4]: Hydraulic diameter of outlet section of diffuser [m]
+		*		- G[4]: Hydraulic diameter of outlet section of confuser [m]
 		*		- G[5]: Curve radius of confuser [m]
-		*		- G[6]: Cross-section area of diffuser inlet, [m2]
-		*		- G[7]: Cross-section area of diffuser outlet, [m2]
+		*		- G[6]: Cross-section area of confuser inlet, [m2]
+		*		- G[7]: Cross-section area of confuser outlet, [m2]
 		*	- forunexpected size changes with sharp edges:
 		*		- G[0]: Roughness [m]
 		*		- G[1]: Diameter 1 [m]

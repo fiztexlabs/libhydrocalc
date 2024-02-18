@@ -26,6 +26,10 @@ real CylindricalDiffuserStraightDirect::checkGeometry(const std::vector<real>& G
 		{
 			err += procGeometryOutOfRange("alpha (diffuser angle) < 3.0", ExceptionGeometryOutOfRange("Straight cylindrical diffuser element " + name_ + ": try to set alpha (diffuser angle) < 3.0"));
 		}
+		if (G.at(7) > 180.0)
+		{
+			err += procGeometryOutOfRange("alpha (diffuser angle) > 180.0", ExceptionGeometryOutOfRange("Straight cylindrical diffuser element " + name_ + ": try to set alpha (diffuser angle) > 180.0"));
+		}
 		if (G.at(3) < 0.0)
 		{
 			err += procInvalidValue("L (diffuser length) < 0.0", ExceptionInvalidValue("Straight cylindrical diffuser element " + name_ + ": try to set L (diffuser length) < 0.0"));
@@ -50,10 +54,6 @@ real CylindricalDiffuserStraightDirect::checkGeometry(const std::vector<real>& G
 		{
 			err += procInvalidValue("D1 (diffuser outlet section hydraulic diameter) < 0.0", ExceptionInvalidValue("Straight cylindrical diffuser element " + name_ + ": try to set D1 (diffuser outlet section hydraulic diameter) < 0.0"));
 		}
-		if (G.at(6) < 0.0)
-		{
-			err += procInvalidValue("D1 (diffuser outlet section hydraulic diameter) < 0.0", ExceptionInvalidValue("Straight cylindrical diffuser element " + name_ + ": try to set D1 (diffuser outlet section hydraulic diameter) < 0.0"));
-		}
 
 		// check diffuser diameters and length consistency
 		real d_out = G.at(1) + 2.0 * G.at(3) * std::atan(0.5 * G.at(7) / (180.0 / M_PI));
@@ -66,13 +66,13 @@ real CylindricalDiffuserStraightDirect::checkGeometry(const std::vector<real>& G
 	return err;
 }
 
-void CylindricalDiffuserStraightDirect::evaluate()
+void CylindricalDiffuserStraightDirect::evaluateDirect()
 {
 	A_ = M_PI * std::pow(0.5 * D0_, 2.0);
 	A1_ = M_PI * std::pow(0.5 * D1_, 2.0);
 	relRou_ = rou_ / D0_;
 
-	real reversed = checkReversedFlow("Re < 0.0", ExceptionReversedFlow("reversed flow in the cylindrical friction element " + name_));
+	real reversed = checkReversedFlow("Re < 0.0", ExceptionReversedFlow("reversed flow in the straight cylindrical diffuser element " + name_));
 
 	if (std::isnan(reversed))
 	{
@@ -88,9 +88,9 @@ void CylindricalDiffuserStraightDirect::evaluate()
 
 		if (math::isEqual<real, real>(Re, static_cast<real>(0.0)))
 		{
-			CSI_ = 0.0;
+			CSI_ = CurrentSettings_.MAX_CSI;
 			CSIlf_ = 0.0;
-			CSIlr_ = 0.0;
+			CSIlr_ = CurrentSettings_.MAX_CSI;
 			lf_ = 0.0;
 		}
 		else
@@ -101,11 +101,6 @@ void CylindricalDiffuserStraightDirect::evaluate()
 			FrictionPart_.setRe(Re);
 			FrictionPart_.evaluate();
 			lf_ = FrictionPart_.getRelFrictionCoeff();
-
-			// remember values, calculated for friction part
-			real friction_CSIlf = FrictionPart_.CSIlf_;
-			real friction_CSIlr = FrictionPart_.CSIlr_;
-			real friction_CSI = FrictionPart_.CSI_;
 
 			// if angle = 0, diffuser reduced to friction
 			if (alpha_ == 0.0)
@@ -169,11 +164,11 @@ void hydrocalc::CylindricalDiffuserStraightDirect::diagram52()
 		// check Re for diagram 5-2
 		if (Re < 0.5e5)
 		{
-			err += procFlowOutOfRange("Re = " + std::to_string(Re) + " < 0.5e5", ExceptionFlowOutOfRange("Cylindrical bend element " + name_ + ": Re < 0.5e5"));
+			err += procFlowOutOfRange("Re = " + std::to_string(Re) + " < 0.5e5", ExceptionFlowOutOfRange("Straight cylindrical diffuser element " + name_ + ": Re < 0.5e5"));
 		}
 		if (Re > 6.e5)
 		{
-			err += procFlowOutOfRange("Re = " + std::to_string(Re) + " < 6.e5", ExceptionFlowOutOfRange("Cylindrical bend element " + name_ + ": Re < 6.e5"));
+			err += procFlowOutOfRange("Re = " + std::to_string(Re) + " < 6.e5", ExceptionFlowOutOfRange("Straight cylindrical diffuser element " + name_ + ": Re < 6.e5"));
 		}
 
 		if (std::isnan(err))
@@ -290,4 +285,11 @@ void CylindricalDiffuserStraightDirect::getGeometry(std::vector<real>& G)
 		A_,
 		A1_
 	};
+}
+
+void hydrocalc::CylindricalDiffuserStraightDirect::evaluate()
+{
+	real err = procNonExixtantFunc("evaluate", ExceptionNonExistentFunction("Try to call function ""evaluate"", forbidden for direct straight diffuser element: " + name_));
+
+	return void();
 }

@@ -5,8 +5,10 @@ namespace hydrocalc
 	/// @brief Precision
 #ifdef HR_DOUBLE_PRECISION_DEFINE
 	typedef double real;
+	const double DEF_MAX_CSI = 1.7e308;
 #else
 	typedef float real;
+	const double DEF_MAX_CSI = 3.4e38;
 #endif
 
 	/// @brief Geometry types of hydraulic resistances
@@ -147,5 +149,8 @@ namespace hydrocalc::settings
 
 		/// @brief Enable or disable check inputs
 		bool checkInputs = 1;
+
+		/// @brief Maximum CSI, ocurred in specific points (such as Re = 0.0)
+		real MAX_CSI = DEF_MAX_CSI;
 	};
 }

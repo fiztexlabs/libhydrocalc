@@ -9,7 +9,6 @@
 namespace hydrocalc
 {
 	class CylindricalBend;
-	class CylindricalDiffuserStraightDirect;
 
 	/**
 	* @brief Class for calculating hydraulic resistance of friction in
@@ -32,8 +31,8 @@ namespace hydrocalc
 	protected:
 		/**
 		* @brief Check cylindrical friction input values and raise exeptions or warnings
-		* @details Error codes:
 		* @param G: Input vector of geometry characteristics
+		* @throw ExceptionInvalidValue
 		*/
 		real checkGeometry(const std::vector<real>& G);
 
@@ -50,14 +49,10 @@ namespace hydrocalc
 		void diagram24();
 
 		friend CylindricalBend;
-		friend CylindricalDiffuserStraightDirect;
 
 	public:
 		/**
 		* @brief Default constructor of cylindrical friction element.
-		* @details Fields of element must be initialized by setters methods
-		and after that function calculateElement() must be called.
-		* @see Service
 		*/
 		CylindricalFriction() :
 			Friction()
@@ -74,6 +69,7 @@ namespace hydrocalc
 		*	- G[0]: Roughness [m]
 		*	- G[1]: Diameter of cross-section [m]
 		*	- G[2]: Length of element [m]
+		* @throw ExceptionInvalidValue
 		*/
 		CylindricalFriction(const real Re, const std::vector<real>& G, const std::string& name = "")
 			: Friction(name, Re, G.at(1), G.at(0), M_PI * std::pow(0.5 * G.at(1), 2.0), G.at(2), Type::cylindrical)
