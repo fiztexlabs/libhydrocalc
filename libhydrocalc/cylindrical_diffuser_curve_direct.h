@@ -1,5 +1,5 @@
 #pragma once
-#include <libhydrocalc/hydraulic_resistance_base.h>
+#include <libhydrocalc/complex_resistance.h>
 #include <libhydrocalc/cylindrical_friction.h>
 #include <libhydrocalc/settings.h>
 #include <string>
@@ -9,6 +9,8 @@
 
 namespace hydrocalc
 {
+	class CylindricalConfuserCurve;
+
 	/**
 	* @brief Class for calculating hydraulic resistance of cylindrical diffusers with
 	* curve generatrix.
@@ -20,7 +22,7 @@ namespace hydrocalc
 	* @date Released 10.08.2022
 	*/
 	class CylindricalDiffuserCurveDirect :
-		public HydraulicResistanceBase
+		public ComplexResistance
 	{
 	private:
 		/// @brief Friction part of hydraulic resistance of bend
@@ -58,15 +60,23 @@ namespace hydrocalc
 		/// @brief Evaluate rhydraulic resistance with respect to diagram 5-8
 		void diagram58();
 
+		friend CylindricalConfuserCurve;
+
 	public:
 		/**
 		* @brief Default constructor of curve cylindrical diffuser element.
 		*/
 		CylindricalDiffuserCurveDirect()
-			: HydraulicResistanceBase()
+			: ComplexResistance()
 		{
+			internal_resistances_.push_back(&FrictionPart_);
+
 			// set default name of element
 			name_ = "CylindricalDiffuserCurve " + std::to_string(id_);
+
+			FrictionPart_.CurrentSettings_.GeometryOutOfRangeMode = settings::GeometryOutOfRangeBehaviorMode::NoCheck;
+			FrictionPart_.CurrentSettings_.FlowOutOfRangeMode = settings::FlowOutOfRangeBehaviorMode::NoCheck;
+			FrictionPart_.CurrentSettings_.ReversedFlowMode = settings::ReversedFlowBehaviorMode::Quiet;
 		}
 
 		/**
@@ -84,8 +94,10 @@ namespace hydrocalc
 		* @throw ExceptionGeometryOutOfRange
 		*/
 		CylindricalDiffuserCurveDirect(const real Re, const std::vector<real>& G, const std::string& name = "")
-			: HydraulicResistanceBase(name, Re, G.at(1), G.at(0), M_PI* std::pow(0.5 * G.at(1), 2.0), G.at(2), Type::cylindrical)
+			: ComplexResistance(name, Re, G.at(1), G.at(0), M_PI* std::pow(0.5 * G.at(1), 2.0), G.at(2), Type::cylindrical)
 		{
+			internal_resistances_.push_back(&FrictionPart_);
+
 			// set name
 			if (name != "")
 			{
@@ -119,6 +131,9 @@ namespace hydrocalc
 
 			// initialize friction element
 			FrictionPart_ = CylindricalFriction(Re_, { rou_,D0_,L_ }, name_ + "{friction}");
+			FrictionPart_.CurrentSettings_.GeometryOutOfRangeMode = settings::GeometryOutOfRangeBehaviorMode::NoCheck;
+			FrictionPart_.CurrentSettings_.FlowOutOfRangeMode = settings::FlowOutOfRangeBehaviorMode::NoCheck;
+			FrictionPart_.CurrentSettings_.ReversedFlowMode = settings::ReversedFlowBehaviorMode::Quiet;
 
 			A1_ = M_PI * std::pow(0.5 * D1_, 2.0);
 		}

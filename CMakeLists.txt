@@ -94,6 +94,9 @@ set(sources
     libhydrocalc/hydraulic_resistance_base.h
     libhydrocalc/hydraulic_resistance_base.cpp
 
+    libhydrocalc/complex_resistance.h
+    libhydrocalc/complex_resistance.cpp
+
     libhydrocalc/friction.h
     libhydrocalc/friction.cpp
     
@@ -121,6 +124,17 @@ set(sources
 
     libhydrocalc/cylindrical_diffuser_curve_direct.h
     libhydrocalc/cylindrical_diffuser_curve_direct.cpp
+
+    libhydrocalc/cylindrical_confuser_curve_direct.h
+    libhydrocalc/cylindrical_confuser_curve_direct.cpp
+    libhydrocalc/approximations/e523.h
+    libhydrocalc/approximations/e523.cpp
+
+    libhydrocalc/cylindrical_diffuser_curve.h
+    libhydrocalc/cylindrical_diffuser_curve.cpp
+
+    libhydrocalc/cylindrical_confuser_curve.h
+    libhydrocalc/cylindrical_confuser_curve.cpp
 
 )
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})

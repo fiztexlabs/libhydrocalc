@@ -18,3 +18,10 @@ void hydrocalc::CylindricalConfuserStraight::evaluate()
 		CSI_ = diffuser_.CSI_;
 	}
 }
+
+void hydrocalc::CylindricalConfuserStraight::setGeometry(const std::vector<real>& G)
+{
+	CylindricalConfuserStraightDirect::setGeometry(G);
+
+	diffuser_.setGeometry({ G.at(0), G.at(1), G.at(2), G.at(3), 0.0, G.at(4), G.at(4), G.at(5) });
+}

@@ -62,8 +62,6 @@ void CylindricalBend::evaluate()
 		}
 		else
 		{
-			FrictionPart_.setGeometry({ rou_,D0_,L_ });
-			FrictionPart_.setRe(Re);
 			FrictionPart_.evaluate();
 			lf_ = FrictionPart_.getRelFrictionCoeff();
 
@@ -587,6 +585,8 @@ void CylindricalBend::setGeometry(const std::vector<real>& G)
 		R0_ = G.at(2);
 		delta_ = G.at(3);
 	}
+
+	FrictionPart_.setGeometry({ rou_, D0_, L_ });
 }
 
 void CylindricalBend::getGeometry(std::vector<real>& G)

@@ -154,7 +154,7 @@ namespace hydrocalc
 		};
 
 		/**
-		* @brief COpy constructor
+		* @brief Copy constructor
 		*/
 		HydraulicResistanceBase(const HydraulicResistanceBase& HR) :
 			id_(count)
@@ -182,7 +182,7 @@ namespace hydrocalc
 		virtual ~HydraulicResistanceBase() {};
 
 		/// @see HydraulicResistance::setName()
-		virtual void setName(const std::string& name) override;
+		//virtual void setName(const std::string& name) override;
 
 		/// @see HydraulicResistance::getName()
 		virtual void getName(std::string& name);

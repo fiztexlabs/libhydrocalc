@@ -1,6 +1,4 @@
 #include <libhydrocalc/cylindrical_diffuser_curve_direct.h>
-#include <libhydrocalc/approximations/f52.h>
-#include <libhydrocalc/approximations/e59.h>
 #include <libmath/boolean.h>
 #include <vector>
 #include <cmath>
@@ -76,6 +74,9 @@ void CylindricalDiffuserCurveDirect::evaluateDirect()
 		}
 		else
 		{
+			FrictionPart_.evaluate();
+			lf_ = FrictionPart_.getRelFrictionCoeff();
+
 			// diagram 5-8
 			diagram58();
 		}
@@ -112,11 +113,6 @@ void hydrocalc::CylindricalDiffuserCurveDirect::diagram58()
 			return void();
 		}
 	}
-
-	FrictionPart_.setGeometry({ rou_,D0_,L_ });
-	FrictionPart_.setRe(Re);
-	FrictionPart_.evaluate();
-	lf_ = FrictionPart_.getRelFrictionCoeff();
 
 	real sigm0 = 1.43 - 1.3 * (A_ / A1_);
 	real d1 = std::pow(1.0 - (A_ / A1_), 2.0);
@@ -175,6 +171,8 @@ void CylindricalDiffuserCurveDirect::setGeometry(const std::vector<real>& G)
 		D1_ = G.at(4);
 		R0_ = G.at(5);
 	}
+
+	FrictionPart_.setGeometry({ rou_, D0_, L_ });
 }
 
 void hydrocalc::CylindricalDiffuserCurveDirect::evaluate()

@@ -77,11 +77,10 @@ Training Time               :
   Finish                    : 2022-08-12 08:19:59.438471
   Total                     : 0:03:28.669307
  */
-#include <pch.h>
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-#include <HydraulicResistances/approximations/E523.h>
+#include <libhydrocalc/approximations/e523.h>
 
 #ifdef __TINYC__
 #undef NAN
@@ -103,11 +102,11 @@ struct DACalculationOptions {
 extern "C" {
 #endif
 
-void _E523(/*[in] */ const HSReal* X /* input vector of size 2 */
+void _E523(/*[in] */ const hydrocalc::real* X /* input vector of size 2 */
         , /*[in] */ int incX /* distance between elements of the vector X */
-        , /*[out]*/ HSReal* F /* optional (may be NULL) output vector of size 1 */
+        , /*[out]*/ hydrocalc::real* F /* optional (may be NULL) output vector of size 1 */
         , /*[in] */ int incF /* distance between elements of the vector F */
-        , /*[out]*/ HSReal* gradF /* optional (may be NULL) array to store partial derivatives of  */
+        , /*[out]*/ hydrocalc::real* gradF /* optional (may be NULL) array to store partial derivatives of  */
                                   /* the output vector F with respect to elements of the input vector X (dF_i/dX_j)  */
                                   /* see declaration of struct DACalculationOptions for details */
         , /*[in] */ int ldGradF /* Leading dimension of the matrix gradF */
@@ -122,9 +121,9 @@ extern "C" {
 #endif
 
 int E523( const int N /* number of input vectors (N >= 0) */
-        , const HSReal* input /* pointer to the input vectors (N == 0 || input != NULL) */
+        , const hydrocalc::real* input /* pointer to the input vectors (N == 0 || input != NULL) */
         , const int ldInput /* distance (in doubles) between input vectors (ldInput >= {input vector size}) */
-        , HSReal* output /* pointer to the output vectors (N == 0 || output != NULL) */
+        , hydrocalc::real* output /* pointer to the output vectors (N == 0 || output != NULL) */
         , const int ldOutput /* distance (in doubles) between output vectors (ldOutput >= {output vector size} * ({input vector size} + 1))) */
         ) {
   static const int daXDimensionality = 2;
@@ -156,9 +155,9 @@ int E523( const int N /* number of input vectors (N >= 0) */
 
 
 int E523AE( const int N /* number of input vectors (N >= 0) */
-        , const HSReal* input /* pointer to the input vectors (N == 0 || input != NULL) */
+        , const hydrocalc::real* input /* pointer to the input vectors (N == 0 || input != NULL) */
         , const int ldInput /* distance (in doubles) between input vectors (ldInput >= {input vector size}) */
-        , HSReal* output /* pointer to the output vectors (N == 0 || output != NULL) */
+        , hydrocalc::real* output /* pointer to the output vectors (N == 0 || output != NULL) */
         , const int ldOutput /* distance (in doubles) between output vectors (ldOutput >= {output vector size} * ({input vector size} + 1))) */
         ) {
   static const int daXDimensionality = 2;
@@ -197,13 +196,13 @@ int E523AE( const int N /* number of input vectors (N >= 0) */
 /* Calculates value and/or gradient of the function E523 at the single point. */
 /* Returns 0 on success or 1-based index of the invalid input parameter */
 int E523Calc( 
-          const HSReal* input  /* [in] pointer to the input vector, requires input != NULL */
+          const hydrocalc::real* input  /* [in] pointer to the input vector, requires input != NULL */
         , const int inputInc   /* [in] distance (in doubles) between elements of the input vector) */
-        , HSReal* value        /* [out] optional pointer to the function value. */
+        , hydrocalc::real* value        /* [out] optional pointer to the function value. */
                                /* Set this pointer to NULL to avoid calculation of the function value */
         , const int valueInc   /* [in] distance (in doubles) between elements of vector 'value'. */
                                /* Ignored if function has 1-dimensional output or value==NULL */
-        , HSReal* grad         /* [out] optional pointer to the function gradient dF_i/dX_j. */
+        , hydrocalc::real* grad         /* [out] optional pointer to the function gradient dF_i/dX_j. */
                                /* Set this pointer to NULL to avoid calculation of the function gradient */
         , const int gradNextDF /* [in] distance (in doubles) between dF_i/dX_k and dF_{i+1}/dX_k */
                                /* elements of the array 'grad'. Ignored if function has 1-dimensional */
@@ -245,7 +244,7 @@ int E523Calc(
       _E523(input, inputInc, value, valueInc, grad, gradNextDX, &options);
     } else {
       int dx, df;
-      HSReal contiguousGrad[2*1];
+      hydrocalc::real contiguousGrad[2*1];
       options._gradientMatrixFMajor = 1;
       _E523(input, inputInc, value, valueInc, contiguousGrad, 2, &options);
       for(df = 0; df < 1; ++ df) {
@@ -262,13 +261,13 @@ int E523Calc(
 /* Calculates value and/or gradient of the function AE E523 at the single point. */
 /* Returns 0 on success or 1-based index of the invalid input parameter */
 int E523CalcAE( 
-          const HSReal* input  /* [in] pointer to the input vector, requires input != NULL */
+          const hydrocalc::real* input  /* [in] pointer to the input vector, requires input != NULL */
         , const int inputInc   /* [in] distance (in doubles) between elements of the input vector) */
-        , HSReal* value        /* [out] optional pointer to the function AE. Set this pointer to NULL */
+        , hydrocalc::real* value        /* [out] optional pointer to the function AE. Set this pointer to NULL */
                                /* to avoid calculation of the function AE */
         , const int valueInc   /* [in] distance (in doubles) between elements of vector 'value'. */
                                /* Ignored if function has 1-dimensional output or value==NULL */
-        , HSReal* grad         /* [out] optional pointer to the gradient of the function AE dAE_i/dX_j. */
+        , hydrocalc::real* grad         /* [out] optional pointer to the gradient of the function AE dAE_i/dX_j. */
                                /* Set this pointer to NULL to avoid calculation of the gradient of */
                                /* the function AE. */
         , const int gradNextDF /* [in] distance (in doubles) between dAE_i/dX_k and dAE_{i+1}/dX_k */
@@ -311,7 +310,7 @@ int E523CalcAE(
       _E523(input, inputInc, value, valueInc, grad, gradNextDX, &options);
     } else {
       int dx, df;
-      HSReal contiguousGrad[2*1];
+      hydrocalc::real contiguousGrad[2*1];
       options._gradientMatrixFMajor = 1;
       _E523(input, inputInc, value, valueInc, contiguousGrad, 2, &options);
       for(df = 0; df < 1; ++ df) {
@@ -342,47 +341,47 @@ extern "C" {
 #endif
 
 
-void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_calculateWeights(/*[in] */ const HSReal* X /* input point */
+void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_calculateWeights(/*[in] */ const hydrocalc::real* X /* input point */
                    , /*[in] */ int incX /* distance between elements of the vector X */
-                   , /*[out]*/ HSReal weights [3] /* weights of the clusters */
-                   , /*[out]*/ HSReal weightsGrad [3][2] /* partial derivatives of weights of the clusters with respect to inputs */
-                   , /*[in] */ const HSReal dLFdX [1][2] /* partial derivatives of weights of the low fidelity model with respect to inputs */);
+                   , /*[out]*/ hydrocalc::real weights [3] /* weights of the clusters */
+                   , /*[out]*/ hydrocalc::real weightsGrad [3][2] /* partial derivatives of weights of the clusters with respect to inputs */
+                   , /*[in] */ const hydrocalc::real dLFdX [1][2] /* partial derivatives of weights of the low fidelity model with respect to inputs */);
 
-void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_localApproximator(/*[in] */ const HSReal* X /* input vector of size 2 */
+void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_localApproximator(/*[in] */ const hydrocalc::real* X /* input vector of size 2 */
                     , /*[in] */ int incX /* distance between elements of the vector X */
-                    , /*[out]*/ HSReal* F /* optional (may be NULL) output vector of size 1 */
+                    , /*[out]*/ hydrocalc::real* F /* optional (may be NULL) output vector of size 1 */
                     , /*[in] */ int incF /* distance between elements of the vector F */
-                    , /*[out]*/ HSReal* gradF /* optional (may be NULL) array to store partial derivatives of  */
+                    , /*[out]*/ hydrocalc::real* gradF /* optional (may be NULL) array to store partial derivatives of  */
                                               /* the output vector F with respect to elements of the input vector X (dF_i/dX_j)  */
                                               /* see declaration of struct DACalculationOptions for details */
                     , /*[in] */ int ldGradF /* Leading dimension of the matrix gradF */
                     , /*[in] */ const struct DACalculationOptions* options);
 
-void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_localApproximator1(/*[in] */ const HSReal* X /* input vector of size 2 */
+void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_localApproximator1(/*[in] */ const hydrocalc::real* X /* input vector of size 2 */
                     , /*[in] */ int incX /* distance between elements of the vector X */
-                    , /*[out]*/ HSReal* F /* optional (may be NULL) output vector of size 1 */
+                    , /*[out]*/ hydrocalc::real* F /* optional (may be NULL) output vector of size 1 */
                     , /*[in] */ int incF /* distance between elements of the vector F */
-                    , /*[out]*/ HSReal* gradF /* optional (may be NULL) array to store partial derivatives of  */
+                    , /*[out]*/ hydrocalc::real* gradF /* optional (may be NULL) array to store partial derivatives of  */
                                               /* the output vector F with respect to elements of the input vector X (dF_i/dX_j)  */
                                               /* see declaration of struct DACalculationOptions for details */
                     , /*[in] */ int ldGradF /* Leading dimension of the matrix gradF */
                     , /*[in] */ const struct DACalculationOptions* options);
 
-void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_localApproximator2(/*[in] */ const HSReal* X /* input vector of size 2 */
+void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_localApproximator2(/*[in] */ const hydrocalc::real* X /* input vector of size 2 */
                     , /*[in] */ int incX /* distance between elements of the vector X */
-                    , /*[out]*/ HSReal* F /* optional (may be NULL) output vector of size 1 */
+                    , /*[out]*/ hydrocalc::real* F /* optional (may be NULL) output vector of size 1 */
                     , /*[in] */ int incF /* distance between elements of the vector F */
-                    , /*[out]*/ HSReal* gradF /* optional (may be NULL) array to store partial derivatives of  */
+                    , /*[out]*/ hydrocalc::real* gradF /* optional (may be NULL) array to store partial derivatives of  */
                                               /* the output vector F with respect to elements of the input vector X (dF_i/dX_j)  */
                                               /* see declaration of struct DACalculationOptions for details */
                     , /*[in] */ int ldGradF /* Leading dimension of the matrix gradF */
                     , /*[in] */ const struct DACalculationOptions* options);
 
-void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_lowFidelityModel(/*[in] */ const HSReal* X /* input vector of size 2 */
+void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_lowFidelityModel(/*[in] */ const hydrocalc::real* X /* input vector of size 2 */
                    , /*[in] */ int incX /* distance between elements of the vector X */
-                   , /*[out]*/ HSReal* F /* optional (may be NULL) output vector of size 1 */
+                   , /*[out]*/ hydrocalc::real* F /* optional (may be NULL) output vector of size 1 */
                    , /*[in] */ int incF /* distance between elements of the vector F */
-                   , /*[out]*/ HSReal* gradF /* optional (may be NULL) array to store partial derivatives of  */
+                   , /*[out]*/ hydrocalc::real* gradF /* optional (may be NULL) array to store partial derivatives of  */
                                              /* the output vector F with respect to elements of the input vector X (dF_i/dX_j)  */
                                              /* see declaration of struct DACalculationOptions for details */
                    , /*[in] */ int ldGradF /* Leading dimension of the matrix gradF */
@@ -450,11 +449,11 @@ float _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_regressionTree5(/*[in] */ const float X 
 
 float _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_regressionTree7(/*[in] */ const float X [] /* input vector */);
 
-void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_kernel(/*[in] */ const HSReal* X /* input vector of size 2 */
+void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_kernel(/*[in] */ const hydrocalc::real* X /* input vector of size 2 */
          , /*[in] */ int incX /* distance between elements of the vector X */
-         , /*[out]*/ HSReal* F /* optional (may be NULL) output vector of size 4 */
+         , /*[out]*/ hydrocalc::real* F /* optional (may be NULL) output vector of size 4 */
          , /*[in] */ int incF /* distance between elements of the vector F */
-         , /*[out]*/ HSReal* gradF /* optional (may be NULL) array to store partial derivatives of  */
+         , /*[out]*/ hydrocalc::real* gradF /* optional (may be NULL) array to store partial derivatives of  */
                                    /* the output vector F with respect to elements of the input vector X (dF_i/dX_j)  */
                                    /* see declaration of struct DACalculationOptions for details */
          , /*[in] */ int ldGradF /* Leading dimension of the matrix gradF */
@@ -479,7 +478,7 @@ enum CBLAS_DIAG {CblasNonUnit=131, CblasUnit=132};
 
 void cblas_dtrsv(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
                  const enum CBLAS_TRANSPOSE TransA, const enum CBLAS_DIAG Diag,
-                 const int N, const HSReal *A, const int lda, HSReal *X,
+                 const int N, const hydrocalc::real *A, const int lda, hydrocalc::real *X,
                  const int incX);
 
 #else /* use local cblas routines implementation */
@@ -489,7 +488,7 @@ void cblas_dtrsv(const enum CBLAS_ORDER order, const enum CBLAS_UPLO Uplo,
 #ifndef DA_DOUBLE_QNAN_DECL
 #define DA_DOUBLE_QNAN_DECL
 #ifdef NAN
-static HSReal doubleQNAN() {
+static hydrocalc::real doubleQNAN() {
   return NAN;
 }
 #else
@@ -499,10 +498,10 @@ static HSReal doubleQNAN() {
 #  define NAN (HUGE_VAL*HUGE_VAL-(HUGE_VAL*HUGE_VAL/HUGE_VAL))
 # endif
 
-static HSReal doubleQNAN() {
+static hydrocalc::real doubleQNAN() {
   static const char* stringNAN = "NAN";
   char* endptr = 0;
-  HSReal doubleNAN = strtod(stringNAN, &endptr);
+  hydrocalc::real doubleNAN = strtod(stringNAN, &endptr);
   if (0 == endptr || 0 != *endptr || doubleNAN == doubleNAN) {
     /* Some compilers (e.g. MSVC) does not support NAN as a valid strtod() input, sad but true */
     /* So let's initialize quiet NAN according to the IEEEE 754 standard */
@@ -513,33 +512,33 @@ static HSReal doubleQNAN() {
 #endif
 #endif
 
-static void aux_fillnan(int sizeF, int sizeX, HSReal* F, int incF, HSReal* dFdX, int nextDF, int nextDX);
+static void aux_fillnan(int sizeF, int sizeX, hydrocalc::real* F, int incF, hydrocalc::real* dFdX, int nextDF, int nextDX);
 
 #endif /* DA_CBLAS_DECLARED */
 
 
-void _E523(/*[in] */ const HSReal* X /* input vector of size 2 */
+void _E523(/*[in] */ const hydrocalc::real* X /* input vector of size 2 */
         , /*[in] */ int incX /* distance between elements of the vector X */
-        , /*[out]*/ HSReal* F /* optional (may be NULL) output vector of size 1 */
+        , /*[out]*/ hydrocalc::real* F /* optional (may be NULL) output vector of size 1 */
         , /*[in] */ int incF /* distance between elements of the vector F */
-        , /*[out]*/ HSReal* gradF /* optional (may be NULL) array to store partial derivatives of  */
+        , /*[out]*/ hydrocalc::real* gradF /* optional (may be NULL) array to store partial derivatives of  */
                                   /* the output vector F with respect to elements of the input vector X (dF_i/dX_j)  */
                                   /* see declaration of struct DACalculationOptions for details */
         , /*[in] */ int ldGradF /* Leading dimension of the matrix gradF */
         , /*[in] */ const struct DACalculationOptions* options) {
   /* mixture of approximators */
 
-  void (*clusterModels[3])(const HSReal*, int, HSReal*, int, HSReal*, int, const struct DACalculationOptions*) = {
+  void (*clusterModels[3])(const hydrocalc::real*, int, hydrocalc::real*, int, hydrocalc::real*, int, const struct DACalculationOptions*) = {
     _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_localApproximator, /* approximation model fro cluster #1 */
     _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_localApproximator1, /* approximation model fro cluster #2 */
     _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_localApproximator2, /* approximation model fro cluster #3 */
   };
-  HSReal clusterWeights[3];
-  HSReal clusterWeightsGrad[3][2];
-  HSReal currentModelValue[1];
-  HSReal currentModelGrad[1][2];
-  HSReal XLF[3];
-  HSReal lowFidelityModelGrad[1][2];
+  hydrocalc::real clusterWeights[3];
+  hydrocalc::real clusterWeightsGrad[3][2];
+  hydrocalc::real currentModelValue[1];
+  hydrocalc::real currentModelGrad[1][2];
+  hydrocalc::real XLF[3];
+  hydrocalc::real lowFidelityModelGrad[1][2];
   struct DACalculationOptions localApproximationOptions;
   int clusterIndex;
   const int nextGradDF = (0 == options || options->_gradientMatrixFMajor)? ldGradF : 1; /* distance between dF[i+1]/dX[j] and dF[i]/dX[j] elements of derivatives matrix */
@@ -604,11 +603,11 @@ void _E523(/*[in] */ const HSReal* X /* input vector of size 2 */
 }
 
 
-void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_localApproximator2(/*[in] */ const HSReal* X /* input vector of size 2 */
+void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_localApproximator2(/*[in] */ const hydrocalc::real* X /* input vector of size 2 */
                     , /*[in] */ int incX /* distance between elements of the vector X */
-                    , /*[out]*/ HSReal* F /* optional (may be NULL) output vector of size 1 */
+                    , /*[out]*/ hydrocalc::real* F /* optional (may be NULL) output vector of size 1 */
                     , /*[in] */ int incF /* distance between elements of the vector F */
-                    , /*[out]*/ HSReal* gradF /* optional (may be NULL) array to store partial derivatives of  */
+                    , /*[out]*/ hydrocalc::real* gradF /* optional (may be NULL) array to store partial derivatives of  */
                                               /* the output vector F with respect to elements of the input vector X (dF_i/dX_j)  */
                                               /* see declaration of struct DACalculationOptions for details */
                     , /*[in] */ int ldGradF /* Leading dimension of the matrix gradF */
@@ -1156,9 +1155,9 @@ float _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_regressionTree13(/*[in] */ const float X
 }
 
 
-void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_normalizeInput(/*[in] */ const HSReal* X /* input (unscaled) vector of size 3 */
+void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_normalizeInput(/*[in] */ const hydrocalc::real* X /* input (unscaled) vector of size 3 */
                  , /*[in] */ int incX /* distance between elements of the vector X */
-                 , /*[out]*/ HSReal* Y /* output (normalized) vector of size 3 */
+                 , /*[out]*/ hydrocalc::real* Y /* output (normalized) vector of size 3 */
                  , /*[in] */ int incY /* distance between elements of the vector Y */) {
   /* apply standard normalization */
 
@@ -1254,14 +1253,14 @@ float _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_regressionTree71(/*[in] */ const float X
 }
 
 
-void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_calculateMahalanobisDistance(/*[in] */ const HSReal X [3] /* input point */
-                               , /*[in] */ const HSReal mu [3] /* mean value */
-                               , /*[in] */ const HSReal sigmaL [3][3] /* lower Cholessky factor of the covariance matrix */
-                               , /*[out]*/ HSReal* distance /* distance */
-                               , /*[out]*/ HSReal distanceGrad [3] /* partial derivatives of distance with respect to inputs */) {
+void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_calculateMahalanobisDistance(/*[in] */ const hydrocalc::real X [3] /* input point */
+                               , /*[in] */ const hydrocalc::real mu [3] /* mean value */
+                               , /*[in] */ const hydrocalc::real sigmaL [3][3] /* lower Cholessky factor of the covariance matrix */
+                               , /*[out]*/ hydrocalc::real* distance /* distance */
+                               , /*[out]*/ hydrocalc::real distanceGrad [3] /* partial derivatives of distance with respect to inputs */) {
   /* mixture of approximators: calculate Mahalanobis distance to cluster center */
 
-  HSReal centeredX[3];
+  hydrocalc::real centeredX[3];
   centeredX[0] = X[0] - mu[0];
   centeredX[1] = X[1] - mu[1];
   centeredX[2] = X[2] - mu[2];
@@ -1301,26 +1300,26 @@ void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_calculateMahalanobisDistance(/*[in] */ co
 }
 
 
-void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_calculateWeights(/*[in] */ const HSReal* X /* input point */
+void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_calculateWeights(/*[in] */ const hydrocalc::real* X /* input point */
                    , /*[in] */ int incX /* distance between elements of the vector X */
-                   , /*[out]*/ HSReal weights [3] /* weights of the clusters */
-                   , /*[out]*/ HSReal weightsGrad [3][2] /* partial derivatives of weights of the clusters with respect to inputs */
-                   , /*[in] */ const HSReal dLFdX [1][2] /* partial derivatives of weights of the low fidelity model with respect to inputs */) {
+                   , /*[out]*/ hydrocalc::real weights [3] /* weights of the clusters */
+                   , /*[out]*/ hydrocalc::real weightsGrad [3][2] /* partial derivatives of weights of the clusters with respect to inputs */
+                   , /*[in] */ const hydrocalc::real dLFdX [1][2] /* partial derivatives of weights of the low fidelity model with respect to inputs */) {
   /* mixture of approximators: clusters weights calculation */
-  extern const HSReal _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_clusterCenter_000[3];
-  extern const HSReal _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_clusterCovarianceFactor_000[3][3];
-  extern const HSReal _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_clusterCenter_001[3];
-  extern const HSReal _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_clusterCovarianceFactor_001[3][3];
-  extern const HSReal _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_clusterCenter_002[3];
-  extern const HSReal _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_clusterCovarianceFactor_002[3][3];
-  extern const HSReal _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_extrapolationWeights[3];
+  extern const hydrocalc::real _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_clusterCenter_000[3];
+  extern const hydrocalc::real _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_clusterCovarianceFactor_000[3][3];
+  extern const hydrocalc::real _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_clusterCenter_001[3];
+  extern const hydrocalc::real _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_clusterCovarianceFactor_001[3][3];
+  extern const hydrocalc::real _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_clusterCenter_002[3];
+  extern const hydrocalc::real _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_clusterCovarianceFactor_002[3][3];
+  extern const hydrocalc::real _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_extrapolationWeights[3];
 
-  HSReal normalizedX[3];
-  HSReal totalWeight = 0.;
-  HSReal weightThreshold = 1.;
-  HSReal currentDistance;
-  HSReal totalWeightGrad[3] = {0., 0., 0.};
-  HSReal dWdXnorm[3][3];
+  hydrocalc::real normalizedX[3];
+  hydrocalc::real totalWeight = 0.;
+  hydrocalc::real weightThreshold = 1.;
+  hydrocalc::real currentDistance;
+  hydrocalc::real totalWeightGrad[3] = {0., 0., 0.};
+  hydrocalc::real dWdXnorm[3][3];
   
   _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_normalizeInput(X, incX, normalizedX, 1);
   
@@ -1349,7 +1348,7 @@ void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_calculateWeights(/*[in] */ const HSReal* 
       dWdXnorm[0][2] = 0.;
     }
   } else if (weightsGrad) {
-    const HSReal gradientFactor = -2. * weights[0];
+    const hydrocalc::real gradientFactor = -2. * weights[0];
     totalWeightGrad[0] += dWdXnorm[0][0] *= gradientFactor;
     totalWeightGrad[1] += dWdXnorm[0][1] *= gradientFactor;
     totalWeightGrad[2] += dWdXnorm[0][2] *= gradientFactor;
@@ -1365,7 +1364,7 @@ void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_calculateWeights(/*[in] */ const HSReal* 
       dWdXnorm[1][2] = 0.;
     }
   } else if (weightsGrad) {
-    const HSReal gradientFactor = -2. * weights[1];
+    const hydrocalc::real gradientFactor = -2. * weights[1];
     totalWeightGrad[0] += dWdXnorm[1][0] *= gradientFactor;
     totalWeightGrad[1] += dWdXnorm[1][1] *= gradientFactor;
     totalWeightGrad[2] += dWdXnorm[1][2] *= gradientFactor;
@@ -1381,7 +1380,7 @@ void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_calculateWeights(/*[in] */ const HSReal* 
       dWdXnorm[2][2] = 0.;
     }
   } else if (weightsGrad) {
-    const HSReal gradientFactor = -2. * weights[2];
+    const hydrocalc::real gradientFactor = -2. * weights[2];
     totalWeightGrad[0] += dWdXnorm[2][0] *= gradientFactor;
     totalWeightGrad[1] += dWdXnorm[2][1] *= gradientFactor;
     totalWeightGrad[2] += dWdXnorm[2][2] *= gradientFactor;
@@ -1417,7 +1416,7 @@ void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_calculateWeights(/*[in] */ const HSReal* 
     weightsGrad[2][0] = (dWdXnorm[2][0] - weights[2] * totalWeightGrad[0]) / (totalWeight * 0.14686303142724516);
     weightsGrad[2][1] = (dWdXnorm[2][1] - weights[2] * totalWeightGrad[1]) / (totalWeight * 0.6819090848492928);
     if (dLFdX) {
-      HSReal dWdLF;
+      hydrocalc::real dWdLF;
 
       dWdLF = (dWdXnorm[0][2] - weights[0] * totalWeightGrad[2]) / (totalWeight * 0.04808923277459299);
       ((weightsGrad[0][1*0]+=dWdLF*dLFdX[0][1*0]), (weightsGrad[0][1*1]+=dWdLF*dLFdX[0][1*1]));
@@ -1433,23 +1432,23 @@ void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_calculateWeights(/*[in] */ const HSReal* 
 }
 
 
-void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_lowFidelityModel(/*[in] */ const HSReal* X /* input vector of size 2 */
+void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_lowFidelityModel(/*[in] */ const hydrocalc::real* X /* input vector of size 2 */
                    , /*[in] */ int incX /* distance between elements of the vector X */
-                   , /*[out]*/ HSReal* F /* optional (may be NULL) output vector of size 1 */
+                   , /*[out]*/ hydrocalc::real* F /* optional (may be NULL) output vector of size 1 */
                    , /*[in] */ int incF /* distance between elements of the vector F */
-                   , /*[out]*/ HSReal* gradF /* optional (may be NULL) array to store partial derivatives of  */
+                   , /*[out]*/ hydrocalc::real* gradF /* optional (may be NULL) array to store partial derivatives of  */
                                              /* the output vector F with respect to elements of the input vector X (dF_i/dX_j)  */
                                              /* see declaration of struct DACalculationOptions for details */
                    , /*[in] */ int ldGradF /* Leading dimension of the matrix gradF */
                    , /*[in] */ const struct DACalculationOptions* options) {
   /* basic HDA approximation */
-  static const HSReal V[1][4] = { 
+  static const hydrocalc::real V[1][4] = { 
     { -0.032027254842660322, -0.22556839082726016, -0.053080253726434649, 0.090399994617143459,  }
   };
-  static const HSReal b[1] = { 0.17998732532983769,  };
+  static const hydrocalc::real b[1] = { 0.17998732532983769,  };
 
-  HSReal psi[4];
-  HSReal gradPsi[4 * 2];
+  hydrocalc::real psi[4];
+  hydrocalc::real gradPsi[4 * 2];
   const int gradientFMajor = (0 == options || options->_gradientMatrixFMajor);
   
   _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_kernel(X, incX, ((0 != F)? psi : 0), 1, ((0 != gradF)? gradPsi : 0), (gradientFMajor? 2 : 4), options);
@@ -1493,11 +1492,11 @@ float _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_regressionTree81(/*[in] */ const float X
 }
 
 
-void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_localApproximator1(/*[in] */ const HSReal* X /* input vector of size 2 */
+void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_localApproximator1(/*[in] */ const hydrocalc::real* X /* input vector of size 2 */
                     , /*[in] */ int incX /* distance between elements of the vector X */
-                    , /*[out]*/ HSReal* F /* optional (may be NULL) output vector of size 1 */
+                    , /*[out]*/ hydrocalc::real* F /* optional (may be NULL) output vector of size 1 */
                     , /*[in] */ int incF /* distance between elements of the vector F */
-                    , /*[out]*/ HSReal* gradF /* optional (may be NULL) array to store partial derivatives of  */
+                    , /*[out]*/ hydrocalc::real* gradF /* optional (may be NULL) array to store partial derivatives of  */
                                               /* the output vector F with respect to elements of the input vector X (dF_i/dX_j)  */
                                               /* see declaration of struct DACalculationOptions for details */
                     , /*[in] */ int ldGradF /* Leading dimension of the matrix gradF */
@@ -1521,11 +1520,11 @@ void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_localApproximator1(/*[in] */ const HSReal
 }
 
 
-void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_localApproximator(/*[in] */ const HSReal* X /* input vector of size 2 */
+void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_localApproximator(/*[in] */ const hydrocalc::real* X /* input vector of size 2 */
                     , /*[in] */ int incX /* distance between elements of the vector X */
-                    , /*[out]*/ HSReal* F /* optional (may be NULL) output vector of size 1 */
+                    , /*[out]*/ hydrocalc::real* F /* optional (may be NULL) output vector of size 1 */
                     , /*[in] */ int incF /* distance between elements of the vector F */
-                    , /*[out]*/ HSReal* gradF /* optional (may be NULL) array to store partial derivatives of  */
+                    , /*[out]*/ hydrocalc::real* gradF /* optional (may be NULL) array to store partial derivatives of  */
                                               /* the output vector F with respect to elements of the input vector X (dF_i/dX_j)  */
                                               /* see declaration of struct DACalculationOptions for details */
                     , /*[in] */ int ldGradF /* Leading dimension of the matrix gradF */
@@ -1975,11 +1974,11 @@ float _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_regressionTree9(/*[in] */ const float X 
 }
 
 
-void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_kernel(/*[in] */ const HSReal* X /* input vector of size 2 */
+void _FS4MX9T39F4951RK9X57WNQ88RF8P9GT_kernel(/*[in] */ const hydrocalc::real* X /* input vector of size 2 */
          , /*[in] */ int incX /* distance between elements of the vector X */
-         , /*[out]*/ HSReal* F /* optional (may be NULL) output vector of size 4 */
+         , /*[out]*/ hydrocalc::real* F /* optional (may be NULL) output vector of size 4 */
          , /*[in] */ int incF /* distance between elements of the vector F */
-         , /*[out]*/ HSReal* gradF /* optional (may be NULL) array to store partial derivatives of  */
+         , /*[out]*/ hydrocalc::real* gradF /* optional (may be NULL) array to store partial derivatives of  */
                                    /* the output vector F with respect to elements of the input vector X (dF_i/dX_j)  */
                                    /* see declaration of struct DACalculationOptions for details */
          , /*[in] */ int ldGradF /* Leading dimension of the matrix gradF */
@@ -2441,11 +2440,11 @@ extern "C" {
 
 #endif /* DA_CBLAS */
 
-static void aux_fillnan(int sizeF, int sizeX, HSReal* F, int incF, HSReal* dFdX, int nextDF, int nextDX) {
+static void aux_fillnan(int sizeF, int sizeX, hydrocalc::real* F, int incF, hydrocalc::real* dFdX, int nextDF, int nextDX) {
 #ifdef NAN
-  const HSReal NaN = NAN;
+  const hydrocalc::real NaN = NAN;
 #else
-  const HSReal NaN = doubleQNAN();
+  const hydrocalc::real NaN = doubleQNAN();
 #endif
 
   if (F) {

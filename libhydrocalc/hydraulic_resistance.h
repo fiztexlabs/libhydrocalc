@@ -41,7 +41,7 @@ namespace hydrocalc
 		* ClassName + number.
 		* @param name: Name of element
 		*/
-		virtual void setName(const std::string& name) = 0;
+		//virtual void setName(const std::string& name) = 0;
 
 		/**
 		 * @brief Get name of element.

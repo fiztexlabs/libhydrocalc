@@ -29,7 +29,13 @@ namespace hydrocalc
 		*/
 		CylindricalDiffuserStraight()
 			: CylindricalDiffuserStraightDirect()
-		{};
+		{
+			internal_resistances_.push_back(&confuser_);
+
+			confuser_.CurrentSettings_.GeometryOutOfRangeMode = settings::GeometryOutOfRangeBehaviorMode::NoCheck;
+			confuser_.CurrentSettings_.FlowOutOfRangeMode = settings::FlowOutOfRangeBehaviorMode::NoCheck;
+			confuser_.CurrentSettings_.ReversedFlowMode = settings::ReversedFlowBehaviorMode::Quiet;
+		};
 
 		/**
 		* @brief Recommended constructor of straight cylindrical diffuser element.
@@ -51,12 +57,21 @@ namespace hydrocalc
 		CylindricalDiffuserStraight(const real Re, const std::vector<real>& G, const real I = 1.0, const std::string& name = "")
 			: CylindricalDiffuserStraightDirect(Re, G, I, name), 
 			confuser_(Re, {G.at(0), G.at(1), G.at(2), G.at(3), G.at(5), G.at(7)}, name_ + "{invert flow confuser}")
-		{};
+		{
+			internal_resistances_.push_back(&confuser_);
+
+			confuser_.CurrentSettings_.GeometryOutOfRangeMode = settings::GeometryOutOfRangeBehaviorMode::NoCheck;
+			confuser_.CurrentSettings_.FlowOutOfRangeMode = settings::FlowOutOfRangeBehaviorMode::NoCheck;
+			confuser_.CurrentSettings_.ReversedFlowMode = settings::ReversedFlowBehaviorMode::Quiet;
+		};
 
 		virtual ~CylindricalDiffuserStraight() {};
 
 		/// @see HydraulicResistance::evaluate()
 		virtual void evaluate() override;
+
+		/// @see HydraulicResistance::setGeometry()
+		virtual void setGeometry(const std::vector<real>& G) override;
 	};
 
 }

@@ -87,8 +87,6 @@ void CylindricalConfuserStraightDirect::evaluateDirect()
 		{
 			real n0d = A_ / A1_;
 
-			FrictionPart_.setGeometry({ rou_,D0_,L_ });
-			FrictionPart_.setRe(Re);
 			FrictionPart_.evaluate();
 			lf_ = FrictionPart_.getRelFrictionCoeff();
 
@@ -214,6 +212,8 @@ void CylindricalConfuserStraightDirect::setGeometry(const std::vector<real>& G)
 		D1_ = G.at(4);
 		alpha_ = G.at(5);
 	}
+
+	FrictionPart_.setGeometry({ rou_, D0_, L_ });
 }
 
 void hydrocalc::CylindricalConfuserStraightDirect::evaluate()

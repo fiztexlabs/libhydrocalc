@@ -9,28 +9,30 @@
 
 namespace hydrocalc
 {
-	class CylindricalDiffuserStraight;
+	class CylindricalDiffuserCurve;
 
 	/**
 	* @brief Class for calculating hydraulic resistance of cylindrical confusers with
-	* straight generatrix.
+	* curve generatrix.
 	* @details Calculation based on diagrams (I.E. Idelchik, 1992):
 	* 5-23
-	* 5-24
-	* This elemnt has diagrams only for direct flow. For direction dependent flow
-	* see hydrocalc::CylindricalConfuserStraight
+	* This elemnt has a direction dependent geometry, so in the case of negative flow @f$ (Re < 0) @f$
+	* element create CurveCylindricalDiffuser in function createDiffuser and calculate it.
 	* @author Ilya Konovalov
-	* @date Released 05.08.2022
+	* @date Released 11.08.2022
 	*/
-	class CylindricalConfuserStraightDirect :
+	class CylindricalConfuserCurveDirect :
 		public ComplexResistance
 	{
-	protected:
+	private:
 		/// @brief Friction part of hydraulic resistance of bend
 		CylindricalFriction FrictionPart_;
 
 		/// @brief Length of outlet section of confuser [m]
 		real L0_ = 0.0;
+
+		/// @brief Curve radius [m]
+		real R0_ = 0.0;
 
 		/// @brief Hydraulic diameter of inlet section of confuser [m]
 		real D1_ = 0.0;
@@ -38,14 +40,13 @@ namespace hydrocalc
 		/// @brief Cross-section area of inlet section of confuser [m2]
 		real A1_ = 0.0;
 
-		/// @brief Angle of confuser [deg]
-		real alpha_ = 0.0;
-
+	protected:
 		/**
-		* @brief Check straight cylindrical confuser element input values and raise exeptions
+		* @brief Check curve cylindrical confuser element input values and raise exeptions
 		* or warnings.
 		* @throw ExceptionInvalidValue
 		* @throw ExceptionGeometryOutOfRange
+		* @param Re: input Reynolds number, const real
 		* @param G: input vector of geometry characteristics, const std::vector<real>&
 		*/
 		real checkGeometry(const std::vector<real>& G);
@@ -53,28 +54,28 @@ namespace hydrocalc
 		/// @see HydraulicResistance::copy()
 		virtual HydraulicResistance* copy() const override;
 
-		/// @brief Evaluate rhydraulic resistance with respect to diagram 5-23
-		void diagram523();
-
-		/// @brief Evaluate rhydraulic resistance with respect to diagram 5-24
-		void diagram524();
-
 		/// @see HydraulicResistance::evaluate()
 		void evaluateDirect();
 
-		friend CylindricalDiffuserStraight;
+		/// @brief Evaluate rhydraulic resistance with respect to diagram 5-23
+		void diagram523();
+
+		friend CylindricalDiffuserCurve;
 
 	public:
 		/**
-		* @brief Default constructor of straight cylindrical confuser element.
+		* @brief Default constructor of curve cylindrical confuser element.
+		* @details Fields of element must be initialized by setters methods
+		and after that function calculateElement() must be called.
+		* @see Service
 		*/
-		CylindricalConfuserStraightDirect()
+		CylindricalConfuserCurveDirect()
 			: ComplexResistance()
 		{
 			internal_resistances_.push_back(&FrictionPart_);
 
 			// set default name of element
-			name_ = "CylindricalConfuserStraight " + std::to_string(id_);
+			name_ = "CylindricalConfuserCurve " + std::to_string(id_);
 
 			FrictionPart_.CurrentSettings_.GeometryOutOfRangeMode = settings::GeometryOutOfRangeBehaviorMode::NoCheck;
 			FrictionPart_.CurrentSettings_.FlowOutOfRangeMode = settings::FlowOutOfRangeBehaviorMode::NoCheck;
@@ -82,7 +83,7 @@ namespace hydrocalc
 		}
 
 		/**
-		* @brief Recommended constructor of straight cylindrical confuser element.
+		* @brief Recommended constructor of curve cylindrical confuser element.
 		* @param name: String name of element
 		* @param Re: Reynolds number. Negative value correspond to negative flow
 		* @param G: Vector of geometry characteristics of the bend element:
@@ -90,10 +91,10 @@ namespace hydrocalc
 		*	- G[1]: Hydraulic diameter of confuser [m]
 		*	- G[2]: Length of outlet section of confuser [m]
 		*	- G[3]: Length of confuser [m]
-		*	- G[4]: Diameter of inlet section of confuser [m]
-		*	- G[5]: Angle of confuser [deg]
+		*	- G[4]: Hydraulic diameter of inlet section of confuser [m]
+		*	- G[5]: Curve radius [m]
 		*/
-		CylindricalConfuserStraightDirect(const real Re, const std::vector<real>& G, const std::string& name = "")
+		CylindricalConfuserCurveDirect(const real Re, const std::vector<real>& G, const std::string& name = "")
 			: ComplexResistance(name, Re, G.at(1), G.at(0), M_PI* std::pow(0.5 * G.at(1), 2.0), G.at(3), Type::cylindrical)
 		{
 			internal_resistances_.push_back(&FrictionPart_);
@@ -107,7 +108,7 @@ namespace hydrocalc
 			else
 			{
 				// default name
-				name_ = "CylindricalConfuserStraight " + std::to_string(id_);
+				name_ = "CylindricalConfuserCurve " + std::to_string(id_);
 			}
 
 			// check inputs
@@ -117,16 +118,16 @@ namespace hydrocalc
 			{
 				rou_ = err;
 				D0_ = err;
-				L0_ = err;
 				L_ = err;
+				L0_ = err;
 				D1_ = err;
-				alpha_ = err;
+				R0_ = err;
 			}
 			else
 			{
 				L0_ = G.at(2);
 				D1_ = G.at(4);
-				alpha_ = G.at(5);
+				R0_ = G.at(5);
 			}
 
 			// initialize friction element
@@ -136,10 +137,9 @@ namespace hydrocalc
 			FrictionPart_.CurrentSettings_.ReversedFlowMode = settings::ReversedFlowBehaviorMode::Quiet;
 
 			A1_ = M_PI * std::pow(0.5 * D1_, 2.0);
-
 		}
 
-		virtual ~CylindricalConfuserStraightDirect() {};
+		virtual ~CylindricalConfuserCurveDirect() {};
 
 		/// @see HydraulicResistance::getGeometry()
 		virtual void getGeometry(std::vector<real>& G) override;
@@ -151,4 +151,3 @@ namespace hydrocalc
 		virtual void evaluate() override;
 	};
 }
-

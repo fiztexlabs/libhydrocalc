@@ -181,10 +181,11 @@ real hydrocalc::HydraulicResistanceBase::procFlowOutOfRange(const std::string& m
 
 	return real();
 }
-void HydraulicResistanceBase::setName(const std::string& name)
-{
-	name_ = name;
-}
+
+//void HydraulicResistanceBase::setName(const std::string& name)
+//{
+//	name_ = name;
+//}
 
 void HydraulicResistanceBase::setRe(const real Re)
 {

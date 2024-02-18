@@ -97,8 +97,6 @@ void CylindricalDiffuserStraightDirect::evaluateDirect()
 		{
 			real n1d = A1_ / A_;
 
-			FrictionPart_.setGeometry({ rou_,D0_,L_ });
-			FrictionPart_.setRe(Re);
 			FrictionPart_.evaluate();
 			lf_ = FrictionPart_.getRelFrictionCoeff();
 
@@ -268,6 +266,8 @@ void CylindricalDiffuserStraightDirect::setGeometry(const std::vector<real>& G)
 		D1_ = G.at(6);
 		alpha_ = G.at(7);
 	}
+
+	FrictionPart_.setGeometry({ rou_, D0_, L_ });
 }
 
 void CylindricalDiffuserStraightDirect::getGeometry(std::vector<real>& G)

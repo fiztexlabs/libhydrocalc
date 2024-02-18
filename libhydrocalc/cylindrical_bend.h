@@ -1,5 +1,5 @@
 #pragma once
-#include <libhydrocalc/hydraulic_resistance_base.h>
+#include <libhydrocalc/complex_resistance.h>
 #include <libhydrocalc/cylindrical_friction.h>
 #include <string>
 #include <math.h>
@@ -22,7 +22,7 @@ namespace hydrocalc
 	* @date Released 03.08.2022
 	*/
 	class CylindricalBend :
-		public HydraulicResistanceBase
+		public ComplexResistance
 	{
 	protected:
 		/// @brief Friction part of hydraulic resistance of bend
@@ -48,15 +48,23 @@ namespace hydrocalc
 		real checkGeometry(const std::vector<real>& G);
 
 		/// @see HydraulicResistance::copy()
-		virtual HydraulicResistance* copy() const;
+		virtual HydraulicResistance* copy() const override;
 
 	public:
 		/**
 		* @brief Default constructor of cylindrical bend element.
 		*/
 		CylindricalBend()
-			: HydraulicResistanceBase()
-		{};
+			: ComplexResistance()
+		{
+			internal_resistances_.push_back(&FrictionPart_);
+
+			name_ = "CylindricalBend " + std::to_string(id_);
+
+			FrictionPart_.CurrentSettings_.GeometryOutOfRangeMode = settings::GeometryOutOfRangeBehaviorMode::NoCheck;
+			FrictionPart_.CurrentSettings_.FlowOutOfRangeMode = settings::FlowOutOfRangeBehaviorMode::NoCheck;
+			FrictionPart_.CurrentSettings_.ReversedFlowMode = settings::ReversedFlowBehaviorMode::Quiet;
+		};
 
 		/**
 		* @brief Recommended constructor of cylindrical bend element.
@@ -74,8 +82,10 @@ namespace hydrocalc
 		* @throw ExceptionInvalidValue
 		*/
 		CylindricalBend(const real Re, const std::vector<real>& G, const std::string& name = "")
-			: HydraulicResistanceBase(name, Re, G.at(1), G.at(1), M_PI* std::pow(0.5 * G.at(1), 2.0), 0.0, Type::cylindrical)
+			: ComplexResistance(name, Re, G.at(1), G.at(1), M_PI* std::pow(0.5 * G.at(1), 2.0), 0.0, Type::cylindrical)
 		{
+			internal_resistances_.push_back(&FrictionPart_);
+
 			// set name
 			if (name != "")
 			{
@@ -121,6 +131,7 @@ namespace hydrocalc
 			FrictionPart_.CurrentSettings_.checkInputs = 0;
 			FrictionPart_.CurrentSettings_.GeometryOutOfRangeMode = settings::GeometryOutOfRangeBehaviorMode::NoCheck;
 			FrictionPart_.CurrentSettings_.FlowOutOfRangeMode = settings::FlowOutOfRangeBehaviorMode::NoCheck;
+			FrictionPart_.CurrentSettings_.ReversedFlowMode = settings::ReversedFlowBehaviorMode::Quiet;
 
 		};
 

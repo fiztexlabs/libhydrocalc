@@ -9,6 +9,10 @@
 namespace hydrocalc
 {
 	class CylindricalBend;
+	class CylindricalDiffuserStraightDirect;
+	class CylindricalConfuserStraightDirect;
+	class CylindricalDiffuserCurveDirect;
+	class CylindricalConfuserCurveDirect;
 
 	/**
 	* @brief Class for calculating hydraulic resistance of friction in
@@ -49,6 +53,10 @@ namespace hydrocalc
 		void diagram24();
 
 		friend CylindricalBend;
+		friend CylindricalDiffuserStraightDirect;
+		friend CylindricalConfuserStraightDirect;
+		friend CylindricalDiffuserCurveDirect;
+		friend CylindricalConfuserCurveDirect;
 
 	public:
 		/**
