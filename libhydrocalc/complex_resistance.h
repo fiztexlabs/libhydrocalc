@@ -9,6 +9,7 @@ namespace hydrocalc
 	* @brief Base class for composite resistances, which include friction, or
 	* others resistance objects
 	* @author Ilya Konovalov
+	* @date Released 18.02.2024
 	*/
 	class ComplexResistance :
 		public HydraulicResistanceBase

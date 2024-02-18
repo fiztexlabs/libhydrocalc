@@ -105,6 +105,9 @@ set(sources
     
     libhydrocalc/cylindrical_bend.h
     libhydrocalc/cylindrical_bend.cpp
+    
+    libhydrocalc/cylindrical_bend_niche.h
+    libhydrocalc/cylindrical_bend_niche.cpp
 
     libhydrocalc/cylindrical_diffuser_straight_direct.h
     libhydrocalc/cylindrical_diffuser_straight_direct.cpp

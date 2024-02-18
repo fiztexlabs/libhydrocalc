@@ -11,6 +11,7 @@ namespace hydrocalc
 	* @details Correlation from diagrams (I.E. Idelchik, 1992) were used
 	* @author Ilya Konovalov
 	* @date Released 17.02.2024
+	* @todo Correct naming of internal objects
 	*/
 	class HydraulicResistance
 	{

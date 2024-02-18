@@ -4,6 +4,15 @@
 
 namespace hydrocalc
 {
+	/**
+	* @brief Class for evaluating hydraulic resistance of cylindrical diffuser
+	* with curve generatrix.
+	* @details Element hydraulic resistance depends on flow direction:
+	* for negative flow (Re<0) hydraulic resistance calculated as for
+	* confuser (hydrocalc::CylindricalConfuserCurveDirect)
+	* @author Ilya Konovalov
+	* @date Released 18.02.2024
+	*/
 	class CylindricalDiffuserCurve :
 		public CylindricalDiffuserCurveDirect
 	{

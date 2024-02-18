@@ -6,6 +6,11 @@
 
 namespace hydrocalc
 {
+	/**
+	* @brief Base class for hydraulic resistances
+	* @author Ilya Konovalov
+	* @date Released 17.02.2024
+	*/
 	class HydraulicResistanceBase :
 		public HydraulicResistance
 	{
