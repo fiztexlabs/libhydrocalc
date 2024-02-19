@@ -245,15 +245,6 @@ namespace hydrocalc
 
 		/// @see HydraulicResistance::getDiagram()
 		virtual void getDiagram(std::string& diagram) override;
-
-		/// @see HydraulicResistance::getElement()
-		virtual HydraulicResistance* getElement(HydraulicResistance* Element) override;
-
-		/// @see HydraulicResistance::addToComposite()
-		virtual void addToComposite(const std::vector<HydraulicResistance*>& elementsToComposite) override;
-
-		/// @see HydraulicResistance::deleteFromComposite()
-		virtual void deleteFromComposite(const std::vector<HydraulicResistance*>& elementsToDelete) override;
 	};
 
 	/// @brief Initialize counter of HR elements

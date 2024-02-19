@@ -386,33 +386,6 @@ namespace hydrocalc
 		* @see HydraulicComposite
 		*/
 		virtual void getDiagram(std::string &diagram) = 0;
-
-		/**
-		 * @brief Get internal element (valid for composite elements).
-		 * @warning Only for HydraulicComposite elements.
-		 * @param Element: Pointer to the element
-		 * @return Pointer to hydraulic resistance element
-		 * @see HydraulicComposite
-		 */
-		virtual HydraulicResistance *getElement(HydraulicResistance *Element) = 0;
-
-		/**
-		 * @brief Add elements to HydraulicComposite.
-		 * @warning Only for HydraulicComposite elements.
-		 * @param elementsToComposite: Vector of pointers to objects to add to
-		 * HydraulicComposite
-		 * @see HydraulicComposite
-		 */
-		virtual void addToComposite(const std::vector<HydraulicResistance *> &elementsToComposite) = 0;
-
-		/**
-		 * @brief Delete elements from HydraulicComposite.
-		 * @warning Only for HydraulicComposite elements.
-		 * @param elementsToDelete: Vector of pointers to objects to add to
-		 * HydraulicComposite
-		 * @see HydraulicComposite
-		 */
-		virtual void deleteFromComposite(const std::vector<HydraulicResistance *> &elementsToDelete) = 0;
 	};
 }
 

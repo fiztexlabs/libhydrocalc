@@ -303,27 +303,6 @@ HydraulicResistanceBase& hydrocalc::HydraulicResistanceBase::operator=(const Hyd
 	return *this;
 }
 
-HydraulicResistance* HydraulicResistanceBase::getElement(HydraulicResistance* Element)
-{
-	real err = procNonExixtantFunc("getElement", ExceptionCompositeFunction("Try to call composite only function ""getElement"" for element: " + name_));
-
-	return nullptr;
-}
-
-void HydraulicResistanceBase::addToComposite(const std::vector<HydraulicResistance*>& elementsToComposite)
-{
-	real err = procNonExixtantFunc("addToComposite", ExceptionCompositeFunction("Try to call composite only function ""addToComposite"" for element: " + name_));
-
-	return void();
-}
-
-void HydraulicResistanceBase::deleteFromComposite(const std::vector<HydraulicResistance*>& elementsToDelete)
-{
-	real err = procNonExixtantFunc("deleteFromComposite", ExceptionCompositeFunction("Try to call composite only function ""deleteFromComposite"" for element: " + name_));
-
-	return void();
-}
-
 real hydrocalc::HydraulicResistanceBase::getLength()
 {
 	return L_;

@@ -16,8 +16,9 @@ namespace hydrocalc
 		public ComplexResistance
 	{
 	private:
-		/// @brief Vector of elements in composite
-		//std::vector<HydraulicResistance> elements_;
+		real main_viscosity_{ 1.0 };
+
+		std::vector<real> elements_viscosity_;
 
 	protected:
 		/**
@@ -52,8 +53,8 @@ namespace hydrocalc
 		*	- G[0]: Roughness [m]
 		*	- G[1]: Hydraulic diameter [m]
 		*/
-		Composite(const real Re, const std::vector<real>& G, const std::vector<HydraulicResistance>& elements, const std::string& name = "")
-			: ComplexResistance(name, Re, G.at(1), G.at(0), M_PI* std::pow(0.5 * G.at(1), 2.0), 0.0, "composite")//, elements_(elements)
+		Composite(const real Re, const std::vector<real>& G, const std::vector<HydraulicResistance*>& elements, const std::string& name = "", const std::vector<real>& elements_viscosity = std::vector<real>())
+			: ComplexResistance(name, Re, G.at(1), G.at(0), M_PI* std::pow(0.5 * G.at(1), 2.0), 0.0, "composite")
 		{
 			// set name
 			if (name != "")
@@ -68,14 +69,25 @@ namespace hydrocalc
 				this->setName("Composite " + std::to_string(id_));
 			}
 
-			/*for (auto& hr : elements_)
+			for (auto& hr : elements)
 			{
-				internal_resistances_.push_back(&hr);
-				hr.setExternalElementName(name_base_);
-			}*/
+				internal_resistances_.push_back(hr->copy());
+			}
+			for (auto& hr : internal_resistances_)
+			{
+				hr->setExternalElementName(name_base_);
+			}
+
+			//if()
 		};
 
-		virtual ~Composite() {};
+		virtual ~Composite() 
+		{
+			for (auto& hr : internal_resistances_)
+			{
+				delete hr;
+			}
+		};
 
 		/// @see HydraulicResistance::calculateElement()
 		virtual void evaluate() override;
@@ -85,6 +97,19 @@ namespace hydrocalc
 
 		/// @see HydraulicResistance::getGeometry()
 		virtual void getGeometry(std::vector<real>& G) override;
+
+		/// @see HydraulicResistance::setRe()
+		virtual void setRe(const real Re) override;
+
+		void push_back(const HydraulicResistance* hr);
+
+		void erase(const size_t idx);
+
+		HydraulicResistance* get(const size_t idx);
+
+		void getAll(std::vector<HydraulicResistance*>& elements);
+
+		size_t size();
 	};
 }
 
