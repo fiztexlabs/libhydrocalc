@@ -16,50 +16,50 @@ real CylindricalDiffuserStraightDirect::checkGeometry(const std::vector<real>& G
 	{
 		if (G.at(0) < 0.0)
 		{
-			err += procInvalidValue("rou (roughness) < 0.0", ExceptionInvalidValue("Straight cylindrical diffuser element " + name_ + ": try to set rou (roughness) < 0.0"));
+			err += procInvalidValue("rou (roughness) < 0.0", ExceptionInvalidValue(type_ + " element " + name_ + ": try to set rou (roughness) < 0.0"));
 		}
 		if (G.at(1) <= 0.0)
 		{
-			err += procInvalidValue("D0 (diffuser hydraulic diameter) <= 0.0", ExceptionInvalidValue("Straight cylindrical diffuser element " + name_ + ": try to set D0 (diffuser hydraulic diameter) < 0.0"));
+			err += procInvalidValue("D0 (diffuser hydraulic diameter) <= 0.0", ExceptionInvalidValue(type_ + " element " + name_ + ": try to set D0 (diffuser hydraulic diameter) < 0.0"));
 		}
 		if (G.at(7) < 3.0)
 		{
-			err += procGeometryOutOfRange("alpha (diffuser angle) < 3.0", ExceptionGeometryOutOfRange("Straight cylindrical diffuser element " + name_ + ": try to set alpha (diffuser angle) < 3.0"));
+			err += procGeometryOutOfRange("alpha (diffuser angle) < 3.0", ExceptionGeometryOutOfRange(type_ + " element " + name_ + ": try to set alpha (diffuser angle) < 3.0"));
 		}
 		if (G.at(7) > 180.0)
 		{
-			err += procGeometryOutOfRange("alpha (diffuser angle) > 180.0", ExceptionGeometryOutOfRange("Straight cylindrical diffuser element " + name_ + ": try to set alpha (diffuser angle) > 180.0"));
+			err += procGeometryOutOfRange("alpha (diffuser angle) > 180.0", ExceptionGeometryOutOfRange(type_ + " element " + name_ + ": try to set alpha (diffuser angle) > 180.0"));
 		}
 		if (G.at(3) < 0.0)
 		{
-			err += procInvalidValue("L (diffuser length) < 0.0", ExceptionInvalidValue("Straight cylindrical diffuser element " + name_ + ": try to set L (diffuser length) < 0.0"));
+			err += procInvalidValue("L (diffuser length) < 0.0", ExceptionInvalidValue(type_ + " element " + name_ + ": try to set L (diffuser length) < 0.0"));
 		}
 		if (G.at(2) < 0.0)
 		{
-			err += procInvalidValue("L0 (diffuser inlet section length) < 0.0", ExceptionInvalidValue("Straight cylindrical diffuser element " + name_ + ": try to set L0 (diffuser inlet section length) < 0.0"));
+			err += procInvalidValue("L0 (diffuser inlet section length) < 0.0", ExceptionInvalidValue(type_ + " element " + name_ + ": try to set L0 (diffuser inlet section length) < 0.0"));
 		}
 		if (G.at(4) < 0.0)
 		{
-			err += procInvalidValue("L1 (diffuser outlet section length) < 0.0", ExceptionInvalidValue("Straight cylindrical diffuser element " + name_ + ": try to set L1 (diffuser outlet section length) < 0.0"));
+			err += procInvalidValue("L1 (diffuser outlet section length) < 0.0", ExceptionInvalidValue(type_ + " element " + name_ + ": try to set L1 (diffuser outlet section length) < 0.0"));
 		}
 		if (G.at(5) < 0.0)
 		{
-			err += procInvalidValue("Dout (diffuser outlet diameter) < 0.0", ExceptionInvalidValue("Straight cylindrical diffuser element " + name_ + ": try to set Dout (diffuser outlet diameter) < 0.0"));
+			err += procInvalidValue("Dout (diffuser outlet diameter) < 0.0", ExceptionInvalidValue(type_ + " element " + name_ + ": try to set Dout (diffuser outlet diameter) < 0.0"));
 		}
 		if (G.at(5) < G.at(1))
 		{
-			err += procGeometryOutOfRange("Dout (diffuser outlet diameter) < D0 (diffuser hydraulic diamater)", ExceptionGeometryOutOfRange("Straight cylindrical diffuser element " + name_ + ": try to set Dout (diffuser outlet diameter) < D0 (diffuser hydraulic diamater)"));
+			err += procGeometryOutOfRange("Dout (diffuser outlet diameter) < D0 (diffuser hydraulic diamater)", ExceptionGeometryOutOfRange(type_ + " element " + name_ + ": try to set Dout (diffuser outlet diameter) < D0 (diffuser hydraulic diamater)"));
 		}
 		if (G.at(6) < 0.0)
 		{
-			err += procInvalidValue("D1 (diffuser outlet section hydraulic diameter) < 0.0", ExceptionInvalidValue("Straight cylindrical diffuser element " + name_ + ": try to set D1 (diffuser outlet section hydraulic diameter) < 0.0"));
+			err += procInvalidValue("D1 (diffuser outlet section hydraulic diameter) < 0.0", ExceptionInvalidValue(type_ + " element " + name_ + ": try to set D1 (diffuser outlet section hydraulic diameter) < 0.0"));
 		}
 
 		// check diffuser diameters and length consistency
 		real d_out = G.at(1) + 2.0 * G.at(3) * std::atan(0.5 * G.at(7) / (180.0 / M_PI));
 		if (!math::isEqual(G.at(5), d_out))
 		{
-			err += procInvalidValue("Inconsistent geometry. Dout (diffuser outlet diameter) != D0 + 2*L*atan(0.5*alpha)", ExceptionInvalidValue("Straight cylindrical diffuser element " + name_ + ": Inconsistent geometry. Dout (diffuser outlet diameter) != D0 + 2*L*atan(0.5*alpha)"));
+			err += procInvalidValue("Inconsistent geometry. Dout (diffuser outlet diameter) != D0 + 2*L*atan(0.5*alpha)", ExceptionInvalidValue(type_ + " element " + name_ + ": Inconsistent geometry. Dout (diffuser outlet diameter) != D0 + 2*L*atan(0.5*alpha)"));
 		}
 	}
 
@@ -72,7 +72,7 @@ void CylindricalDiffuserStraightDirect::evaluateDirect()
 	A1_ = M_PI * std::pow(0.5 * D1_, 2.0);
 	relRou_ = rou_ / D0_;
 
-	real reversed = checkReversedFlow("Re < 0.0", ExceptionReversedFlow("reversed flow in the straight cylindrical diffuser element " + name_));
+	real reversed = checkReversedFlow("Re < 0.0", ExceptionReversedFlow("reversed flow in the " + type_ + " element " + name_));
 
 	if (std::isnan(reversed))
 	{
@@ -162,11 +162,11 @@ void hydrocalc::CylindricalDiffuserStraightDirect::diagram52()
 		// check Re for diagram 5-2
 		if (Re < 0.5e5)
 		{
-			err += procFlowOutOfRange("Re = " + std::to_string(Re) + " < 0.5e5", ExceptionFlowOutOfRange("Straight cylindrical diffuser element " + name_ + ": Re < 0.5e5"));
+			err += procFlowOutOfRange("Re = " + std::to_string(Re) + " < 0.5e5", ExceptionFlowOutOfRange(type_ + " element " + name_ + ": Re < 0.5e5"));
 		}
 		if (Re > 6.e5)
 		{
-			err += procFlowOutOfRange("Re = " + std::to_string(Re) + " < 6.e5", ExceptionFlowOutOfRange("Straight cylindrical diffuser element " + name_ + ": Re < 6.e5"));
+			err += procFlowOutOfRange("Re = " + std::to_string(Re) + " < 6.e5", ExceptionFlowOutOfRange(type_ + " element " + name_ + ": Re < 6.e5"));
 		}
 
 		if (std::isnan(err))
@@ -289,7 +289,7 @@ void CylindricalDiffuserStraightDirect::getGeometry(std::vector<real>& G)
 
 void hydrocalc::CylindricalDiffuserStraightDirect::evaluate()
 {
-	real err = procNonExixtantFunc("evaluate", ExceptionNonExistentFunction("Try to call function ""evaluate"", forbidden for direct straight diffuser element: " + name_));
+	real err = procNonExixtantFunc("evaluate", ExceptionNonExistentFunction("Try to call function ""evaluate"", forbidden for direct " + type_ + " element: " + name_));
 
 	return void();
 }

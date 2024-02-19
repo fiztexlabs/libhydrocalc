@@ -14,42 +14,42 @@ real CylindricalConfuserStraightDirect::checkGeometry(const std::vector<real>& G
 	{
 		if (G.at(0) < 0.0)
 		{
-			err += procInvalidValue("rou (roughness) < 0.0", ExceptionInvalidValue("Straight cylindrical confuser element " + name_ + ": try to set rou (roughness) < 0.0"));
+			err += procInvalidValue("rou (roughness) < 0.0", ExceptionInvalidValue(type_ + " element " + name_ + ": try to set rou (roughness) < 0.0"));
 		}
 		if (G.at(1) <= 0.0)
 		{
-			err += procInvalidValue("D0 (confuser hydraulic diameter) <= 0.0", ExceptionInvalidValue("Straight cylindrical confuser element " + name_ + ": try to set D0 (confuser hydraulic diameter) < 0.0"));
+			err += procInvalidValue("D0 (confuser hydraulic diameter) <= 0.0", ExceptionInvalidValue(type_ + " element " + name_ + ": try to set D0 (confuser hydraulic diameter) < 0.0"));
 		}
 		if (G.at(5) > 180.0)
 		{
-			err += procGeometryOutOfRange("alpha (confuser angle) > 180.0", ExceptionGeometryOutOfRange("Straight cylindrical confuser element " + name_ + ": try to set alpha (confuser angle) > 180.0"));
+			err += procGeometryOutOfRange("alpha (confuser angle) > 180.0", ExceptionGeometryOutOfRange(type_ + " element " + name_ + ": try to set alpha (confuser angle) > 180.0"));
 		}
 		if (G.at(5) < 0.0)
 		{
-			err += procGeometryOutOfRange("alpha (confuser angle) < 0.0", ExceptionGeometryOutOfRange("Straight cylindrical confuser element " + name_ + ": try to set alpha (confuser angle) < 0.0"));
+			err += procGeometryOutOfRange("alpha (confuser angle) < 0.0", ExceptionGeometryOutOfRange(type_ + " element " + name_ + ": try to set alpha (confuser angle) < 0.0"));
 		}
 		if (G.at(3) < 0.0)
 		{
-			err += procInvalidValue("L (confuser length) < 0.0", ExceptionInvalidValue("Straight cylindrical confuser element " + name_ + ": try to set L (confuser length) < 0.0"));
+			err += procInvalidValue("L (confuser length) < 0.0", ExceptionInvalidValue(type_ + " element " + name_ + ": try to set L (confuser length) < 0.0"));
 		}
 		if (G.at(2) < 0.0)
 		{
-			err += procInvalidValue("L0 (confuser outlet section length) < 0.0", ExceptionInvalidValue("Straight cylindrical confuser element " + name_ + ": try to set L0 (confuser outlet section length) < 0.0"));
+			err += procInvalidValue("L0 (confuser outlet section length) < 0.0", ExceptionInvalidValue(type_ + " element " + name_ + ": try to set L0 (confuser outlet section length) < 0.0"));
 		}
 		if (G.at(4) < 0.0)
 		{
-			err += procInvalidValue("Din (confuser inlet diameter) < 0.0", ExceptionInvalidValue("Straight cylindrical confuser element " + name_ + ": try to set Din (confuser inlet diameter) < 0.0"));
+			err += procInvalidValue("Din (confuser inlet diameter) < 0.0", ExceptionInvalidValue(type_ + " element " + name_ + ": try to set Din (confuser inlet diameter) < 0.0"));
 		}
 		if (G.at(4) < G.at(1))
 		{
-			err += procGeometryOutOfRange("Din (confuser inlet diameter) < D0 (confuser hydraulic diamater)", ExceptionGeometryOutOfRange("Straight cylindrical confuser element " + name_ + ": try to set Din (confuser inlet diameter) < D0 (confuser hydraulic diamater)"));
+			err += procGeometryOutOfRange("Din (confuser inlet diameter) < D0 (confuser hydraulic diamater)", ExceptionGeometryOutOfRange(type_ + " element " + name_ + ": try to set Din (confuser inlet diameter) < D0 (confuser hydraulic diamater)"));
 		}
 
 		// check confuser diameters and length consistency
 		real d_out = G.at(1) + 2.0 * G.at(3) * std::atan(0.5 * G.at(5) / (180.0 / M_PI));
 		if (!math::isEqual(G.at(4), d_out))
 		{
-			err += procInvalidValue("Inconsistent geometry. Din (confuser inlet diameter) != D0 + 2*L*atan(0.5*alpha)", ExceptionInvalidValue("Straight cylindrical confuser element " + name_ + ": Inconsistent geometry. Din (confuser inlet diameter) != D0 + 2*L*atan(0.5*alpha)"));
+			err += procInvalidValue("Inconsistent geometry. Din (confuser inlet diameter) != D0 + 2*L*atan(0.5*alpha)", ExceptionInvalidValue(type_ + " element " + name_ + ": Inconsistent geometry. Din (confuser inlet diameter) != D0 + 2*L*atan(0.5*alpha)"));
 		}
 	}
 
@@ -62,7 +62,7 @@ void CylindricalConfuserStraightDirect::evaluateDirect()
 	A1_ = M_PI * std::pow(0.5 * D1_, 2.0);
 	relRou_ = rou_ / D0_;
 
-	real reversed = checkReversedFlow("Re < 0.0", ExceptionReversedFlow("reversed flow in the straight cylindrical confuser element " + name_));
+	real reversed = checkReversedFlow("Re < 0.0", ExceptionReversedFlow("reversed flow in the " + type_ + " element " + name_));
 
 	if (std::isnan(reversed))
 	{
@@ -144,7 +144,7 @@ void hydrocalc::CylindricalConfuserStraightDirect::diagram523()
 		// check Re for diagram 5-23
 		if (Re < 1.e5)
 		{
-			err += procFlowOutOfRange("Re = " + std::to_string(Re) + " < 1.e5", ExceptionFlowOutOfRange("Straight cylindrical confuser element " + name_ + ": Re < 1.e5"));
+			err += procFlowOutOfRange("Re = " + std::to_string(Re) + " < 1.e5", ExceptionFlowOutOfRange(type_ + " element " + name_ + ": Re < 1.e5"));
 		}
 
 		if (std::isnan(err))
@@ -218,7 +218,7 @@ void CylindricalConfuserStraightDirect::setGeometry(const std::vector<real>& G)
 
 void hydrocalc::CylindricalConfuserStraightDirect::evaluate()
 {
-	real err = procNonExixtantFunc("evaluate", ExceptionNonExistentFunction("Try to call function ""evaluate"", forbidden for direct straight confuser element: " + name_));
+	real err = procNonExixtantFunc("evaluate", ExceptionNonExistentFunction("Try to call function ""evaluate"", forbidden for direct " + type_ + " element: " + name_));
 
 	return void();
 }

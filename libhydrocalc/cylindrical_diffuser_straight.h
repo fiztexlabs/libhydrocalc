@@ -31,6 +31,7 @@ namespace hydrocalc
 			: CylindricalDiffuserStraightDirect()
 		{
 			internal_resistances_.push_back(&confuser_);
+			confuser_.setExternalElementName(name_base_);
 
 			confuser_.CurrentSettings_.GeometryOutOfRangeMode = settings::GeometryOutOfRangeBehaviorMode::NoCheck;
 			confuser_.CurrentSettings_.FlowOutOfRangeMode = settings::FlowOutOfRangeBehaviorMode::NoCheck;
@@ -56,9 +57,10 @@ namespace hydrocalc
 		*/
 		CylindricalDiffuserStraight(const real Re, const std::vector<real>& G, const real I = 1.0, const std::string& name = "")
 			: CylindricalDiffuserStraightDirect(Re, G, I, name), 
-			confuser_(Re, {G.at(0), G.at(1), G.at(2), G.at(3), G.at(5), G.at(7)}, name_ + "{invert flow confuser}")
+			confuser_(Re, {G.at(0), G.at(1), G.at(2), G.at(3), G.at(5), G.at(7)}, "invert flow confuser")
 		{
 			internal_resistances_.push_back(&confuser_);
+			confuser_.setExternalElementName(name_base_);
 
 			confuser_.CurrentSettings_.GeometryOutOfRangeMode = settings::GeometryOutOfRangeBehaviorMode::NoCheck;
 			confuser_.CurrentSettings_.FlowOutOfRangeMode = settings::FlowOutOfRangeBehaviorMode::NoCheck;

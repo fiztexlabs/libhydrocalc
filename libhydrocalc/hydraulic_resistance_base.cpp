@@ -15,7 +15,7 @@ real hydrocalc::HydraulicResistanceBase::procInvalidValue(const std::string& msg
 		return std::numeric_limits<real>::quiet_NaN();
 		break;
 	case settings::InvalidValuesBehaviorMode::WarnNan:
-		std::cerr << "%%err element: " << name_ << " " << msg << std::endl;
+		std::cerr << "%%err " << type_ << " element: " << name_ << " " << msg << std::endl;
 		return std::numeric_limits<real>::quiet_NaN();
 		break;
 	case settings::InvalidValuesBehaviorMode::Stop:
@@ -66,7 +66,7 @@ real hydrocalc::HydraulicResistanceBase::procNonExixtantFunc(const std::string& 
 		return std::numeric_limits<real>::quiet_NaN();
 		break;
 	case settings::NonExistentFuncBehaviorMode::WarnNaN:
-		std::cerr << "%%err Element " << name_ << ": Function """ << FuncName << """ does not exist" << std::endl;
+		std::cerr << "%%err " << type_ << " element " << name_ << ": Function """ << FuncName << """ does not exist" << std::endl;
 		return std::numeric_limits<real>::quiet_NaN();
 		break;
 	case settings::NonExistentFuncBehaviorMode::Stop:
@@ -89,13 +89,13 @@ real hydrocalc::HydraulicResistanceBase::checkReversedFlow(const std::string& ms
 		case settings::ReversedFlowBehaviorMode::Quiet:
 			break;
 		case settings::ReversedFlowBehaviorMode::Warn:
-			std::cerr << "%%warn Reversed flow detected in element: " << name_ << ": " << msg << std::endl;
+			std::cerr << "%%warn Reversed flow detected in " << type_ << " element " << name_ << ": " << msg << std::endl;
 			break;
 		case settings::ReversedFlowBehaviorMode::QuietNaN:
 			return std::numeric_limits<real>::quiet_NaN();
 			break;
 		case settings::ReversedFlowBehaviorMode::WarnNaN:
-			std::cerr << "%%err Reversed flow detected in element: " << name_ << ": " << msg << std::endl;
+			std::cerr << "%%err Reversed flow detected in " << type_ << " element " << name_ << ": " << msg << std::endl;
 			return std::numeric_limits<real>::quiet_NaN();
 			break;
 		case settings::ReversedFlowBehaviorMode::Stop:
@@ -121,20 +121,20 @@ real hydrocalc::HydraulicResistanceBase::procGeometryOutOfRange(const std::strin
 	case settings::GeometryOutOfRangeBehaviorMode::NoCheck:
 		break;
 	case settings::GeometryOutOfRangeBehaviorMode::Warn:
-		std::cerr << "%%warn Geometry value out of range in element: " << name_ << ": " << msg << std::endl;
+		std::cerr << "%%warn Geometry value out of range in " << type_ << " element " << name_ << ": " << msg << std::endl;
 		break;
 	case settings::GeometryOutOfRangeBehaviorMode::QuietNaN:
 		return std::numeric_limits<real>::quiet_NaN();
 		break;
 	case settings::GeometryOutOfRangeBehaviorMode::WarnNaN:
-		std::cerr << "%%err Geometry value out of range in element: " << name_ << ": " << msg << std::endl;
+		std::cerr << "%%err Geometry value out of range in " << type_ << " element " << name_ << ": " << msg << std::endl;
 		return std::numeric_limits<real>::quiet_NaN();
 		break;
 	case settings::GeometryOutOfRangeBehaviorMode::NearestValidWithNoWarn:
 		return nearest;
 		break;
 	case settings::GeometryOutOfRangeBehaviorMode::NearestValidWithWarn:
-		std::cerr << "%%warn Geometry value out of range in element: " << name_ << " and was set to nearest valid (" << nearest << "): " << msg << std::endl;
+		std::cerr << "%%warn Geometry value out of range in " << type_ << " element " << name_ << " and was set to nearest valid (" << nearest << "): " << msg << std::endl;
 		return nearest;
 		break;
 	case settings::GeometryOutOfRangeBehaviorMode::Stop:
@@ -155,20 +155,20 @@ real hydrocalc::HydraulicResistanceBase::procFlowOutOfRange(const std::string& m
 	case settings::FlowOutOfRangeBehaviorMode::NoCheck:
 		break;
 	case settings::FlowOutOfRangeBehaviorMode::Warn:
-		std::cerr << "%%err Flow value out of range in element: " << name_ << ": " << msg << std::endl;
+		std::cerr << "%%err Flow value out of range in " << type_ << " element " << name_ << ": " << msg << std::endl;
 		break;
 	case settings::FlowOutOfRangeBehaviorMode::QuietNaN:
 		return std::numeric_limits<real>::quiet_NaN();
 		break;
 	case settings::FlowOutOfRangeBehaviorMode::WarnNaN:
-		std::cerr << "%%err Flow value out of range in element: " << name_ << ": " << msg << std::endl;
+		std::cerr << "%%err Flow value out of range in " << type_ << " element " << name_ << ": " << msg << std::endl;
 		return std::numeric_limits<real>::quiet_NaN();
 		break;
 	case settings::FlowOutOfRangeBehaviorMode::NearestValidWithNoWarn:
 		return nearest;
 		break;
 	case settings::FlowOutOfRangeBehaviorMode::NearestValidWithWarn:
-		std::cerr << "%%err Flow value out of range in element: " << name_ << " and was set to nearest valid (" << nearest << "): " << msg << std::endl;
+		std::cerr << "%%err Flow value out of range in " << type_ << " element " << name_ << " and was set to nearest valid (" << nearest << "): " << msg << std::endl;
 		return nearest;
 		break;
 	case settings::FlowOutOfRangeBehaviorMode::Stop:
@@ -182,10 +182,12 @@ real hydrocalc::HydraulicResistanceBase::procFlowOutOfRange(const std::string& m
 	return real();
 }
 
-//void HydraulicResistanceBase::setName(const std::string& name)
-//{
-//	name_ = name;
-//}
+void hydrocalc::HydraulicResistanceBase::setExternalElementName(const std::string& name)
+{
+	name_external_ = name;
+
+	name_ = "[" + name_external_ + "]{" + name_base_ + "}";
+}
 
 void HydraulicResistanceBase::setRe(const real Re)
 {
@@ -211,7 +213,7 @@ void HydraulicResistanceBase::setRou(const real rou)
 	}
 }
 
-Type HydraulicResistanceBase::getType()
+std::string HydraulicResistanceBase::getType()
 {
 	return type_;
 }
@@ -229,6 +231,13 @@ real HydraulicResistanceBase::getRe()
 real HydraulicResistanceBase::getRou()
 {
 	return rou_;
+}
+
+void hydrocalc::HydraulicResistanceBase::setName(const std::string& name)
+{
+	name_base_ = name;
+
+	name_ = "[" + name_external_ + "]{" + name_base_ + "}";
 }
 
 void HydraulicResistanceBase::getName(std::string& name)
@@ -275,8 +284,10 @@ HydraulicResistanceBase& hydrocalc::HydraulicResistanceBase::operator=(const Hyd
 {
 	if (this != &HR)
 	{
+		diagram_ = HR.diagram_;
 		CurrentSettings_ = HR.CurrentSettings_;
-		name_ = HR.name_;
+		name_ = "[]{" + HR.name_base_ + "}";
+		name_base_ = HR.name_base_;
 		Re_ = HR.Re_;
 		D0_ = HR.D0_;
 		A_ = HR.A_;

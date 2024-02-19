@@ -103,6 +103,13 @@ set(sources
     libhydrocalc/cylindrical_friction.h
     libhydrocalc/cylindrical_friction.cpp
     
+    libhydrocalc/ring_friction.h
+    libhydrocalc/ring_friction.cpp
+    libhydrocalc/approximations/ke27.h
+    libhydrocalc/approximations/ke27.cpp
+    libhydrocalc/approximations/kn27.h
+    libhydrocalc/approximations/kn27.cpp
+    
     libhydrocalc/cylindrical_bend.h
     libhydrocalc/cylindrical_bend.cpp
     
@@ -138,6 +145,12 @@ set(sources
 
     libhydrocalc/cylindrical_confuser_curve.h
     libhydrocalc/cylindrical_confuser_curve.cpp
+
+    libhydrocalc/sharp_unexpected_size_change.h
+    libhydrocalc/sharp_unexpected_size_change.cpp
+
+    libhydrocalc/composite.h
+    libhydrocalc/composite.cpp
 
 )
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})

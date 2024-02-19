@@ -74,7 +74,7 @@ namespace hydrocalc
 			internal_resistances_.push_back(&FrictionPart_);
 
 			// set default name of element
-			name_ = "CylindricalConfuserStraight " + std::to_string(id_);
+			this->setName("CylindricalConfuserStraight " + std::to_string(id_));
 
 			FrictionPart_.CurrentSettings_.GeometryOutOfRangeMode = settings::GeometryOutOfRangeBehaviorMode::NoCheck;
 			FrictionPart_.CurrentSettings_.FlowOutOfRangeMode = settings::FlowOutOfRangeBehaviorMode::NoCheck;
@@ -94,7 +94,7 @@ namespace hydrocalc
 		*	- G[5]: Angle of confuser [deg]
 		*/
 		CylindricalConfuserStraightDirect(const real Re, const std::vector<real>& G, const std::string& name = "")
-			: ComplexResistance(name, Re, G.at(1), G.at(0), M_PI* std::pow(0.5 * G.at(1), 2.0), G.at(3), Type::cylindrical)
+			: ComplexResistance(name, Re, G.at(1), G.at(0), M_PI* std::pow(0.5 * G.at(1), 2.0), G.at(3), "straight cylindrical confuser")
 		{
 			internal_resistances_.push_back(&FrictionPart_);
 
@@ -102,12 +102,12 @@ namespace hydrocalc
 			if (name != "")
 			{
 				// user defined name
-				name_ = name;
+				this->setName(name);
 			}
 			else
 			{
 				// default name
-				name_ = "CylindricalConfuserStraight " + std::to_string(id_);
+				this->setName("CylindricalConfuserStraight " + std::to_string(id_));
 			}
 
 			// check inputs
@@ -130,7 +130,9 @@ namespace hydrocalc
 			}
 
 			// initialize friction element
-			FrictionPart_ = CylindricalFriction(Re_, { rou_,D0_,L_ }, name_ + "{friction}");
+			FrictionPart_ = CylindricalFriction(Re_, { rou_,D0_,L_ }, "friction");
+			FrictionPart_.setExternalElementName(name_base_);
+
 			FrictionPart_.CurrentSettings_.GeometryOutOfRangeMode = settings::GeometryOutOfRangeBehaviorMode::NoCheck;
 			FrictionPart_.CurrentSettings_.FlowOutOfRangeMode = settings::FlowOutOfRangeBehaviorMode::NoCheck;
 			FrictionPart_.CurrentSettings_.ReversedFlowMode = settings::ReversedFlowBehaviorMode::Quiet;

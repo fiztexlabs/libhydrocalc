@@ -5,6 +5,9 @@
 
 namespace hydrocalc
 {
+	class ComplexResistance;
+	class Composite;
+
 	/**
 	* @brief Interface HydraulicResistance define the C++ interface for calculation
 	* of local hydraulic resistance element for C++.
@@ -22,6 +25,11 @@ namespace hydrocalc
 		 * @return HR: Pointer to clone of hydraulic resistance
 		 */
 		virtual HydraulicResistance *copy() const = 0;
+
+		virtual void setExternalElementName(const std::string& name) = 0;
+
+		friend ComplexResistance;
+		friend Composite;
 
 	public:
 		virtual ~HydraulicResistance(){};
@@ -42,10 +50,17 @@ namespace hydrocalc
 		* ClassName + number.
 		* @param name: Name of element
 		*/
-		//virtual void setName(const std::string& name) = 0;
+		virtual void setName(const std::string& name) = 0;
 
 		/**
 		 * @brief Get name of element.
+		 * @details Each element name contains two parts:
+		 *	- base part, which is the main name of element
+		 *	- external part, which is define name of element, which contain THIS
+		 * element as internal part
+		 * So, the full element name defined as "[external part]{base part}".
+		 * For example, default name for cylindrical friction element is
+		 * "[]{CylindricalFriction 0}", because it's doesnt belong to any complex elements.
 		 * @param[out] name: String name of element
 		 */
 		virtual void getName(std::string& name) = 0;
@@ -66,7 +81,7 @@ namespace hydrocalc
 		 *	- 4: Rectangular tube bundles
 		 *	- 5: Rectangular channels
 		 */
-		virtual Type getType() = 0;
+		virtual std::string getType() = 0;
 
 		/**
 		* @brief Set geometry characteristics to element.
@@ -198,8 +213,9 @@ namespace hydrocalc
 		*		- G[7]: Cross-section area of confuser outlet, [m2]
 		*	- forunexpected size changes with sharp edges:
 		*		- G[0]: Roughness [m]
-		*		- G[1]: Diameter 1 [m]
-		*		- G[2]: Diameter 2 [m]
+		*		- G[1]: Hydraulic diameter [m]
+		*		- G[2]: Diameter 1 [m]
+		*		- G[3]: Diameter 2 [m]
 		*		- G[4]: Cross-section area 1 [m2]
 		*		- G[5]: Cross-section area 2 [m2]
 		*/

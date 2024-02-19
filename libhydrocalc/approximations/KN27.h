@@ -80,7 +80,7 @@ Training Time               :
   Finish                    : 2022-11-02 08:33:45.907752
   Total                     : 0:02:52.683688
  */
-#include <service/ServiceHS.h>
+#include <libhydrocalc/settings.h>
 
 #define KN27_sizeX 2 /* input dimensionality */
 #define KN27_sizeF 1 /* model output dimensionality */
@@ -94,29 +94,29 @@ extern "C" {
 #endif
 
 int KN27( const int N /* number of input vectors (N >= 0) */
-        , const HSReal* input /* pointer to the input vectors (N == 0 || input != NULL) */
+        , const hydrocalc::real* input /* pointer to the input vectors (N == 0 || input != NULL) */
         , const int ldInput /* distance (in doubles) between input vectors (ldInput >= {input vector size}) */
-        , HSReal* output /* pointer to the output vectors (N == 0 || output != NULL) */
+        , hydrocalc::real* output /* pointer to the output vectors (N == 0 || output != NULL) */
         , const int ldOutput /* distance (in doubles) between output vectors (ldOutput >= {output vector size} * ({input vector size} + 1))) */
         );
 
 int KN27AE( const int N /* number of input vectors (N >= 0) */
-        , const HSReal* input /* pointer to the input vectors (N == 0 || input != NULL) */
+        , const hydrocalc::real* input /* pointer to the input vectors (N == 0 || input != NULL) */
         , const int ldInput /* distance (in doubles) between input vectors (ldInput >= {input vector size}) */
-        , HSReal* output /* pointer to the output vectors (N == 0 || output != NULL) */
+        , hydrocalc::real* output /* pointer to the output vectors (N == 0 || output != NULL) */
         , const int ldOutput /* distance (in doubles) between output vectors (ldOutput >= {output vector size} * ({input vector size} + 1))) */
         );
 
 /* Calculates value and/or gradient of the function KN27 at the single point. */
 /* Returns 0 on success or 1-based index of the invalid input parameter */
 int KN27Calc( 
-          const HSReal* input  /* [in] pointer to the input vector, requires input != NULL */
+          const hydrocalc::real* input  /* [in] pointer to the input vector, requires input != NULL */
         , const int inputInc   /* [in] distance (in doubles) between elements of the input vector) */
-        , HSReal* value        /* [out] optional pointer to the function value. */
+        , hydrocalc::real* value        /* [out] optional pointer to the function value. */
                                /* Set this pointer to NULL to avoid calculation of the function value */
         , const int valueInc   /* [in] distance (in doubles) between elements of vector 'value'. */
                                /* Ignored if function has 1-dimensional output or value==NULL */
-        , HSReal* grad         /* [out] optional pointer to the function gradient dF_i/dX_j. */
+        , hydrocalc::real* grad         /* [out] optional pointer to the function gradient dF_i/dX_j. */
                                /* Set this pointer to NULL to avoid calculation of the function gradient */
         , const int gradNextDF /* [in] distance (in doubles) between dF_i/dX_k and dF_{i+1}/dX_k */
                                /* elements of the array 'grad'. Ignored if function has 1-dimensional */
@@ -129,13 +129,13 @@ int KN27Calc(
 /* Calculates value and/or gradient of the function AE KN27 at the single point. */
 /* Returns 0 on success or 1-based index of the invalid input parameter */
 int KN27CalcAE( 
-          const HSReal* input  /* [in] pointer to the input vector, requires input != NULL */
+          const hydrocalc::real* input  /* [in] pointer to the input vector, requires input != NULL */
         , const int inputInc   /* [in] distance (in doubles) between elements of the input vector) */
-        , HSReal* value        /* [out] optional pointer to the function AE. Set this pointer to NULL */
+        , hydrocalc::real* value        /* [out] optional pointer to the function AE. Set this pointer to NULL */
                                /* to avoid calculation of the function AE */
         , const int valueInc   /* [in] distance (in doubles) between elements of vector 'value'. */
                                /* Ignored if function has 1-dimensional output or value==NULL */
-        , HSReal* grad         /* [out] optional pointer to the gradient of the function AE dAE_i/dX_j. */
+        , hydrocalc::real* grad         /* [out] optional pointer to the gradient of the function AE dAE_i/dX_j. */
                                /* Set this pointer to NULL to avoid calculation of the gradient of */
                                /* the function AE. */
         , const int gradNextDF /* [in] distance (in doubles) between dAE_i/dX_k and dAE_{i+1}/dX_k */
@@ -147,27 +147,27 @@ int KN27CalcAE(
         );
 
 
-const HSReal _W1G22XLMTP1A2QRFNERF9WXSXF5PDNQC_extrapolationWeights[3] = { 0.40507383084150017, 0.31809858309099598, 0.27682758606750379, };
+const hydrocalc::real _W1G22XLMTP1A2QRFNERF9WXSXF5PDNQC_extrapolationWeights[3] = { 0.40507383084150017, 0.31809858309099598, 0.27682758606750379, };
 
-const HSReal _W1G22XLMTP1A2QRFNERF9WXSXF5PDNQC_clusterCenter_002[3] = { -0.57487845246837366, 0.76006680133725479, 0., };
+const hydrocalc::real _W1G22XLMTP1A2QRFNERF9WXSXF5PDNQC_clusterCenter_002[3] = { -0.57487845246837366, 0.76006680133725479, 0., };
 
-const HSReal _W1G22XLMTP1A2QRFNERF9WXSXF5PDNQC_clusterCenter_001[3] = { -0.57487845246837432, -0.85207627257584451, 0., };
+const hydrocalc::real _W1G22XLMTP1A2QRFNERF9WXSXF5PDNQC_clusterCenter_001[3] = { -0.57487845246837432, -0.85207627257584451, 0., };
 
-const HSReal _W1G22XLMTP1A2QRFNERF9WXSXF5PDNQC_clusterCenter_000[3] = { 1.7246353574051216, 8.8817841970012504e-17, 0., };
+const hydrocalc::real _W1G22XLMTP1A2QRFNERF9WXSXF5PDNQC_clusterCenter_000[3] = { 1.7246353574051216, 8.8817841970012504e-17, 0., };
 
-const HSReal _W1G22XLMTP1A2QRFNERF9WXSXF5PDNQC_clusterCovarianceFactor_002[3][3] = {
+const hydrocalc::real _W1G22XLMTP1A2QRFNERF9WXSXF5PDNQC_clusterCovarianceFactor_002[3][3] = {
     { 0.11132112505541444, 0., 0.,  },
     { 0., 0.65941742353859867, 0.,  },
     { 0., 0., 0.031622776601683791,  }
 };
 
-const HSReal _W1G22XLMTP1A2QRFNERF9WXSXF5PDNQC_clusterCovarianceFactor_001[3][3] = {
+const hydrocalc::real _W1G22XLMTP1A2QRFNERF9WXSXF5PDNQC_clusterCovarianceFactor_001[3][3] = {
     { 0.11132112505541344, 0., 0.,  },
     { 0., 0.51189553441125657, 0.,  },
     { 0., 0., 0.031622776601683791,  }
 };
 
-const HSReal _W1G22XLMTP1A2QRFNERF9WXSXF5PDNQC_clusterCovarianceFactor_000[3][3] = {
+const hydrocalc::real _W1G22XLMTP1A2QRFNERF9WXSXF5PDNQC_clusterCovarianceFactor_000[3][3] = {
     { 0.031622776601683791, 0., 0.,  },
     { 0., 1.000499875062461, 0.,  },
     { 0., 0., 0.031622776601683791,  }

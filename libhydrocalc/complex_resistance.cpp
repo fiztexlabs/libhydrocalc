@@ -3,6 +3,28 @@
 
 using namespace hydrocalc;
 
+void hydrocalc::ComplexResistance::setExternalElementName(const std::string& name)
+{
+	HydraulicResistanceBase::setExternalElementName(name);
+
+	for (auto& hr : internal_resistances_)
+	{
+		hr->setExternalElementName(name_);
+	}
+}
+
+void hydrocalc::ComplexResistance::setName(const std::string& name)
+{
+	name_base_ = name;
+
+	name_ = "[" + name_external_ + "]{" + name_base_ + "}";
+
+	for (auto& hr : internal_resistances_)
+	{
+		hr->setExternalElementName(name);
+	}
+}
+
 void hydrocalc::ComplexResistance::setRe(const real Re)
 {
 	Re_ = Re;

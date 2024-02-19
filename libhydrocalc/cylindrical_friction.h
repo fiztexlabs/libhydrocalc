@@ -13,6 +13,7 @@ namespace hydrocalc
 	class CylindricalConfuserStraightDirect;
 	class CylindricalDiffuserCurveDirect;
 	class CylindricalConfuserCurveDirect;
+	class RingFriction;
 
 	/**
 	* @brief Class for calculating hydraulic resistance of friction in
@@ -57,6 +58,7 @@ namespace hydrocalc
 		friend CylindricalConfuserStraightDirect;
 		friend CylindricalDiffuserCurveDirect;
 		friend CylindricalConfuserCurveDirect;
+		friend RingFriction;
 
 	public:
 		/**
@@ -66,7 +68,7 @@ namespace hydrocalc
 			Friction()
 		{
 			// set default name of element
-			name_ = "CylindricalFriction " + std::to_string(id_);
+			this->setName("CylindricalFriction " + std::to_string(id_));
 		};
 
 		/**
@@ -80,18 +82,18 @@ namespace hydrocalc
 		* @throw ExceptionInvalidValue
 		*/
 		CylindricalFriction(const real Re, const std::vector<real>& G, const std::string& name = "")
-			: Friction(name, Re, G.at(1), G.at(0), M_PI * std::pow(0.5 * G.at(1), 2.0), G.at(2), Type::cylindrical)
+			: Friction(name, Re, G.at(1), G.at(0), M_PI * std::pow(0.5 * G.at(1), 2.0), G.at(2), "cylindrical friction")
 		{
 			// set name
 			if (name != "")
 			{
 				// user defined name
-				name_ = name;
+				this->setName(name);
 			}
 			else
 			{
 				// default name
-				name_ = "CylindricalFriction " + std::to_string(id_);
+				this->setName("CylindricalFriction " + std::to_string(id_));
 			}
 
 			// check inputs

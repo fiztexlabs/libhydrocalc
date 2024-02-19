@@ -11,7 +11,7 @@ namespace hydrocalc
 	const double DEF_MAX_CSI = 3.4e38;
 #endif
 
-	/// @brief Geometry types of hydraulic resistances
+	/*/// @brief Geometry types of hydraulic resistances
 	enum class Type
 	{
 		/// @brief cylindrical geometry
@@ -26,7 +26,7 @@ namespace hydrocalc
 		triangular_bundle = 4,
 		/// @brief rectangular bundles
 		rectangular_bundle = 5
-	};
+	};*/
 }
 
 namespace hydrocalc::settings

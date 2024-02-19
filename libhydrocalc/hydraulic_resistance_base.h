@@ -24,6 +24,10 @@ namespace hydrocalc
 		/// @brief Element name
 		std::string name_;
 
+		std::string name_base_;
+
+		std::string name_external_ = "";
+
 		/// @brief Diagram number
 		std::string diagram_ = "";
 
@@ -58,7 +62,7 @@ namespace hydrocalc
 		real CSI_ = 0.0;
 
 		/// @brief type of geometry (cylinrical, rectangular etc.)
-		Type type_ = Type::cylindrical;
+		std::string type_ = "cylindrical";
 
 		/// @brief Length of element [m]
 		real L_ = 0.0;
@@ -117,11 +121,14 @@ namespace hydrocalc
 		*/
 		real procFlowOutOfRange(const std::string& msg, const Exception& exec, const real nearest = 0.0);
 
+		/// @see HydraulicResistance::setExternalElementName()
+		virtual void setExternalElementName(const std::string& name) override;
+
 	public:
 		/// @brief Default constructor
 		HydraulicResistanceBase() :
 			id_(count),
-			name_("Undefined element " + std::to_string(id_))
+			name_base_("Undefined element " + std::to_string(id_))
 		{
 			++count;
 		}
@@ -144,9 +151,9 @@ namespace hydrocalc
 			const real rou,
 			const real A,
 			const real L,
-			const Type type) :
+			const std::string& type) :
 			id_(count),
-			name_(name),
+			name_base_(name),
 			Re_(Re),
 			D0_(D0),
 			A_(A),
@@ -164,8 +171,10 @@ namespace hydrocalc
 		HydraulicResistanceBase(const HydraulicResistanceBase& HR) :
 			id_(count)
 		{
+			diagram_ = HR.diagram_;
 			CurrentSettings_ = HR.CurrentSettings_;
-			name_ = HR.name_;
+			name_ = "[]{" + HR.name_base_ + "}";
+			name_base_ = HR.name_base_;
 			Re_ = HR.Re_;
 			D0_ = HR.D0_;
 			A_ = HR.A_;
@@ -187,7 +196,7 @@ namespace hydrocalc
 		virtual ~HydraulicResistanceBase() {};
 
 		/// @see HydraulicResistance::setName()
-		//virtual void setName(const std::string& name) override;
+		virtual void setName(const std::string& name) override;
 
 		/// @see HydraulicResistance::getName()
 		virtual void getName(std::string& name);
@@ -211,7 +220,7 @@ namespace hydrocalc
 		virtual void setLength(const real L) override;
 
 		/// @see HydraulicResistance::getType()
-		virtual Type getType() override;
+		virtual std::string getType() override;
 
 		/// @see HydraulicResistance::getHydraulicDiameter()
 		virtual real getHydraulicDiameter() override;

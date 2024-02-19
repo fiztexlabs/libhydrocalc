@@ -27,6 +27,7 @@ namespace hydrocalc
 			: CylindricalConfuserCurveDirect()
 		{
 			internal_resistances_.push_back(&diffuser_);
+			diffuser_.setExternalElementName(name_base_);
 
 			diffuser_.CurrentSettings_.GeometryOutOfRangeMode = settings::GeometryOutOfRangeBehaviorMode::NoCheck;
 			diffuser_.CurrentSettings_.FlowOutOfRangeMode = settings::FlowOutOfRangeBehaviorMode::NoCheck;
@@ -47,9 +48,10 @@ namespace hydrocalc
 		*/
 		CylindricalConfuserCurve(const real Re, const std::vector<real>& G, const std::string& name = "")
 			: CylindricalConfuserCurveDirect(Re, G, name),
-			diffuser_(Re, { G.at(0), G.at(1), G.at(3), 0.0, G.at(4), G.at(5) }, name_ + "{invert flow diffuser}")
+			diffuser_(Re, { G.at(0), G.at(1), G.at(3), 0.0, G.at(4), G.at(5) }, "invert flow diffuser")
 		{
 			internal_resistances_.push_back(&diffuser_);
+			diffuser_.setExternalElementName(name_base_);
 
 			diffuser_.CurrentSettings_.GeometryOutOfRangeMode = settings::GeometryOutOfRangeBehaviorMode::NoCheck;
 			diffuser_.CurrentSettings_.FlowOutOfRangeMode = settings::FlowOutOfRangeBehaviorMode::NoCheck;

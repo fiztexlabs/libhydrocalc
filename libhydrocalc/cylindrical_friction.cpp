@@ -11,7 +11,7 @@ void CylindricalFriction::evaluate()
 	A_ = M_PI * std::pow(0.5 * D0_, 2.0);
 	relRou_ = rou_ / D0_;
 
-	real reversed = checkReversedFlow("Re < 0.0", ExceptionReversedFlow("reversed flow in the cylindrical friction element " + name_));
+	real reversed = checkReversedFlow("Re < 0.0", ExceptionReversedFlow("reversed flow in the " + type_ + " element " + name_));
 
 	if (std::isnan(reversed))
 	{
@@ -118,7 +118,7 @@ void hydrocalc::CylindricalFriction::diagram23()
 		{
 			if (relRou_ < 0.007)
 			{
-				relRou_ = procGeometryOutOfRange("rou/D0 (relative roughness)  < 0.007", ExceptionGeometryOutOfRange("%%err Cylindrical friction element:" + name_ + ": rou/D0 (relative roughness) < 0.007"), 0.007);
+				relRou_ = procGeometryOutOfRange("rou/D0 (relative roughness)  < 0.007", ExceptionGeometryOutOfRange(type_ + " element " + name_ + ": rou/D0 (relative roughness) < 0.007"), 0.007);
 			}
 		}
 
@@ -192,15 +192,15 @@ real CylindricalFriction::checkGeometry(const std::vector<real>& G)
 	{
 		if (G.at(0) < 0.0)
 		{
-			err += procInvalidValue("rou (roughness) < 0.0", ExceptionInvalidValue("Cylindrical friction element " + name_ + ": try to set rou (roughness) < 0.0"));
+			err += procInvalidValue("rou (roughness) < 0.0", ExceptionInvalidValue(type_ + " element " + name_ + ": try to set rou (roughness) < 0.0"));
 		}
 		if (G.at(1) <= 0.0)
 		{
-			err += procInvalidValue("D0 (hydraulic diameter) <= 0.0", ExceptionInvalidValue("Cylindrical friction element " + name_ + ": try to set D0 (hydraulic diameter) <= 0.0"));
+			err += procInvalidValue("D0 (hydraulic diameter) <= 0.0", ExceptionInvalidValue(type_ + " element " + name_ + ": try to set D0 (hydraulic diameter) <= 0.0"));
 		}
 		if (G.at(2) < 0.0)
 		{
-			err += procInvalidValue("L (element length) < 0.0", ExceptionInvalidValue("Cylindrical friction element " + name_ + ": try to set L (element length) < 0.0"));
+			err += procInvalidValue("L (element length) < 0.0", ExceptionInvalidValue(type_ + " element " + name_ + ": try to set L (element length) < 0.0"));
 		}
 	}
 

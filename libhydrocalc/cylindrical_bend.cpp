@@ -14,19 +14,19 @@ real CylindricalBend::checkGeometry(const std::vector<real>& G)
 	{
 		if (G.at(0) < 0.0)
 		{
-			err += procInvalidValue("rou (roughness) < 0.0", ExceptionInvalidValue("Cylindrical bend element " + name_ + ": try to set rou (roughness) < 0.0"));
+			err += procInvalidValue("rou (roughness) < 0.0", ExceptionInvalidValue(type_ + " element " + name_ + ": try to set rou (roughness) < 0.0"));
 		}
 		if (G.at(1) <= 0.0)
 		{
-			err += procInvalidValue("D0 (hydraulic diameter) <= 0.0", ExceptionInvalidValue("Cylindrical bend element " + name_ + ": try to set D0 (hydraulic diameter) <= 0.0"));
+			err += procInvalidValue("D0 (hydraulic diameter) <= 0.0", ExceptionInvalidValue(type_ + " element " + name_ + ": try to set D0 (hydraulic diameter) <= 0.0"));
 		}
 		if (G.at(4) < 0.0)
 		{
-			err += procInvalidValue("R0 (bending radius) < 0.0", ExceptionInvalidValue("Cylindrical bend element " + name_ + ": try to set R0 (bending radius) < 0.0"));
+			err += procInvalidValue("R0 (bending radius) < 0.0", ExceptionInvalidValue(type_ + " element " + name_ + ": try to set R0 (bending radius) < 0.0"));
 		}
 		if (G.at(4) < 0.0)
 		{
-			err += procInvalidValue("L0 (previous section length) < 0.0", ExceptionInvalidValue("Cylindrical bend element " + name_ + ": try to set L0 (previous section length) < 0.0"));
+			err += procInvalidValue("L0 (previous section length) < 0.0", ExceptionInvalidValue(type_ + " element " + name_ + ": try to set L0 (previous section length) < 0.0"));
 		}
 	}
 
@@ -38,8 +38,7 @@ void CylindricalBend::evaluate()
 	A_ = M_PI * std::pow(0.5 * D0_, 2.0);
 	relRou_ = rou_ / D0_;
 
-	real reversed = checkReversedFlow("Re < 0.0", ExceptionReversedFlow("reversed flow in the element " + name_));
-
+	real reversed = checkReversedFlow("Re < 0.0", ExceptionReversedFlow("reversed flow in the " + type_ + " element " + name_));
 
 	if (std::isnan(reversed))
 	{
@@ -55,9 +54,9 @@ void CylindricalBend::evaluate()
 
 		if (math::isEqual<real, real>(Re, static_cast<real>(0.0)))
 		{
-			CSI_ = 0.0;
+			CSI_ = CurrentSettings_.MAX_CSI;
 			CSIlf_ = 0.0;
-			CSIlr_ = 0.0;
+			CSIlr_ = CurrentSettings_.MAX_CSI;
 			lf_ = 0.0;
 		}
 		else
@@ -191,17 +190,17 @@ void CylindricalBend::evaluate()
 					// check bending radius for diagram 6-1
 					if (RD < 0.5)
 					{
-						err += procGeometryOutOfRange("R0/D0 = " + std::to_string(RD) + " < 0.5", ExceptionGeometryOutOfRange("Cylindrical bend element " + name_ + ": R0/D0 < 0.5"));
+						err += procGeometryOutOfRange("R0/D0 = " + std::to_string(RD) + " < 0.5", ExceptionGeometryOutOfRange(type_ + " element " + name_ + ": R0/D0 < 0.5"));
 					}
 					// check relative length
 					if (L0_ / D0_ < 10.0)
 					{
-						err += procGeometryOutOfRange("L0/D0 = " + std::to_string(L0_ / D0_) + " < 10.0", ExceptionGeometryOutOfRange("Cylindrical bend element " + name_ + ": L0/D0 < 10.0"));
+						err += procGeometryOutOfRange("L0/D0 = " + std::to_string(L0_ / D0_) + " < 10.0", ExceptionGeometryOutOfRange(type_ + " element " + name_ + ": L0/D0 < 10.0"));
 					}
 					// check angle
 					if (delta_ > 180.0)
 					{
-						err += procGeometryOutOfRange("delta (bending angle) = " + std::to_string(delta_) + " < 180.0 deg", ExceptionGeometryOutOfRange("Cylindrical bend element " + name_ + ": delta (bending angle) < 180.0"));
+						err += procGeometryOutOfRange("delta (bending angle) = " + std::to_string(delta_) + " < 180.0 deg", ExceptionGeometryOutOfRange(type_ + " element " + name_ + ": delta (bending angle) < 180.0"));
 					}
 
 					if (std::isnan(err))
@@ -238,7 +237,7 @@ void CylindricalBend::evaluate()
 						// check Re for diagram 6-1
 						if (Re < 2.e5)
 						{
-							err = procFlowOutOfRange("Re = " + std::to_string(Re) + " < 2.e5", ExceptionFlowOutOfRange("Cylindrical bend element " + name_ + ": Re < 2.e5"));
+							err = procFlowOutOfRange("Re = " + std::to_string(Re) + " < 2.e5", ExceptionFlowOutOfRange(type_ + " element " + name_ + ": Re < 2.e5"));
 						}
 
 						if (std::isnan(err))
@@ -263,7 +262,7 @@ void CylindricalBend::evaluate()
 						// check Re for diagram 6-1
 						if (Re < 3.3e3)
 						{
-							err = procFlowOutOfRange("Re = " + std::to_string(Re) + " < 3.3e3", ExceptionFlowOutOfRange("Cylindrical bend element " + name_ + ": Re < 3.3e3"));
+							err = procFlowOutOfRange("Re = " + std::to_string(Re) + " < 3.3e3", ExceptionFlowOutOfRange(type_ + " element " + name_ + ": Re < 3.3e3"));
 						}
 
 						if (std::isnan(err))
@@ -321,7 +320,7 @@ void CylindricalBend::evaluate()
 					// check relative length
 					if (L0_ / D0_ < 10.0)
 					{
-						err += procGeometryOutOfRange("L0/D0 = " + std::to_string(L0_ / D0_) + " < 10.0", ExceptionGeometryOutOfRange("Cylindrical bend element " + name_ + ": L0/D0 < 10.0"));
+						err += procGeometryOutOfRange("L0/D0 = " + std::to_string(L0_ / D0_) + " < 10.0", ExceptionGeometryOutOfRange(type_ + " element " + name_ + ": L0/D0 < 10.0"));
 					}
 
 					if (std::isnan(err))
@@ -343,12 +342,12 @@ void CylindricalBend::evaluate()
 					{
 						real botReLim = 50.0 / std::sqrt(D0_ / (2.0 * R0_));
 						err += procFlowOutOfRange("Re = " + std::to_string(Re) + " < " + std::to_string(botReLim),
-							ExceptionFlowOutOfRange("Cylindrical bend element " + name_ + ": Re < " + std::to_string(botReLim)));
+							ExceptionFlowOutOfRange(type_ + " element " + name_ + ": Re < " + std::to_string(botReLim)));
 					}
 					// check Re for diagram 6-2
 					if (Re > 8.e4)
 					{
-						err = procFlowOutOfRange("Re = " + std::to_string(Re) + " > 8.e4", ExceptionFlowOutOfRange("Cylindrical bend element " + name_ + ": Re < 8.e4"));
+						err = procFlowOutOfRange("Re = " + std::to_string(Re) + " > 8.e4", ExceptionFlowOutOfRange(type_ + " element " + name_ + ": Re < 8.e4"));
 					}
 
 					if (std::isnan(err))
@@ -396,7 +395,7 @@ void CylindricalBend::evaluate()
 					// check relative length
 					if (L0_ / D0_ < 10.0)
 					{
-						err += procGeometryOutOfRange("L0/D0 = " + std::to_string(L0_ / D0_) + " < 10.0", ExceptionGeometryOutOfRange("Cylindrical bend element " + name_ + ": L0/D0 < 10.0"));
+						err += procGeometryOutOfRange("L0/D0 = " + std::to_string(L0_ / D0_) + " < 10.0", ExceptionGeometryOutOfRange(type_ + " element " + name_ + ": L0/D0 < 10.0"));
 					}
 
 					if (std::isnan(err))
@@ -422,7 +421,7 @@ void CylindricalBend::evaluate()
 						// check Re for diagram 6-7
 						if (Re < 2.e5)
 						{
-							err += procFlowOutOfRange("Re = " + std::to_string(Re) + " < 2.e5", ExceptionFlowOutOfRange("Cylindrical bend element " + name_ + ": Re < 2.e5"));
+							err += procFlowOutOfRange("Re = " + std::to_string(Re) + " < 2.e5", ExceptionFlowOutOfRange(type_ + " element " + name_ + ": Re < 2.e5"));
 						}
 
 						if (std::isnan(err))
@@ -447,12 +446,12 @@ void CylindricalBend::evaluate()
 						// check Re for diagram 6-7
 						if (Re < 1.e4)
 						{
-							err += procFlowOutOfRange("Re = " + std::to_string(Re) + " < 1.e4", ExceptionFlowOutOfRange("Cylindrical bend element " + name_ + ": Re < 1.e4"));
+							err += procFlowOutOfRange("Re = " + std::to_string(Re) + " < 1.e4", ExceptionFlowOutOfRange(type_ + " element " + name_ + ": Re < 1.e4"));
 						}
 						// check Re for diagram 6-6
 						if (Re < 3.e3)
 						{
-							err += procFlowOutOfRange("Re = " + std::to_string(Re) + " < 3.e3", ExceptionFlowOutOfRange("Cylindrical bend element " + name_ + ": Re < 3.e3"));
+							err += procFlowOutOfRange("Re = " + std::to_string(Re) + " < 3.e3", ExceptionFlowOutOfRange(type_ + " element " + name_ + ": Re < 3.e3"));
 						}
 
 						if (std::isnan(err))
@@ -507,17 +506,17 @@ void CylindricalBend::evaluate()
 					// check bending radius for diagram 6-9
 					if (RD < 0.05)
 					{
-						err += procGeometryOutOfRange("R0/D0 = " + std::to_string(RD) + " < 0.05", ExceptionGeometryOutOfRange("Cylindrical bend element " + name_ + ": R0/D0 < 0.05"));
+						err += procGeometryOutOfRange("R0/D0 = " + std::to_string(RD) + " < 0.05", ExceptionGeometryOutOfRange(type_ + " element " + name_ + ": R0/D0 < 0.05"));
 					}
 					// check relative length
 					if (L0_ / D0_ < 10.0)
 					{
-						err += procGeometryOutOfRange("L0/D0 = " + std::to_string(L0_ / D0_) + " < 10.0", ExceptionGeometryOutOfRange("Cylindrical bend element " + name_ + ": L0/D0 < 10.0"));
+						err += procGeometryOutOfRange("L0/D0 = " + std::to_string(L0_ / D0_) + " < 10.0", ExceptionGeometryOutOfRange(type_ + " element " + name_ + ": L0/D0 < 10.0"));
 					}
 					// check angle
 					if (delta_ > 180.0)
 					{
-						err += procGeometryOutOfRange("delta (bending angle) = " + std::to_string(delta_) + " < 180.0 deg", ExceptionGeometryOutOfRange("Cylindrical bend element " + name_ + ": delta (bending angle) < 180.0"));
+						err += procGeometryOutOfRange("delta (bending angle) = " + std::to_string(delta_) + " < 180.0 deg", ExceptionGeometryOutOfRange(type_ + " element " + name_ + ": delta (bending angle) < 180.0"));
 					}
 
 					if (std::isnan(err))

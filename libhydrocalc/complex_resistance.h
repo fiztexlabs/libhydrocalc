@@ -18,6 +18,9 @@ namespace hydrocalc
 		/// @brief Vector of hydraulic resistance components
 		std::vector<HydraulicResistance*> internal_resistances_;
 
+		/// @see HydraulicResistance::setExternalElementName()
+		virtual void setExternalElementName(const std::string& name) override;
+
 	public:
 		/// @brief Default constructor
 		ComplexResistance() :
@@ -32,7 +35,7 @@ namespace hydrocalc
 			const real rou,
 			const real A,
 			const real L,
-			const Type type) :
+			const std::string& type) :
 			HydraulicResistanceBase(
 				name,
 				Re,
@@ -44,6 +47,9 @@ namespace hydrocalc
 		{};
 
 		virtual ~ComplexResistance() {};
+
+		/// @see HydraulicResistance::setName()
+		virtual void setName(const std::string& name) override;
 
 		/// @see HydraulicResistance::setRe()
 		virtual void setRe(const real Re) override;

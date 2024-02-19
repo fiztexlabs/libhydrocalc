@@ -31,7 +31,9 @@ namespace hydrocalc
 			: CylindricalBend()
 		{
 			// set default name of element
-			name_ = "CylindricalBendNiche " + std::to_string(id_);
+			this->setName("CylindricalBendNiche " + std::to_string(id_));
+
+			type_ = "cylindrical bend with niche";
 		};
 
 		/**
@@ -56,13 +58,15 @@ namespace hydrocalc
 			if (name != "")
 			{
 				// user defined name
-				name_ = name;
+				this->setName(name);
 			}
 			else
 			{
 				// default name
-				name_ = "CylindricalBendNiche " + std::to_string(id_);
+				this->setName("CylindricalBendNiche " + std::to_string(id_));
 			}
+
+			type_ = "cylindrical bend with niche";
 		}
 
 		/// @see HydraulicResistance::calculateElement()
