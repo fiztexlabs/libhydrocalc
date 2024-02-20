@@ -145,8 +145,9 @@ HydraulicResistance* CylindricalDiffuserStraightDirect::copy() const
 			D1_,
 			alpha_
 		},
-		I_,
-		name_);
+		name_,
+		vis_,
+		I_);
 }
 
 void hydrocalc::CylindricalDiffuserStraightDirect::diagram52()

@@ -69,6 +69,8 @@ namespace hydrocalc
 		CylindricalDiffuserCurveDirect()
 			: ComplexResistance()
 		{
+			type_ = "[CylindricalDiffuserCurve]";
+
 			internal_resistances_.push_back(&FrictionPart_);
 
 			// set default name of element
@@ -90,11 +92,12 @@ namespace hydrocalc
 		*	- G[3]: Length of outlet section of diffuser [m]
 		*	- G[4]: Hydraulic diameter of outlet section of diffuser [m]
 		*	- G[5]: Curve radius [m]
+		* @param vis: Flow kinematic viscosity in the element [Pa*s]
 		* @throw ExceptionInvalidValue
 		* @throw ExceptionGeometryOutOfRange
 		*/
-		CylindricalDiffuserCurveDirect(const real Re, const std::vector<real>& G, const std::string& name = "")
-			: ComplexResistance(name, Re, G.at(1), G.at(0), M_PI* std::pow(0.5 * G.at(1), 2.0), G.at(2), "curve cylindrical diffuser")
+		CylindricalDiffuserCurveDirect(const real Re, const std::vector<real>& G, const std::string& name, const real vis)
+			: ComplexResistance(name, Re, G.at(1), G.at(0), M_PI* std::pow(0.5 * G.at(1), 2.0), G.at(2), vis, "[CylindricalDiffuserCurve]")
 		{
 			internal_resistances_.push_back(&FrictionPart_);
 

@@ -53,6 +53,8 @@ namespace hydrocalc
 		RingFriction()
 			: ComplexResistance()
 		{
+			type_ = "[RingFriction]";
+
 			internal_resistances_.push_back(&FrictionPart_);
 
 			// set default name of element
@@ -73,17 +75,19 @@ namespace hydrocalc
 		*	- G[2]: Internal diameter [m]
 		*	- G[3]: Excentric		  [m]
 		*	- G[4]: Length of element [m]
+		* @param vis: Flow kinematic viscosity in the element [Pa*s]
 		* @throw ExceptionInvalidValue
 		*/
-		RingFriction(const real Re, const std::vector<real>& G, const std::string& name = "")
+		RingFriction(const real Re, const std::vector<real>& G, const std::string& name = "", const real vis = 1.0)
 			: ComplexResistance(
 				name, 
 				Re, 
 				G.at(1) - G.at(2), 
 				G.at(0), 
 				M_PI * (std::pow(0.5 * G.at(1), 2.0) - std::pow(0.5 * G.at(2), 2.0)),
-				G.at(4), 
-				"ring friction")
+				G.at(4),
+				vis,
+				"RingFriction")
 		{
 			// set name
 			if (name != "")

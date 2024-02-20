@@ -21,11 +21,13 @@ namespace hydrocalc
 		/// @brief Current settings
 		settings::Settings CurrentSettings_;
 
-		/// @brief Element name
+		/// @brief Full element name
 		std::string name_;
 
+		/// @brief Base part of element name - "main" name of element
 		std::string name_base_;
 
+		/// @brief Additional part of element name - name of external elment, to which this element belongs
 		std::string name_external_ = "";
 
 		/// @brief Diagram number
@@ -61,11 +63,14 @@ namespace hydrocalc
 		/// @brief Local resistance coefficient [-], @f$ \xi = \xi_\lambda+\xi_l @f$
 		real CSI_ = 0.0;
 
-		/// @brief type of geometry (cylinrical, rectangular etc.)
-		std::string type_ = "cylindrical";
+		/// @brief type of element
+		std::string type_ = "[Undefined]";
 
 		/// @brief Length of element [m]
 		real L_ = 0.0;
+
+		/// @brief Kinematic viscosity in the element [Pa*s]
+		real vis_ = 1.0;
 
 		/**
 		* @bpief Proceed InvalidValue accidents
@@ -151,6 +156,7 @@ namespace hydrocalc
 			const real rou,
 			const real A,
 			const real L,
+			const real vis,
 			const std::string& type) :
 			id_(count),
 			name_base_(name),
@@ -160,6 +166,7 @@ namespace hydrocalc
 			rou_(rou),
 			relRou_(rou/D0),
 			L_(L),
+			vis_(vis),
 			type_(type)
 		{
 			++count;
@@ -171,7 +178,9 @@ namespace hydrocalc
 		HydraulicResistanceBase(const HydraulicResistanceBase& HR) :
 			id_(count)
 		{
-			diagram_ = HR.diagram_;
+			*this = HR;
+
+			/*diagram_ = HR.diagram_;
 			CurrentSettings_ = HR.CurrentSettings_;
 			name_ = "[]{" + HR.name_base_ + "}";
 			name_base_ = HR.name_base_;
@@ -186,8 +195,9 @@ namespace hydrocalc
 			CSIlf_ = HR.CSIlf_;
 			CSIlr_ = HR.CSIlr_;
 			CSI_ = HR.CSI_;
+			vis_ = HR.vis_;
 
-			++count;
+			++count;*/
 		};
 
 		/// @brief Reload copy operator, because id_ is const
@@ -221,6 +231,12 @@ namespace hydrocalc
 
 		/// @see HydraulicResistance::getType()
 		virtual std::string getType() override;
+
+		/// @see HydraulicResistance::setViscosity()
+		virtual void setViscosity(const real vis) override;
+
+		/// @see HydraulicResistance::getViscosity()
+		virtual real getViscosity() override;
 
 		/// @see HydraulicResistance::getHydraulicDiameter()
 		virtual real getHydraulicDiameter() override;

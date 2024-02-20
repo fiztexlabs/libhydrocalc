@@ -48,9 +48,9 @@ namespace hydrocalc
 		* @throw ExceptionInvalidValue
 		* @throw ExceptionGeometryOutOfRange
 		*/
-		CylindricalDiffuserCurve(const real Re, const std::vector<real>& G, const std::string& name = "")
-			: CylindricalDiffuserCurveDirect(Re, G, name),
-			confuser_(Re, { G.at(0), G.at(1), 0.0, G.at(2), G.at(4), G.at(5) }, "invert flow confuser")
+		CylindricalDiffuserCurve(const real Re, const std::vector<real>& G, const std::string& name = "", const real vis = 1.0)
+			: CylindricalDiffuserCurveDirect(Re, G, name, vis),
+			confuser_(Re, { G.at(0), G.at(1), 0.0, G.at(2), G.at(4), G.at(5) }, "invert flow confuser", vis)
 		{
 			internal_resistances_.push_back(&confuser_);
 			confuser_.setExternalElementName(name_base_);

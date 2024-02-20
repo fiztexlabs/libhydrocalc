@@ -65,13 +65,12 @@ namespace hydrocalc
 	public:
 		/**
 		* @brief Default constructor of curve cylindrical confuser element.
-		* @details Fields of element must be initialized by setters methods
-		and after that function calculateElement() must be called.
-		* @see Service
 		*/
 		CylindricalConfuserCurveDirect()
 			: ComplexResistance()
 		{
+			type_ = "[CylindricalConfuserCurve]";
+
 			internal_resistances_.push_back(&FrictionPart_);
 
 			// set default name of element
@@ -93,9 +92,12 @@ namespace hydrocalc
 		*	- G[3]: Length of confuser [m]
 		*	- G[4]: Hydraulic diameter of inlet section of confuser [m]
 		*	- G[5]: Curve radius [m]
+		* @param vis: Flow kinematic viscosity in the element [Pa*s]
+		* @throw ExceptionInvalidValue
+		* @throw ExceptionGeometryOutOfRange
 		*/
-		CylindricalConfuserCurveDirect(const real Re, const std::vector<real>& G, const std::string& name = "")
-			: ComplexResistance(name, Re, G.at(1), G.at(0), M_PI* std::pow(0.5 * G.at(1), 2.0), G.at(3), "curve cylindrical confuser")
+		CylindricalConfuserCurveDirect(const real Re, const std::vector<real>& G, const std::string& name, const real vis)
+			: ComplexResistance(name, Re, G.at(1), G.at(0), M_PI* std::pow(0.5 * G.at(1), 2.0), G.at(3), vis, "[CylindricalConfuserCurve]")
 		{
 			internal_resistances_.push_back(&FrictionPart_);
 

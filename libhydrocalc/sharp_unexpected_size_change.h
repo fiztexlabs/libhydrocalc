@@ -61,6 +61,8 @@ namespace hydrocalc
 		SharpUnexpectedSizeChange()
 			: HydraulicResistanceBase()
 		{
+			type_ = "[SharpUnexpectedSizeChange]";
+
 			// set default name of element
 			this->setName("UnexpectedSizeChange(constriction) " + std::to_string(id_));
 		};
@@ -73,11 +75,12 @@ namespace hydrocalc
 		*	- G[0]: Roughness [m]
 		*	- G[1]: Diameter 1 (in the flow direction) [m] 
 		*	- G[2]: Diameter 2 (in the flow direction) [m]
+		* @param vis: Flow kinematic viscosity in the element [Pa*s]
 		* @throw ExceptionInvalidValue
 		* @throw ExceptionGeometryOutOfRange
 		*/
-		SharpUnexpectedSizeChange(const real Re, const std::vector<real>& G, const std::string& name = "")
-			: HydraulicResistanceBase(name, Re, std::min(G.at(1), G.at(2)), G.at(0), M_PI* std::pow(0.5 * std::min(G.at(1), G.at(2)), 2.0), 0.0, "sharp unexpected size change")
+		SharpUnexpectedSizeChange(const real Re, const std::vector<real>& G, const std::string& name = "", const real vis = 1.0)
+			: HydraulicResistanceBase(name, Re, std::min(G.at(1), G.at(2)), G.at(0), M_PI* std::pow(0.5 * std::min(G.at(1), G.at(2)), 2.0), 0.0, vis, "[SharpUnexpectedSizeChange]")
 		{
 			// set name
 			if (name != "")

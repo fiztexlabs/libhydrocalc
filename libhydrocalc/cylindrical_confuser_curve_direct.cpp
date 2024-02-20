@@ -109,7 +109,8 @@ HydraulicResistance* CylindricalConfuserCurveDirect::copy() const
 			D1_,
 			R0_
 		},
-		name_
+		name_,
+		vis_
 	);
 }
 

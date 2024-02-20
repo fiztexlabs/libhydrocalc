@@ -88,10 +88,12 @@ namespace hydrocalc
 		CylindricalDiffuserStraightDirect()
 			: ComplexResistance()
 		{
+			type_ = "[CylindricalDiffuserStraight]";
+
 			internal_resistances_.push_back(&FrictionPart_);
 
 			// set default name of element
-			this->setName("CylindricalDiffuserStraightDirect " + std::to_string(id_));
+			this->setName("CylindricalDiffuserStraight " + std::to_string(id_));
 
 			FrictionPart_.CurrentSettings_.GeometryOutOfRangeMode = settings::GeometryOutOfRangeBehaviorMode::NoCheck;
 			FrictionPart_.CurrentSettings_.FlowOutOfRangeMode = settings::FlowOutOfRangeBehaviorMode::NoCheck;
@@ -114,11 +116,12 @@ namespace hydrocalc
 		*	- G[5]: Diameter of the outlet of diffuser[m]
 		*	- G[6]: Hydraulic diameter of outlet section of diffuser [m]
 		*	- G[7]: Angle of diffuser [deg]
+		* @param vis: Flow kinematic viscosity in the element [Pa*s]
 		* @throw ExceptionInvalidValue
 		* @throw ExceptionGeometryOutOfRange
 		*/
-		CylindricalDiffuserStraightDirect(const real Re, const std::vector<real>& G, const real I = 1.0, const std::string& name = "")
-			: ComplexResistance(name, Re, G.at(1), G.at(0), M_PI* std::pow(0.5 * G.at(1), 2.0), G.at(3), "straight cylindrical diffuser"), I_(I)
+		CylindricalDiffuserStraightDirect(const real Re, const std::vector<real>& G, const std::string& name, const real vis, const real I)
+			: ComplexResistance(name, Re, G.at(1), G.at(0), M_PI* std::pow(0.5 * G.at(1), 2.0), G.at(3), vis, "[CylindricalDiffuserStraight]"), I_(I)
 		{
 			internal_resistances_.push_back(&FrictionPart_);
 
@@ -131,7 +134,7 @@ namespace hydrocalc
 			else
 			{
 				// default name
-				this->setName("CylindricalDiffuserStraightDirect " + std::to_string(id_));
+				this->setName("CylindricalDiffuserStraight " + std::to_string(id_));
 			}
 
 			// check inputs

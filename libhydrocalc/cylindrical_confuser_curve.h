@@ -45,10 +45,13 @@ namespace hydrocalc
 		*	- G[3]: Length of confuser [m]
 		*	- G[4]: Hydraulic diameter of inlet section of confuser [m]
 		*	- G[5]: Curve radius [m]
+		* @param vis: Flow kinematic viscosity in the element [Pa*s]
+		* @throw ExceptionInvalidValue
+		* @throw ExceptionGeometryOutOfRange
 		*/
-		CylindricalConfuserCurve(const real Re, const std::vector<real>& G, const std::string& name = "")
-			: CylindricalConfuserCurveDirect(Re, G, name),
-			diffuser_(Re, { G.at(0), G.at(1), G.at(3), 0.0, G.at(4), G.at(5) }, "invert flow diffuser")
+		CylindricalConfuserCurve(const real Re, const std::vector<real>& G, const std::string& name = "", const real vis = 1.0)
+			: CylindricalConfuserCurveDirect(Re, G, name, vis),
+			diffuser_(Re, { G.at(0), G.at(1), G.at(3), 0.0, G.at(4), G.at(5) }, "invert flow diffuser", vis)
 		{
 			internal_resistances_.push_back(&diffuser_);
 			diffuser_.setExternalElementName(name_base_);

@@ -30,10 +30,10 @@ namespace hydrocalc
 		CylindricalBendNiche()
 			: CylindricalBend()
 		{
+			type_ = "[CylindricalBendNiche]";
+
 			// set default name of element
 			this->setName("CylindricalBendNiche " + std::to_string(id_));
-
-			type_ = "cylindrical bend with niche";
 		};
 
 		/**
@@ -49,11 +49,14 @@ namespace hydrocalc
 		*	- G[4]: Length of section before bend [m]; G[4] = 0 means, that
 		* bend located after collector, however G[4] > 0 means, that straight section L = G[4]
 		* located before bend
+		* @param vis: Flow kinematic viscosity in the element [Pa*s]
 		* @throw ExceptionInvalidValue
 		*/
-		CylindricalBendNiche(const real Re, const std::vector<real>& G, const std::string& name = "")
-			: CylindricalBend(Re, G, name)
+		CylindricalBendNiche(const real Re, const std::vector<real>& G, const std::string& name = "", const real vis = 1.0)
+			: CylindricalBend(Re, G, name, vis)
 		{
+			type_ = "[CylindricalBendNiche]";
+
 			// set name
 			if (name != "")
 			{
@@ -65,8 +68,6 @@ namespace hydrocalc
 				// default name
 				this->setName("CylindricalBendNiche " + std::to_string(id_));
 			}
-
-			type_ = "cylindrical bend with niche";
 		}
 
 		/// @see HydraulicResistance::calculateElement()

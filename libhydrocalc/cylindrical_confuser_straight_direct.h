@@ -71,6 +71,8 @@ namespace hydrocalc
 		CylindricalConfuserStraightDirect()
 			: ComplexResistance()
 		{
+			type_ = "[CylindricalConfuserStraight]";
+
 			internal_resistances_.push_back(&FrictionPart_);
 
 			// set default name of element
@@ -92,9 +94,10 @@ namespace hydrocalc
 		*	- G[3]: Length of confuser [m]
 		*	- G[4]: Diameter of inlet section of confuser [m]
 		*	- G[5]: Angle of confuser [deg]
+		* @param vis: Flow kinematic viscosity in the element [Pa*s]
 		*/
-		CylindricalConfuserStraightDirect(const real Re, const std::vector<real>& G, const std::string& name = "")
-			: ComplexResistance(name, Re, G.at(1), G.at(0), M_PI* std::pow(0.5 * G.at(1), 2.0), G.at(3), "straight cylindrical confuser")
+		CylindricalConfuserStraightDirect(const real Re, const std::vector<real>& G, const std::string& name, const real vis)
+			: ComplexResistance(name, Re, G.at(1), G.at(0), M_PI* std::pow(0.5 * G.at(1), 2.0), G.at(3), vis, "[CylindricalConfuserStraight]")
 		{
 			internal_resistances_.push_back(&FrictionPart_);
 

@@ -35,6 +35,7 @@ namespace hydrocalc
 			const real rou,
 			const real A,
 			const real L,
+			const real vis,
 			const std::string& type) :
 			HydraulicResistanceBase(
 				name,
@@ -43,6 +44,7 @@ namespace hydrocalc
 				rou,
 				A,
 				L,
+				vis,
 				type)
 		{};
 

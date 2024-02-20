@@ -67,6 +67,8 @@ namespace hydrocalc
 		CylindricalFriction() :
 			Friction()
 		{
+			type_ = "[CylindricalFriction]";
+
 			// set default name of element
 			this->setName("CylindricalFriction " + std::to_string(id_));
 		};
@@ -79,10 +81,11 @@ namespace hydrocalc
 		*	- G[0]: Roughness [m]
 		*	- G[1]: Diameter of cross-section [m]
 		*	- G[2]: Length of element [m]
+		* @param vis: Flow kinematic viscosity in the element [Pa*s]
 		* @throw ExceptionInvalidValue
 		*/
-		CylindricalFriction(const real Re, const std::vector<real>& G, const std::string& name = "")
-			: Friction(name, Re, G.at(1), G.at(0), M_PI * std::pow(0.5 * G.at(1), 2.0), G.at(2), "cylindrical friction")
+		CylindricalFriction(const real Re, const std::vector<real>& G, const std::string& name = "", const real vis = 1.0)
+			: Friction(name, Re, G.at(1), G.at(0), M_PI * std::pow(0.5 * G.at(1), 2.0), G.at(2), vis, "[CylindricalFriction]")
 		{
 			// set name
 			if (name != "")

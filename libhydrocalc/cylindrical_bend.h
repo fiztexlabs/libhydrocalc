@@ -57,6 +57,8 @@ namespace hydrocalc
 		CylindricalBend()
 			: ComplexResistance()
 		{
+			type_ = "[CylindricalBend]";
+
 			internal_resistances_.push_back(&FrictionPart_);
 
 			this->setName("CylindricalBend " + std::to_string(id_));
@@ -79,10 +81,11 @@ namespace hydrocalc
 		*	- G[4]: Length of section before bend [m]; G[4] = 0 means, that
 		* bend located after collector, however G[4] > 0 means, that straight section L = G[4]
 		* located before bend
+		* @param vis: Flow kinematic viscosity in the element [Pa*s]
 		* @throw ExceptionInvalidValue
 		*/
-		CylindricalBend(const real Re, const std::vector<real>& G, const std::string& name = "")
-			: ComplexResistance(name, Re, G.at(1), G.at(0), M_PI* std::pow(0.5 * G.at(1), 2.0), 0.0, "cylindrical bend")
+		CylindricalBend(const real Re, const std::vector<real>& G, const std::string& name = "", const real vis = 1.0)
+			: ComplexResistance(name, Re, G.at(1), G.at(0), M_PI* std::pow(0.5 * G.at(1), 2.0), 0.0, vis, "[CylindricalBend]")
 		{
 			internal_resistances_.push_back(&FrictionPart_);
 

@@ -80,8 +80,25 @@ namespace hydrocalc
 		 *	- 3: Triangular tube bundles
 		 *	- 4: Rectangular tube bundles
 		 *	- 5: Rectangular channels
+		 * @todo actualize elements types
 		 */
 		virtual std::string getType() = 0;
+
+		/**
+		* @brief Set kinematic viscosity for hydraulic element.
+		* @details Flow viscosity in the element is used for calculation
+		* general hydraulic resistance coefficient, when some elements
+		* combined into Composite. In this case calling setRe for composite must call
+		* setRe for all elements in Composite with corresponding Re number for each element
+		* @param vis: Flow kinematic viscosity in the element [Pa*s]
+		*/
+		virtual void setViscosity(const real vis) = 0;
+
+		/**
+		* @brief Get flow kinematic viscosity of element.
+		* @return Kinematic viscosity [Pa*s]
+		*/
+		virtual real getViscosity() = 0;
 
 		/**
 		* @brief Set geometry characteristics to element.
