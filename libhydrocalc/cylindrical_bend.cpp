@@ -559,7 +559,7 @@ HydraulicResistance* CylindricalBend::copy() const
 			delta_,
 			L0_
 		},
-		name_
+		name_base_
 	);
 }
 

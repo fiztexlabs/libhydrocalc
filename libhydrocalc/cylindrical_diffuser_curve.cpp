@@ -1,5 +1,24 @@
 #include <libhydrocalc/cylindrical_diffuser_curve.h>
 
+using namespace hydrocalc;
+
+HydraulicResistance* hydrocalc::CylindricalDiffuserCurve::copy() const
+{
+	return new CylindricalDiffuserCurve(
+		Re_,
+		{
+			rou_,
+			D0_,
+			L_,
+			L1_,
+			D1_,
+			R0_
+		},
+		name_base_,
+		vis_
+	);
+}
+
 void hydrocalc::CylindricalDiffuserCurve::evaluate()
 {
 	if (Re_ >= 0.0)

@@ -2,13 +2,14 @@
 #include <libhydrocalc/cylindrical_friction.h>
 #include <libhydrocalc/cylindrical_bend.h>
 #include <libhydrocalc/cylindrical_confuser_straight.h>
+#include <libhydrocalc/composite.h>
 
 
 namespace hr = hydrocalc;
 
 int main()
 {
-    hr::CylindricalFriction tube(1.e6, { 2.e-5, 50.e-3, 1.0 }, "tube");
+    hr::CylindricalFriction tube(1.e6, { 2.e-5, 35.e-3, 1.0 }, "tube");
 
     tube.evaluate();
 
@@ -19,7 +20,7 @@ int main()
         1.e6,
         {
             2.e-5,
-            50.e-3,
+            20.e-3,
             0.,
             90.,
             0.
@@ -57,6 +58,24 @@ int main()
     );
 
     confuser.evaluate();
+
+    std::cout << confuser.getLocalResistanceCoeff() << std::endl;
+
+    hr::Composite composite(
+        3.e6,
+        {
+            50.e-3,
+            1.0
+        },
+        {
+            &tube,
+            &bend,
+            &confuser
+        },
+        "composite"
+    );
+
+    composite.evaluate();
 
     return 0;
 }

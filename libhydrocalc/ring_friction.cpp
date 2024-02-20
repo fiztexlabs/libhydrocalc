@@ -160,7 +160,7 @@ HydraulicResistance* RingFriction::copy() const
 			exc_,
 			L_
 		},
-		name_
+		name_base_
 	);
 }
 

@@ -109,7 +109,7 @@ HydraulicResistance* SharpUnexpectedSizeChange::copy() const
 			D1_,
 			D2_
 		},
-		name_
+		name_base_
 	);
 }
 

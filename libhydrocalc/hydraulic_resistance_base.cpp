@@ -7,7 +7,7 @@
 using namespace hydrocalc;
 
 
-real hydrocalc::HydraulicResistanceBase::procInvalidValue(const std::string& msg, const Exception& exec)
+real hydrocalc::HydraulicResistanceBase::procInvalidValue(const std::string& msg, const Exception& exec) const
 {
 	switch (CurrentSettings_.InvalidValueMode)
 	{
@@ -15,7 +15,7 @@ real hydrocalc::HydraulicResistanceBase::procInvalidValue(const std::string& msg
 		return std::numeric_limits<real>::quiet_NaN();
 		break;
 	case settings::InvalidValuesBehaviorMode::WarnNan:
-		std::cerr << "%%err " << type_ << " element: " << name_ << " " << msg << std::endl;
+		std::cerr << "%%warn " << type_ << " element: " << name_ << " " << msg << std::endl;
 		return std::numeric_limits<real>::quiet_NaN();
 		break;
 	case settings::InvalidValuesBehaviorMode::Stop:
@@ -29,7 +29,7 @@ real hydrocalc::HydraulicResistanceBase::procInvalidValue(const std::string& msg
 	return real();
 }
 
-real hydrocalc::HydraulicResistanceBase::procUnphysicalValue(const real val, const real true_val, const std::string& msg, const Exception& exec)
+real hydrocalc::HydraulicResistanceBase::procUnphysicalValue(const real val, const real true_val, const std::string& msg, const Exception& exec) const
 {
 	switch (CurrentSettings_.UnphysicalMode)
 	{
@@ -58,7 +58,7 @@ real hydrocalc::HydraulicResistanceBase::procUnphysicalValue(const real val, con
 	return real();
 }
 
-real hydrocalc::HydraulicResistanceBase::procNonExixtantFunc(const std::string& FuncName, const Exception& exec)
+real hydrocalc::HydraulicResistanceBase::procNonExixtantFunc(const std::string& FuncName, const Exception& exec) const
 {
 	switch (CurrentSettings_.NonExistentFunc)
 	{
@@ -66,7 +66,7 @@ real hydrocalc::HydraulicResistanceBase::procNonExixtantFunc(const std::string& 
 		return std::numeric_limits<real>::quiet_NaN();
 		break;
 	case settings::NonExistentFuncBehaviorMode::WarnNaN:
-		std::cerr << "%%err " << type_ << " element " << name_ << ": Function """ << FuncName << """ does not exist" << std::endl;
+		std::cerr << "%%warn " << type_ << " element " << name_ << ": Function """ << FuncName << """ does not exist" << std::endl;
 		return std::numeric_limits<real>::quiet_NaN();
 		break;
 	case settings::NonExistentFuncBehaviorMode::Stop:
@@ -80,7 +80,7 @@ real hydrocalc::HydraulicResistanceBase::procNonExixtantFunc(const std::string& 
 	return real();
 }
 
-real hydrocalc::HydraulicResistanceBase::checkReversedFlow(const std::string& msg, const Exception& exec)
+real hydrocalc::HydraulicResistanceBase::checkReversedFlow(const std::string& msg, const Exception& exec) const
 {
 	if (Re_ < 0.0)
 	{
@@ -95,7 +95,7 @@ real hydrocalc::HydraulicResistanceBase::checkReversedFlow(const std::string& ms
 			return std::numeric_limits<real>::quiet_NaN();
 			break;
 		case settings::ReversedFlowBehaviorMode::WarnNaN:
-			std::cerr << "%%err Reversed flow detected in " << type_ << " element " << name_ << ": " << msg << std::endl;
+			std::cerr << "%%warn Reversed flow detected in " << type_ << " element " << name_ << ": " << msg << std::endl;
 			return std::numeric_limits<real>::quiet_NaN();
 			break;
 		case settings::ReversedFlowBehaviorMode::Stop:
@@ -114,7 +114,7 @@ real hydrocalc::HydraulicResistanceBase::checkReversedFlow(const std::string& ms
 	return real();
 }
 
-real hydrocalc::HydraulicResistanceBase::procGeometryOutOfRange(const std::string& msg, const Exception& exec, const real nearest)
+real hydrocalc::HydraulicResistanceBase::procGeometryOutOfRange(const std::string& msg, const Exception& exec, const real nearest) const
 {
 	switch (CurrentSettings_.GeometryOutOfRangeMode)
 	{
@@ -127,7 +127,7 @@ real hydrocalc::HydraulicResistanceBase::procGeometryOutOfRange(const std::strin
 		return std::numeric_limits<real>::quiet_NaN();
 		break;
 	case settings::GeometryOutOfRangeBehaviorMode::WarnNaN:
-		std::cerr << "%%err Geometry value out of range in " << type_ << " element " << name_ << ": " << msg << std::endl;
+		std::cerr << "%%warn Geometry value out of range in " << type_ << " element " << name_ << ": " << msg << std::endl;
 		return std::numeric_limits<real>::quiet_NaN();
 		break;
 	case settings::GeometryOutOfRangeBehaviorMode::NearestValidWithNoWarn:
@@ -148,27 +148,27 @@ real hydrocalc::HydraulicResistanceBase::procGeometryOutOfRange(const std::strin
 	return real();
 }
 
-real hydrocalc::HydraulicResistanceBase::procFlowOutOfRange(const std::string& msg, const Exception& exec, const real nearest)
+real hydrocalc::HydraulicResistanceBase::procFlowOutOfRange(const std::string& msg, const Exception& exec, const real nearest) const
 {
 	switch (CurrentSettings_.FlowOutOfRangeMode)
 	{
 	case settings::FlowOutOfRangeBehaviorMode::NoCheck:
 		break;
 	case settings::FlowOutOfRangeBehaviorMode::Warn:
-		std::cerr << "%%err Flow value out of range in " << type_ << " element " << name_ << ": " << msg << std::endl;
+		std::cerr << "%%warn Flow value out of range in " << type_ << " element " << name_ << ": " << msg << std::endl;
 		break;
 	case settings::FlowOutOfRangeBehaviorMode::QuietNaN:
 		return std::numeric_limits<real>::quiet_NaN();
 		break;
 	case settings::FlowOutOfRangeBehaviorMode::WarnNaN:
-		std::cerr << "%%err Flow value out of range in " << type_ << " element " << name_ << ": " << msg << std::endl;
+		std::cerr << "%%warn Flow value out of range in " << type_ << " element " << name_ << ": " << msg << std::endl;
 		return std::numeric_limits<real>::quiet_NaN();
 		break;
 	case settings::FlowOutOfRangeBehaviorMode::NearestValidWithNoWarn:
 		return nearest;
 		break;
 	case settings::FlowOutOfRangeBehaviorMode::NearestValidWithWarn:
-		std::cerr << "%%err Flow value out of range in " << type_ << " element " << name_ << " and was set to nearest valid (" << nearest << "): " << msg << std::endl;
+		std::cerr << "%%warn Flow value out of range in " << type_ << " element " << name_ << " and was set to nearest valid (" << nearest << "): " << msg << std::endl;
 		return nearest;
 		break;
 	case settings::FlowOutOfRangeBehaviorMode::Stop:

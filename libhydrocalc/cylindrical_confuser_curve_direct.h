@@ -24,7 +24,7 @@ namespace hydrocalc
 	class CylindricalConfuserCurveDirect :
 		public ComplexResistance
 	{
-	private:
+	protected:
 		/// @brief Friction part of hydraulic resistance of bend
 		CylindricalFriction FrictionPart_;
 
@@ -40,7 +40,6 @@ namespace hydrocalc
 		/// @brief Cross-section area of inlet section of confuser [m2]
 		real A1_ = 0.0;
 
-	protected:
 		/**
 		* @brief Check curve cylindrical confuser element input values and raise exeptions
 		* or warnings.

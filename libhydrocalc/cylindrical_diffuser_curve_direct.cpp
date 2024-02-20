@@ -135,19 +135,9 @@ void hydrocalc::CylindricalDiffuserCurveDirect::diagram58()
 
 HydraulicResistance* CylindricalDiffuserCurveDirect::copy() const
 {
-	return new CylindricalDiffuserCurveDirect(
-		Re_,
-		{
-			rou_,
-			D0_,
-			L_,
-			L1_,
-			D1_,
-			R0_
-		},
-		name_,
-		vis_
-	);
+	real err = procNonExixtantFunc("evaluate", ExceptionNonExistentFunction("Try to call function ""copy"", forbidden for direct " + type_ + " element: " + name_));
+
+	return nullptr;
 }
 
 void CylindricalDiffuserCurveDirect::setGeometry(const std::vector<real>& G)

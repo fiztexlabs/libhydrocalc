@@ -123,6 +123,21 @@ namespace hydrocalc::settings
 		Stop = 4
 	};
 
+	/// @brief Behavior on InconsistentReynolds accidents in composite
+	enum class InconsistentReynolds
+	{
+		/// @brief Do nothing
+		Quiet = 0,
+		/// @brief Print warning message
+		Warn = 1,
+		/// @brief Return quiet NaN value
+		QuietNaN = 2,
+		/// @brief Return NaN value and rise warning
+		WarnNaN = 3,
+		/// @brief Stop code execution
+		Stop = 4
+	};
+
 	/// @brief Global librsp settings
 	struct Settings
 	{
@@ -146,6 +161,9 @@ namespace hydrocalc::settings
 
 		/// @brief Behavior on ReversedFlows accidents
 		ReversedFlowBehaviorMode ReversedFlowMode = ReversedFlowBehaviorMode::Quiet;
+
+		/// @brief Behavior on InconsistentReynolds accidents in composite
+		InconsistentReynolds InconsistentReynoldsMode = InconsistentReynolds::Warn;
 
 		/// @brief Enable or disable check inputs
 		bool checkInputs = 1;

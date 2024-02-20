@@ -78,7 +78,7 @@ namespace hydrocalc
 		* @param exec: Type of eception to raise
 		* @return NaN or 0.0 correspond to CurrentSettings_.InvalidValuesBehaviorMode 
 		*/
-		real procInvalidValue(const std::string& msg, const Exception& exec);
+		real procInvalidValue(const std::string& msg, const Exception& exec) const;
 
 		/**
 		* @bpief Proceed unphysical value accidents
@@ -88,7 +88,7 @@ namespace hydrocalc
 		* @param exec: Type of eception to raise
 		* @return NaN or 0.0 correspond to CurrentSettings_.InvalidValuesBehaviorMode
 		*/
-		real procUnphysicalValue(const real val, const real true_val, const std::string& msg, const Exception& exec);
+		real procUnphysicalValue(const real val, const real true_val, const std::string& msg, const Exception& exec) const;
 
 		/**
 		* @brief Rise actions corresponding to CurrentSettings_.NonExistentFunc flag
@@ -97,7 +97,7 @@ namespace hydrocalc
 		* @return NaN value if function does not exist and 0.0 value if non-existent function, or ignored.
 		* Result dependent on CurrentSettings_.NonExistentFunc
 		*/
-		real procNonExixtantFunc(const std::string& FuncName, const Exception& exec);
+		real procNonExixtantFunc(const std::string& FuncName, const Exception& exec) const;
 
 		/**
 		* @bpief Check and proceed ReversedFlow accidents
@@ -106,7 +106,7 @@ namespace hydrocalc
 		* @param exec: Type of exception to raise
 		* @return NaN or 0.0 correspond to CurrentSettings_.ReversedFlowMode flag
 		*/
-		real checkReversedFlow(const std::string& msg, const Exception& exec);
+		real checkReversedFlow(const std::string& msg, const Exception& exec) const;
 
 		/**
 		* @bpief Proceed GeometryOutOfRange accidents
@@ -115,7 +115,7 @@ namespace hydrocalc
 		* @param exec: Type of exception to raise
 		* @return NaN or 0.0 correspond to CurrentSettings_.OutOfRangeMode
 		*/
-		real procGeometryOutOfRange(const std::string& msg, const Exception& exec, const real nearest = 0.0);
+		real procGeometryOutOfRange(const std::string& msg, const Exception& exec, const real nearest = 0.0) const;
 
 		/**
 		* @bpief Proceed FlowOutOfRange accidents
@@ -124,7 +124,7 @@ namespace hydrocalc
 		* @param exec: Type of exception to raise
 		* @return NaN or 0.0 correspond to CurrentSettings_.OutOfRangeMode
 		*/
-		real procFlowOutOfRange(const std::string& msg, const Exception& exec, const real nearest = 0.0);
+		real procFlowOutOfRange(const std::string& msg, const Exception& exec, const real nearest = 0.0) const;
 
 		/// @see HydraulicResistance::setExternalElementName()
 		virtual void setExternalElementName(const std::string& name) override;

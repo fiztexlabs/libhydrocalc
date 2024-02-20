@@ -71,7 +71,7 @@ HydraulicResistance* CylindricalFriction::copy() const
 			D0_,
 			L_
 		},
-		name_
+		name_base_
 	);
 }
 

@@ -1,5 +1,26 @@
 #include <libhydrocalc/cylindrical_diffuser_straight.h>
 
+using namespace hydrocalc;
+
+HydraulicResistance* hydrocalc::CylindricalDiffuserStraight::copy() const
+{
+	return new CylindricalDiffuserStraight(
+		Re_,
+		{
+			rou_,
+			D0_,
+			L0_,
+			L_,
+			L1_,
+			Dout_,
+			D1_,
+			alpha_
+		},
+		name_base_,
+		vis_,
+		I_);
+}
+
 void hydrocalc::CylindricalDiffuserStraight::evaluate()
 {
 	if (Re_ >= 0.0)

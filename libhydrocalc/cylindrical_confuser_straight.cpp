@@ -2,6 +2,23 @@
 
 using namespace hydrocalc;
 
+HydraulicResistance* hydrocalc::CylindricalConfuserStraight::copy() const
+{
+	return new CylindricalConfuserStraight(
+		Re_,
+		{
+			rou_,
+			D0_,
+			L0_,
+			L_,
+			D1_,
+			alpha_
+		},
+		name_base_,
+		vis_
+	);
+}
+
 void hydrocalc::CylindricalConfuserStraight::evaluate()
 {
 	if (Re_ >= 0.0)

@@ -4,6 +4,7 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
+#include <libhydrocalc/exceptions.h>
 
 using namespace hydrocalc;
 
@@ -99,19 +100,9 @@ void hydrocalc::CylindricalConfuserCurveDirect::diagram523()
 
 HydraulicResistance* CylindricalConfuserCurveDirect::copy() const
 {
-	return new CylindricalConfuserCurveDirect(
-		Re_, 
-		{
-			rou_,
-			D0_,
-			L0_,
-			L_,
-			D1_,
-			R0_
-		},
-		name_,
-		vis_
-	);
+	real err = procNonExixtantFunc("evaluate", ExceptionNonExistentFunction("Try to call function ""copy"", forbidden for direct " + type_ + " element: " + name_));
+
+	return nullptr;
 }
 
 void CylindricalConfuserCurveDirect::setGeometry(const std::vector<real>& G)

@@ -137,4 +137,32 @@ namespace hydrocalc
 			type_ = "InvalidRou";
 		}
 	};
+
+	/**
+	* @brief Exception unphysical values
+	*/
+	class ExceptionUnphysicalValue :
+		public Exception
+	{
+	public:
+		ExceptionUnphysicalValue(const std::string& m)
+			: Exception(m)
+		{
+			type_ = "UnphysicalValue";
+		}
+	};
+
+	/**
+	* @brief Exception unphysical values
+	*/
+	class ExceptionInconsistentReynolds :
+		public ExceptionUnphysicalValue
+	{
+	public:
+		ExceptionInconsistentReynolds(const std::string& m)
+			: ExceptionUnphysicalValue(m)
+		{
+			type_ = "InconsistentReynolds";
+		}
+	};
 }

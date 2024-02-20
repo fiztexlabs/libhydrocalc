@@ -23,6 +23,11 @@ namespace hydrocalc
 	private:
 		/// @brief Confuser, for reverse flow calculations
 		CylindricalConfuserStraightDirect confuser_;
+
+	protected:
+		/// @see HydraulicResistance::copy()
+		virtual HydraulicResistance* copy() const override;
+
 	public:
 		/**
 		* @brief Default constructor of straight cylindrical diffuser element.

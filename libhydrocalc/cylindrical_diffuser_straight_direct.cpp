@@ -133,21 +133,9 @@ void CylindricalDiffuserStraightDirect::evaluateDirect()
 
 HydraulicResistance* CylindricalDiffuserStraightDirect::copy() const
 {
-	return new CylindricalDiffuserStraightDirect(
-		Re_,
-		{
-			rou_,
-			D0_,
-			L0_,
-			L_,
-			L1_,
-			Dout_,
-			D1_,
-			alpha_
-		},
-		name_,
-		vis_,
-		I_);
+	real err = procNonExixtantFunc("evaluate", ExceptionNonExistentFunction("Try to call function ""copy"", forbidden for direct " + type_ + " element: " + name_));
+
+	return nullptr;
 }
 
 void hydrocalc::CylindricalDiffuserStraightDirect::diagram52()

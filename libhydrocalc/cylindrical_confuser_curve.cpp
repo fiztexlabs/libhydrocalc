@@ -1,4 +1,23 @@
-#include "cylindrical_confuser_curve.h"
+#include <libhydrocalc/cylindrical_confuser_curve.h>
+
+using namespace hydrocalc;
+
+hydrocalc::HydraulicResistance* hydrocalc::CylindricalConfuserCurve::copy() const
+{
+	return new CylindricalConfuserCurve(
+		Re_,
+		{
+			rou_,
+			D0_,
+			L0_,
+			L_,
+			D1_,
+			R0_
+		},
+		name_base_,
+		vis_
+	);
+}
 
 void hydrocalc::CylindricalConfuserCurve::evaluate()
 {

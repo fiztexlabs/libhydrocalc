@@ -28,7 +28,7 @@ namespace hydrocalc
 	class CylindricalDiffuserStraightDirect :
 		public ComplexResistance
 	{
-	private:
+	protected:
 		/// @brief Friction part of hydraulic resistance of bend
 		CylindricalFriction FrictionPart_;
 
@@ -53,7 +53,6 @@ namespace hydrocalc
 		/// @brief Turbulence intensity, @f$ I=\frac{w_0}{w_max} @f$
 		real I_ = 0.0;
 
-	protected:
 		/**
 		* @brief Check straight cylindrical diffuser element input values and raise exeptions
 		* or warnings.

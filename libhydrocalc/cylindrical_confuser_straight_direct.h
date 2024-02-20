@@ -153,7 +153,7 @@ namespace hydrocalc
 		virtual void setGeometry(const std::vector<real>& G) override;
 
 		/// @brief forbidden for this class
-		virtual void evaluate() override;
+		void virtual evaluate() override;
 	};
 }
 
