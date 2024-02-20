@@ -115,12 +115,14 @@ namespace hydrocalc
 		*	- G[5]: Diameter of the outlet of diffuser[m]
 		*	- G[6]: Hydraulic diameter of outlet section of diffuser [m]
 		*	- G[7]: Angle of diffuser [deg]
+		* 	- G[8]: I - turbulence intensity, @f$ I=\frac{w_0}{w_max} @f$. If @f$ I=1 @f$
+		* velocity profile before diffuser is straight and influece of hit coefficient @f$ k_d @f$
 		* @param vis: Flow kinematic viscosity in the element [Pa*s]
 		* @throw ExceptionInvalidValue
 		* @throw ExceptionGeometryOutOfRange
 		*/
-		CylindricalDiffuserStraightDirect(const real Re, const std::vector<real>& G, const std::string& name, const real vis, const real I)
-			: ComplexResistance(name, Re, G.at(1), G.at(0), M_PI* std::pow(0.5 * G.at(1), 2.0), G.at(3), vis, "[CylindricalDiffuserStraight]"), I_(I)
+		CylindricalDiffuserStraightDirect(const real Re, const std::vector<real>& G, const std::string& name, const real vis)
+			: ComplexResistance(name, Re, G.at(1), G.at(0), M_PI* std::pow(0.5 * G.at(1), 2.0), G.at(3), vis, "[CylindricalDiffuserStraight]"), I_(G.at(8))
 		{
 			internal_resistances_.push_back(&FrictionPart_);
 
@@ -149,6 +151,7 @@ namespace hydrocalc
 				Dout_ = err;
 				D1_ = err;
 				alpha_ = err;
+				I_ = err;
 			}
 			else
 			{
@@ -157,15 +160,7 @@ namespace hydrocalc
 				Dout_ = G.at(5);
 				D1_ = G.at(6);
 				alpha_ = G.at(7);
-			}
-
-			if (I < 1.0)
-			{
-				err = procInvalidValue("I (turbulence intensity) < 1.0", ExceptionInvalidValue("Straiht cylindrical diffuser element " + name_ + ": try to set I (turbulence intensity) < 1.0"));
-				if (std::isnan(err))
-				{
-					Re_ = err;
-				}
+				I_ = G.at(8);
 			}
 
 			// initialize friction element

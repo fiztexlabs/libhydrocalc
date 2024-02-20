@@ -57,7 +57,7 @@ namespace hydrocalc
 		*/
 		CylindricalConfuserStraight(const real Re, const std::vector<real>& G, const std::string& name = "", const real vis = 1.0)
 			: CylindricalConfuserStraightDirect(Re, G, name, vis),
-			diffuser_(Re, { G.at(0), G.at(1), G.at(2), G.at(3), 0.0, G.at(4), G.at(4), G.at(5) }, "invert flow diffuser", vis, 1.0)
+			diffuser_(Re, { G.at(0), G.at(1), G.at(2), G.at(3), 0.0, G.at(4), G.at(4), G.at(5), 1.0 }, "invert flow diffuser", vis)
 		{
 			internal_resistances_.push_back(&diffuser_);
 			diffuser_.setExternalElementName(name_base_);

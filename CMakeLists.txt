@@ -88,6 +88,13 @@ set(sources
     libhydrocalc/service.h
     libhydrocalc/service.cpp
     libhydrocalc/exceptions.h
+    libhydrocalc/export.h
+    libhydrocalc/hydrocalc.h
+    libhydrocalc/hydrocalc.cpp
+    libhydrocalc/info.h
+
+    libhydrocalc/c/c_api.h
+    libhydrocalc/c/c_api.cpp
 
     libhydrocalc/hydraulic_resistance.h
 
