@@ -170,6 +170,11 @@ namespace hydrocalc
 			type_(type)
 		{
 			++count;
+
+			if (vis_ <= 0.0)
+			{
+				throw(ExceptionUnphysicalViscosity(type_ + " element " + name_ + ": try to set vis (kinematic viscosity) <= 0.0"));
+			}
 		};
 
 		/**

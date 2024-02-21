@@ -3,13 +3,16 @@
 #include <libhydrocalc/cylindrical_bend.h>
 #include <libhydrocalc/cylindrical_confuser_straight.h>
 #include <libhydrocalc/composite.h>
+#include <libhydrocalc/hydrocalc.h>
+#include <memory>
+#include <exception>
 
 
 namespace hr = hydrocalc;
 
 int main()
 {
-    hr::CylindricalFriction tube(1.e6, { 2.e-5, 35.e-3, 1.0 }, "tube");
+    /*hr::CylindricalFriction tube(1.e6, { 2.e-5, 35.e-3, 1.0 }, "tube");
 
     tube.evaluate();
 
@@ -75,7 +78,26 @@ int main()
         "composite"
     );
 
-    composite.evaluate();
+    composite.evaluate();*/
+
+
+    try
+    {
+        std::unique_ptr<hydrocalc::HydraulicResistance> tube1(hydrocalc::createHydraulicResistance(
+            "CylindricalFriction",
+            1.e6,
+            { 2.e-5, 35.e-3 }
+        ));
+
+        tube1->evaluate();
+
+        std::cout << tube1->getLocalResistanceCoeff() << std::endl;
+    }
+    catch (const std::exception& exec)
+    //catch (const hydrocalc::Exception& exec)
+    {
+        std::cout << "fail "<< std::endl;
+    }
 
     return 0;
 }

@@ -167,6 +167,20 @@ namespace hydrocalc
 	};
 
 	/**
+	* @brief Exception unphysical viscosity
+	*/
+	class ExceptionUnphysicalViscosity :
+		public ExceptionUnphysicalValue
+	{
+	public:
+		ExceptionUnphysicalViscosity(const std::string& m)
+			: ExceptionUnphysicalValue(m)
+		{
+			type_ = "UnphysicalViscosity";
+		}
+	};
+
+	/**
 	* @brief Exception unphysical values
 	*/
 	class ExceptionInconsistentReynolds :
