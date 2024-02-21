@@ -1,11 +1,14 @@
 #include <MCADINCL.H>
-#include <libhydrocalc/c/c_api.h>
+//#include <libhydrocalc/c/c_api.h>
+#include <libhydrocalc/hydrocalc.h>
 #include <math.h>
 #include <windows.h>
 #include <SDKDDKVer.h>
 #include <vector>
+#include <memory>
+#include <string>
 
-std::vector<int> i;
+std::vector<std::unique_ptr<hydrocalc::HydraulicResistance>> hr_vec;
 
 char* HydrocalcFunctionErrors[4] =
 {
@@ -50,25 +53,28 @@ LRESULT createHydraulicResistance_impl(
 	//	//_result->real = rgpTCRIT(static_cast<const int>(_Id->real));
 	//}
 
-	//hr_vec.push_back(std::unique_ptr<HydraulicResistance>(createHydraulicResistance(
-	//	std::string(_type->str), 
-	//	_Re->real, 
-	//	std::vector<real>(*(_G->hReal), *(_G->hReal)+_G->rows),
-	//	std::string(_name->str),
-	//	_vis->real)));
-	////hr_vec.push_back(std::unique_ptr<HydraulicResistance>(createHydraulicResistance(std::string(_type->str))));
+	hr_vec.push_back(std::unique_ptr<hydrocalc::HydraulicResistance>(hydrocalc::createHydraulicResistance(
+		std::string(_type->str), 
+		_Re->real, 
+		std::vector<hydrocalc::real>(*(_G->hReal), *(_G->hReal)+_G->rows),
+		std::string(_name->str),
+		_vis->real)));
 
 
-	_result->real = createHydraulicResistance(
+
+	/*result->real = createHydraulicResistance(
 		_type->str,
 		_Re->real,
 		*(_G->hReal),
 		_G->rows,
 		_name->str,
 		_vis->real
-	);
+	);*/
 
-	_result->real = 100.0;
+
+	//_result->real = static_cast<int>(hr_vec.size() - 1);
+
+	_result->real = static_cast<int>(hr_vec.size() - 1);
 	_result->imag = 0.0;
 
 	return 0;

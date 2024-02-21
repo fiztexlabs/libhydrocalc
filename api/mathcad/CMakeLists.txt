@@ -34,15 +34,15 @@ target_include_directories( libhydrocalcmcad
 )
 target_link_libraries(libhydrocalcmcad
     PRIVATE
-    #static-libhydrocalc
-    libhydrocalc::libhydrocalc
+    static-libhydrocalc
+    #libhydrocalc::libhydrocalc
     "${MATHCAD_ROOT}/userefi/microsft/lib/mcaduser.lib"
 )
 
 if(NOT is_top_level)
     win_copy_deps_to_target_dir(libhydrocalcmcad
-        libhydrocalc::libhydrocalc
-        #static-libhydrocalc
+        #libhydrocalc::libhydrocalc
+        static-libhydrocalc
     )
 endif()
 
