@@ -3,7 +3,9 @@
 #include <math.h>
 #include <windows.h>
 #include <SDKDDKVer.h>
+#include <vector>
 
+std::vector<int> i;
 
 char* HydrocalcFunctionErrors[4] =
 {
@@ -66,6 +68,7 @@ LRESULT createHydraulicResistance_impl(
 		_vis->real
 	);
 
+	_result->real = 100.0;
 	_result->imag = 0.0;
 
 	return 0;
@@ -116,8 +119,13 @@ extern "C" BOOL WINAPI DllMain(HINSTANCE hModule, DWORD ul_reason_for_call, LPVO
 			// SOURCE
 			CreateUserFunction(hModule, &fi_createHydraulicResistance);
 		};
+
+		break;
 	}
-	break;
+	default:
+	{
+		break;
+	}
 	}
 	return TRUE;
 }

@@ -46,7 +46,7 @@ if(NOT is_top_level)
     )
 endif()
 
-set_target_properties(libhydrocalcmcad PROPERTIES LINK_FLAGS "/ENTRY:\"DllMain\"")
-set_target_properties(libhydrocalcmcad PROPERTIES PREFIX "")
+# set_target_properties(libhydrocalcmcad PROPERTIES LINK_FLAGS "/ENTRY:\"DllMain\"")
+# set_target_properties(libhydrocalcmcad PROPERTIES PREFIX "")
 
 # target_compile_options(libhydrocalcmcad PUBLIC "-MT")
