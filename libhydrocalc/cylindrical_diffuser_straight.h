@@ -59,10 +59,11 @@ namespace hydrocalc
 		*	- G[5]: Diameter of the outlet of diffuser[m]
 		*	- G[6]: Hydraulic diameter of outlet section of diffuser [m]
 		*	- G[7]: Angle of diffuser [deg]
+		* 	- G[8]: I - turbulence intensity, @f$ I=\frac{w_0}{w_max} @f$. If @f$ I=1 @f$
 		* @param vis: Flow kinematic viscosity in the element [Pa*s]
 		*/
-		CylindricalDiffuserStraight(const real Re, const std::vector<real>& G, const std::string& name = "", const real vis = 1.0, const real I = 1.0)
-			: CylindricalDiffuserStraightDirect(Re, G, name, vis, I), 
+		CylindricalDiffuserStraight(const real Re, const std::vector<real>& G, const std::string& name = "", const real vis = 1.0)
+			: CylindricalDiffuserStraightDirect(Re, G, name, vis), 
 			confuser_(Re, {G.at(0), G.at(1), G.at(2), G.at(3), G.at(5), G.at(7)}, "invert flow confuser", vis)
 		{
 			internal_resistances_.push_back(&confuser_);

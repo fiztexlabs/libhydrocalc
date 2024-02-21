@@ -31,6 +31,12 @@ namespace hydrocalc
 
 namespace hydrocalc::settings
 {
+	/**
+	* @defgroup Settings Settings of hydraulic resistance element
+	* @{
+	* @brief Settings of hydraulic resistance element
+	*/
+
 	/// @brief Behavior on unphysical value accidents
 	enum class UnphysicalValueBehaviorMode
 	{
@@ -171,4 +177,8 @@ namespace hydrocalc::settings
 		/// @brief Maximum CSI, ocurred in specific points (such as Re = 0.0)
 		real MAX_CSI = DEF_MAX_CSI;
 	};
+
+	/**
+	* @}
+	*/
 }

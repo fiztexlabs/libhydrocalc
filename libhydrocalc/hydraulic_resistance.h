@@ -135,6 +135,7 @@ namespace hydrocalc
 		*		- G[5]: Diameter of the outlet of diffuser[m]
 		*		- G[6]: Hydraulic diameter of outlet section of diffuser [m]
 		*		- G[7]: Angle of diffuser [deg]
+		* 		- G[8]: I - turbulence intensity, @f$ I=\frac{w_0}{w_max} @f$. If @f$ I=1 @f$
 		*	- for curve cylindrical diffuser element:
 		*		- G[0]: Roughness [m]
 		*		- G[1]: Hydraulic diameter of diffuser [m]
@@ -203,6 +204,7 @@ namespace hydrocalc
 		*		- G[7]: Angle of diffuser [deg]
 		*		- G[8]: Cross-section area of diffuser inlet, [m2]
 		*		- G[9]: Cross-section area of diffuser outlet, [m2]
+		* 		- G[10]: I - turbulence intensity, @f$ I=\frac{w_0}{w_max} @f$. If @f$ I=1 @f$
 		*	- for curve cylindrical diffuser element:
 		*		- G[0]: Roughness [m]
 		*		- G[1]: Hydraulic diameter of diffuser [m]

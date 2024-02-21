@@ -21,7 +21,7 @@ string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}" is_top_
 # uncomment for shared build
 set(HR_SHARED_LIBS " ")
 
-set(CMAKE_BUILD_TYPE Debug)
+# set(CMAKE_BUILD_TYPE Debug)
 option(HR_BUILD_TESTS "Build libhydrocalc tests" ON)
 # option(HR_BUILD_PYTHON_EXT "Build libhydrocalc python extension" ON)
 option(HR_BUILD_MATHCAD_EXT "Build libhydrocalc Mathcad extension" ON)
@@ -70,7 +70,6 @@ else()
 endif()
 target_link_libraries(libhydrocalc PRIVATE libmath::libmath)
 
-
 #----------------------------------------------------------------------------------------------------------------------
 # libhydrocalc sources
 #----------------------------------------------------------------------------------------------------------------------
@@ -89,6 +88,13 @@ set(sources
     libhydrocalc/service.h
     libhydrocalc/service.cpp
     libhydrocalc/exceptions.h
+    libhydrocalc/export.h
+    libhydrocalc/hydrocalc.h
+    libhydrocalc/hydrocalc.cpp
+    libhydrocalc/info.h
+
+    libhydrocalc/c/c_api.h
+    libhydrocalc/c/c_api.cpp
 
     libhydrocalc/hydraulic_resistance.h
 

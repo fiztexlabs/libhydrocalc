@@ -14,11 +14,11 @@ HydraulicResistance* hydrocalc::CylindricalDiffuserStraight::copy() const
 			L1_,
 			Dout_,
 			D1_,
-			alpha_
+			alpha_,
+			I_
 		},
 		name_base_,
-		vis_,
-		I_);
+		vis_);
 }
 
 void hydrocalc::CylindricalDiffuserStraight::evaluate()

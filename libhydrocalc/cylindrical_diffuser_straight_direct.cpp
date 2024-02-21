@@ -54,6 +54,10 @@ real CylindricalDiffuserStraightDirect::checkGeometry(const std::vector<real>& G
 		{
 			err += procInvalidValue("D1 (diffuser outlet section hydraulic diameter) < 0.0", ExceptionInvalidValue(type_ + " element " + name_ + ": try to set D1 (diffuser outlet section hydraulic diameter) < 0.0"));
 		}
+		if(G.at(8)<1.0)
+		{
+			err += procInvalidValue("I (turbulence intensity) < 1.0", ExceptionInvalidValue("Straiht cylindrical diffuser element " + name_ + ": try to set I (turbulence intensity) < 1.0"));
+		}
 
 		// check diffuser diameters and length consistency
 		real d_out = G.at(1) + 2.0 * G.at(3) * std::atan(0.5 * G.at(7) / (180.0 / M_PI));
@@ -243,6 +247,7 @@ void CylindricalDiffuserStraightDirect::setGeometry(const std::vector<real>& G)
 		Dout_ = err;
 		D1_ = err;
 		alpha_ = err;
+		I_ = err;
 	}
 	else
 	{
@@ -254,6 +259,7 @@ void CylindricalDiffuserStraightDirect::setGeometry(const std::vector<real>& G)
 		Dout_ = G.at(5);
 		D1_ = G.at(6);
 		alpha_ = G.at(7);
+		I_ = G.at(8);
 	}
 
 	FrictionPart_.setGeometry({ rou_, D0_, L_ });
@@ -272,7 +278,8 @@ void CylindricalDiffuserStraightDirect::getGeometry(std::vector<real>& G)
 		D1_,
 		alpha_,
 		A_,
-		A1_
+		A1_,
+		I_
 	};
 }
 

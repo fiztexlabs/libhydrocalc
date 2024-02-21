@@ -125,6 +125,20 @@ namespace hydrocalc
 	};
 
 	/**
+	* @brief Exception invalid element type
+	*/
+	class ExceptionInvalidElementType :
+		public ExceptionInvalidValue
+	{
+	public:
+		ExceptionInvalidElementType(const std::string& m)
+			: ExceptionInvalidValue(m)
+		{
+			type_ = "InvalidElementType";
+		}
+	};
+
+	/**
 	* @brief Exception invalid rou value
 	*/
 	class ExceptionInvalidRou :

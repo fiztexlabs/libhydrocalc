@@ -10,6 +10,51 @@
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
       "ctestCommandArgs": "",
+      "cmakeExecutable": "C:/Program Files/CMake/bin/cmake.exe",
+      "variables": [
+        {
+          "name": "MATHCAD_ROOT",
+          "value": "c:\\Program Files (x86)\\Mathcad\\Mathcad 15",
+          "type": "STRING"
+        }
+      ]
+    },
+    {
+      "name": "x86-Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "buildRoot": "${projectDir}\\build\\${name}",
+      "installRoot": "${projectDir}\\out\\install\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": "",
+      "inheritEnvironments": [ "msvc_x86" ],
+      "variables": [
+        {
+          "name": "MATHCAD_ROOT",
+          "value": "c:\\Program Files (x86)\\Mathcad\\Mathcad 15",
+          "type": "STRING"
+        }
+      ],
+      "cmakeExecutable": "C:/Program Files/CMake/bin/cmake.exe"
+    },
+    {
+      "name": "x86-Release",
+      "generator": "Ninja",
+      "configurationType": "RelWithDebInfo",
+      "buildRoot": "${projectDir}\\build\\${name}",
+      "installRoot": "${projectDir}\\out\\install\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": "",
+      "inheritEnvironments": [ "msvc_x86" ],
+      "variables": [
+        {
+          "name": "MATHCAD_ROOT",
+          "value": "c:\\Program Files (x86)\\Mathcad\\Mathcad 15",
+          "type": "STRING"
+        }
+      ],
       "cmakeExecutable": "C:/Program Files/CMake/bin/cmake.exe"
     }
   ]
