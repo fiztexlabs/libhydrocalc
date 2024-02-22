@@ -265,7 +265,7 @@ namespace hydrocalc
 		virtual real getCrossSectionArea() override;
 
 		/// @see HydraulicResistance::getDiagram()
-		virtual void getDiagram(std::string& diagram) override;
+		virtual std::string getDiagram() override;
 	};
 
 	/// @brief Initialize counter of HR elements

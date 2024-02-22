@@ -401,10 +401,9 @@ namespace hydrocalc
 		* @brief Get name of correlations diagram.
 		* @details For HydraulicComposite element return string, contains diagrams, wich was used
 		* for calculation each of element in HydraulicComposite.
-		* @param[out] diagram: String number of diagram, which was used for calculations
-		* @see HydraulicComposite
+		* @return diagram: String number of diagram, which was used for calculations
 		*/
-		virtual void getDiagram(std::string &diagram) = 0;
+		virtual std::string getDiagram() = 0;
 	};
 }
 

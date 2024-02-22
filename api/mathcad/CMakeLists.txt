@@ -5,7 +5,32 @@ string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}" is_top_
 # set(MATHCAD_ROOT "d:\\Users\\Mathcad\\Mathcad 14\\")
 
 set(ext_sources
+    src/mathcad_api.h
     src/mathcad_api.cpp
+    src/create_hydraulic_resistance.h
+    src/create_composite.h
+    src/evaluate.h
+
+    src/get_diagram.h
+    src/get_friction_part_coeff.h
+    src/get_geometry.h
+    src/get_geometry_part_coeff.h
+    src/get_id.h
+    src/get_length.h
+    src/get_local_resistance_coeff.h
+    src/get_name.h
+    src/get_re.h
+    src/get_rel_friction_coeff.h
+    src/get_rou.h
+    src/get_type.h
+    src/get_viscosity.h
+
+    src/set_geometry.h
+    src/set_length.h
+    src/set_name.h
+    src/set_re.h
+    src/set_rou.h
+    src/set_viscosity.h
 )
 add_library(libhydrocalcmcad SHARED ${ext_sources})
 

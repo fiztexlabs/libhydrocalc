@@ -299,9 +299,9 @@ real HydraulicResistanceBase::getCrossSectionArea()
 	return A_;
 }
 
-void HydraulicResistanceBase::getDiagram(std::string& diagram)
+std::string HydraulicResistanceBase::getDiagram()
 {
-	diagram = diagram_;
+	return diagram_;
 }
 
 HydraulicResistanceBase& hydrocalc::HydraulicResistanceBase::operator=(const HydraulicResistanceBase& HR)
