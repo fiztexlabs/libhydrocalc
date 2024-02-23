@@ -29,7 +29,7 @@ LRESULT composite_get_impl(
 
 	try
 	{
-		auto composite{ static_cast<hydrocalc::Composite*>(hydrocalc::mathcad::hr_vec.at(static_cast<size_t>(_id->real)).get()) };
+		auto composite{ dynamic_cast<hydrocalc::Composite*>(hydrocalc::mathcad::hr_vec.at(static_cast<size_t>(_id->real)).get()) };
 
 		hydrocalc::HydraulicResistance* element(composite->get(static_cast<size_t>(_id_to_get->real)));
 

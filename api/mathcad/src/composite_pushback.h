@@ -29,7 +29,7 @@ LRESULT composite_push_back_impl(
 
 	try
 	{
-		static_cast<hydrocalc::Composite*>(hydrocalc::mathcad::hr_vec.at(static_cast<size_t>(_id->real)).get())->push_back(
+		dynamic_cast<hydrocalc::Composite*>(hydrocalc::mathcad::hr_vec.at(static_cast<size_t>(_id->real)).get())->push_back(
 			hydrocalc::mathcad::hr_vec.at(static_cast<size_t>(_id_to_push_back->real)).get()
 		);
 	}

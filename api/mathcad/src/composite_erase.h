@@ -29,7 +29,7 @@ LRESULT composite_erase_impl(
 
 	try
 	{
-		static_cast<hydrocalc::Composite*>(hydrocalc::mathcad::hr_vec.at(static_cast<size_t>(_id->real)).get())->erase(
+		dynamic_cast<hydrocalc::Composite*>(hydrocalc::mathcad::hr_vec.at(static_cast<size_t>(_id->real)).get())->erase(
 			hydrocalc::mathcad::hr_vec.at(static_cast<size_t>(_id_to_erase->real)).get()
 		);
 	}

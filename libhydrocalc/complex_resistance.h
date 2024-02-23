@@ -1,7 +1,6 @@
 #pragma once
 #include <libhydrocalc/hydraulic_resistance_base.h>
 #include <string>
-#include <vector>
 
 namespace hydrocalc
 {
@@ -15,9 +14,6 @@ namespace hydrocalc
 		public HydraulicResistanceBase
 	{
 	protected:
-		/// @brief Vector of hydraulic resistance components
-		std::vector<HydraulicResistance*> internal_resistances_;
-
 		/// @see HydraulicResistance::setExternalElementName()
 		virtual void setExternalElementName(const std::string& name) override;
 

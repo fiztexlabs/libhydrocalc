@@ -3,9 +3,13 @@
 #include <libhydrocalc/exceptions.h>
 #include <libhydrocalc/settings.h>
 #include <string>
+#include <vector>
+#include <algorithm>
 
 namespace hydrocalc
 {
+	class Composite;
+
 	/**
 	* @brief Base class for hydraulic resistances
 	* @author Ilya Konovalov
@@ -17,7 +21,14 @@ namespace hydrocalc
 	private:
 		/// @brief Counter of HR elements
 		static size_t count;
+
 	protected:
+		/// @brief Vector of composites, that includes this element
+		std::vector<HydraulicResistanceBase*> composites_;
+
+		/// @brief Vector of hydraulic resistance components
+		std::vector<HydraulicResistance*> internal_resistances_;
+
 		/// @brief Current settings
 		settings::Settings CurrentSettings_;
 
@@ -129,6 +140,8 @@ namespace hydrocalc
 		/// @see HydraulicResistance::setExternalElementName()
 		virtual void setExternalElementName(const std::string& name) override;
 
+		friend Composite;
+
 	public:
 		/// @brief Default constructor
 		HydraulicResistanceBase() :
@@ -208,7 +221,14 @@ namespace hydrocalc
 		/// @brief Reload copy operator, because id_ is const
 		HydraulicResistanceBase& operator=(const HydraulicResistanceBase& HR);
 
-		virtual ~HydraulicResistanceBase() {};
+		virtual ~HydraulicResistanceBase() 
+		{
+			for (auto composite : composites_)
+			{
+				// delete this element from any composites
+				composite->internal_resistances_.erase(std::find(composite->internal_resistances_.begin(), composite->internal_resistances_.end(), this));
+			}
+		};
 
 		/// @see HydraulicResistance::setName()
 		virtual void setName(const std::string& name) override;

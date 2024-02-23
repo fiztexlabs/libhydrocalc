@@ -19,7 +19,7 @@ LRESULT composite_getAll_impl(
 
 	try
 	{
-		auto composite{ static_cast<hydrocalc::Composite*>(hydrocalc::mathcad::hr_vec.at(static_cast<size_t>(_id->real)).get()) };
+		auto composite{ dynamic_cast<hydrocalc::Composite*>(hydrocalc::mathcad::hr_vec.at(static_cast<size_t>(_id->real)).get()) };
 
 		std::vector<hydrocalc::HydraulicResistance*> in_elements;
 

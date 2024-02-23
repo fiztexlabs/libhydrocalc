@@ -200,10 +200,16 @@ void hydrocalc::Composite::push_back(HydraulicResistance* hr)
 	if (is_unique_)
 	{
 		internal_resistances_.push_back(hr->copy());
+
+		// mark hr, that its included to this composite
+		dynamic_cast<HydraulicResistanceBase*>(internal_resistances_.back())->composites_.push_back(this);
 	}
 	else
 	{
 		internal_resistances_.push_back(hr);
+
+		// mark hr, that its included to this composite
+		dynamic_cast<HydraulicResistanceBase*>(hr)->composites_.push_back(this);
 	}
 
 	hr->setExternalElementName(name_base_);

@@ -12,7 +12,7 @@ namespace hr = hydrocalc;
 
 int main()
 {
-    hr::CylindricalFriction tube(1.e6, { 2.e-5, 35.e-3, 1.0 }, "tube");
+    hr::CylindricalFriction tube(1.e6, { 2.e-5, 50.e-3, 2.0 }, "tube");
 
     tube.evaluate();
 
@@ -83,7 +83,7 @@ int main()
 
     composite.evaluate();
 
-    std::unique_ptr<hr::HydraulicResistance> ptr_composite(new hr::Composite(
+    /*std::unique_ptr<hr::HydraulicResistance> ptr_composite(new hr::Composite(
         3.e6,
         {
             50.e-3,
@@ -91,8 +91,7 @@ int main()
         },
         {
             &tube,
-            &bend,
-            &confuser
+            &tube
         },
         "composite",
         1.0,
@@ -104,6 +103,8 @@ int main()
     ptr_composite.get()->evaluate();
 
     std::cout << ptr_composite.get()->getLocalResistanceCoeff();
+
+    tube.~CylindricalFriction();*/
 
    /* std::unique_ptr<hr::HydraulicResistance> tube_ptr(std::make_unique<hr::CylindricalFriction>(tube));
 
@@ -130,6 +131,9 @@ int main()
     //{
     //    std::cout << "fail "<< std::endl;
     //}
+
+    tube.~CylindricalFriction();
+    composite.~Composite();
 
     return 0;
 }

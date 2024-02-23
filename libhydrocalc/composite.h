@@ -103,10 +103,16 @@ namespace hydrocalc
 				if (is_unique_)
 				{
 					internal_resistances_.push_back(hr->copy());
+
+					// mark hr, that its included to this composite
+					dynamic_cast<HydraulicResistanceBase*>(internal_resistances_.back())->composites_.push_back(this);
 				}
 				else
 				{
 					internal_resistances_.push_back(hr);
+
+					// mark hr, that its included to this composite
+					dynamic_cast<HydraulicResistanceBase*>(hr)->composites_.push_back(this);
 				}
 			}
 			for (auto& hr : internal_resistances_)
@@ -138,6 +144,10 @@ namespace hydrocalc
 				else
 				{
 					hr->setExternalElementName("");
+
+					// delete this composites from any elements, which this composite include
+					auto hr_b = dynamic_cast<HydraulicResistanceBase*>(hr);
+					(hr_b->composites_).erase(std::find((hr_b->composites_).begin(), (hr_b->composites_).end(), this));
 				}
 			}
 		};

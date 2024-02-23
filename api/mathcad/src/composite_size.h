@@ -19,7 +19,7 @@ LRESULT composite_size_impl(
 
 	try
 	{
-		_result->real = static_cast<hydrocalc::Composite*>(hydrocalc::mathcad::hr_vec.at(static_cast<size_t>(_id->real)).get())->size();
+		_result->real = dynamic_cast<hydrocalc::Composite*>(hydrocalc::mathcad::hr_vec.at(static_cast<size_t>(_id->real)).get())->size();
 	}
 	catch (const std::exception& exec)
 	{
