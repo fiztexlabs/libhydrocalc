@@ -285,6 +285,7 @@ namespace hydrocalc
 		 *	- for StraightCylindricalDiffuser set length of diffuser;
 		 *	- for SharpUnexpectedSizeChange set 1e-6 m;
 		 * @param L: Length of element [m]
+		 * @throw ExceptionInvalidValue
 		 */
 		virtual void setLength(const real L) = 0;
 

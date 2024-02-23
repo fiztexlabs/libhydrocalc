@@ -62,5 +62,8 @@ namespace hydrocalc
 		/// @see HydraulicResistance::setLength()
 		virtual void setLength(const real L) override;
 
+		/// @see HydraulicResistance::setViscosity()
+		virtual void setViscosity(const real vis) override;
+
 	};
 }

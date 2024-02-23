@@ -2,10 +2,10 @@
 #include <src/mathcad_api.h>
 #include <libhydrocalc/hydrocalc.h>
 #include <libhydrocalc/exceptions.h>
-#include <string.h>
+#include <libhydrocalc/composite.h>
 
-LRESULT getType_impl(
-	MCSTRING* const _result,
+LRESULT composite_size_impl(
+	COMPLEXSCALAR* const _result,
 	const COMPLEXSCALAR* const _id)
 {
 	if (static_cast<int>(_id->real) != _id->real)
@@ -19,15 +19,7 @@ LRESULT getType_impl(
 
 	try
 	{
-		std::string type = hydrocalc::mathcad::hr_vec.at(static_cast<size_t>(_id->real)).get()->getType();
-
-		_result->str = MathcadAllocate(type.length() + 1);
-		if (_result->str == NULL)
-		{
-			return MAKELRESULT(12, 0);
-		}
-
-		strcpy_s(_result->str, type.length() + 1, type.c_str());
+		_result->real = static_cast<hydrocalc::Composite*>(hydrocalc::mathcad::hr_vec.at(static_cast<size_t>(_id->real)).get())->size();
 	}
 	catch (const std::exception& exec)
 	{
@@ -36,16 +28,18 @@ LRESULT getType_impl(
 		return MAKELRESULT(8, 1);
 	}
 
+	_result->imag = 0.0;
+
 	return 0;
 }
 
-FUNCTIONINFO fi_getType =
+FUNCTIONINFO fi_composite_size =
 {
-	"hr_getType",
+	"hr_composite_size",
 	"",
 	"",
-	(LPCFUNCTION)getType_impl,
-	STRING,
+	(LPCFUNCTION)composite_size_impl,
+	COMPLEX_SCALAR,
 	1,
 	{COMPLEX_SCALAR}
 };

@@ -44,6 +44,11 @@ HydraulicResistance* hydrocalc::Composite::copy() const
 	);
 }
 
+bool hydrocalc::Composite::isInComposite(HydraulicResistance* Element)
+{
+	return (std::find(internal_resistances_.begin(), internal_resistances_.end(), Element) != internal_resistances_.end());
+}
+
 real hydrocalc::Composite::procInconsistentReynolds(HydraulicResistance* hr) const
 {
 	std::string elname;
@@ -188,4 +193,123 @@ void hydrocalc::Composite::setRe(const real Re)
 
 		hr->setRe(Re_curr);
 	}
+}
+
+void hydrocalc::Composite::push_back(HydraulicResistance* hr)
+{
+	if (is_unique_)
+	{
+		internal_resistances_.push_back(hr->copy());
+	}
+	else
+	{
+		internal_resistances_.push_back(hr);
+	}
+
+	hr->setExternalElementName(name_base_);
+}
+
+void hydrocalc::Composite::push_back(const std::vector<HydraulicResistance*>& elements)
+{
+	for (auto hr : elements)
+	{
+		(*this).push_back(hr);
+	}
+}
+
+void hydrocalc::Composite::erase(const size_t idx)
+{
+	if (idx >= internal_resistances_.size())
+	{
+		throw(ExceptionInvalidElementId(type_ + " element: try to get element by id " + std::to_string(idx) + ", which is not in the composite"));
+	}
+	else
+	{
+		if (is_unique_)
+		{
+			delete internal_resistances_.at(idx);
+			internal_resistances_.erase(internal_resistances_.begin() + idx);
+		}
+		else
+		{
+			internal_resistances_.at(idx)->setExternalElementName("");
+			internal_resistances_.erase(internal_resistances_.begin() + idx);
+		}
+	}
+}
+
+void hydrocalc::Composite::erase(HydraulicResistance* hr)
+{
+	if (isInComposite(hr))
+	{
+		throw(ExceptionInvalidElementId(type_ + " element: try to get element, which is not in the composite by pointer"));
+	}
+	else
+	{
+		auto el = std::find(internal_resistances_.begin(), internal_resistances_.end(), hr);
+
+		if (is_unique_)
+		{
+			delete* el;
+			internal_resistances_.erase(el);
+		}
+		else
+		{
+			(*el)->setExternalElementName("");
+			internal_resistances_.erase(el);
+		}
+	}
+}
+
+void hydrocalc::Composite::erase(const std::vector<HydraulicResistance*>& elements)
+{
+	for (auto hr : elements)
+	{
+		(*this).erase(hr);
+	}
+}
+
+void hydrocalc::Composite::erase(const std::vector<size_t>& elements)
+{
+	for (auto hr : elements)
+	{
+		(*this).erase(hr);
+	}
+}
+
+HydraulicResistance* hydrocalc::Composite::get(const size_t idx, const bool copy)
+{
+	if (copy)
+	{
+		return internal_resistances_.at(idx)->copy();
+	}
+	else
+	{
+		return internal_resistances_.at(idx);
+	}
+}
+
+void hydrocalc::Composite::get(std::vector<HydraulicResistance*>& elements, const bool copy)
+{
+	if (copy)
+	{
+		for (auto hr : internal_resistances_)
+		{
+			elements.push_back(hr->copy());
+		}
+	}
+	else
+	{
+		elements = internal_resistances_;
+	}
+}
+
+size_t hydrocalc::Composite::size()
+{
+	return internal_resistances_.size();
+}
+
+bool hydrocalc::Composite::isUnique()
+{
+	return is_unique_;
 }

@@ -40,5 +40,5 @@ void hydrocalc::CylindricalConfuserStraight::setGeometry(const std::vector<real>
 {
 	CylindricalConfuserStraightDirect::setGeometry(G);
 
-	diffuser_.setGeometry({ G.at(0), G.at(1), G.at(2), G.at(3), 0.0, G.at(4), G.at(4), G.at(5) });
+	diffuser_.setGeometry({ G.at(0), G.at(1), G.at(2), G.at(3), 0.0, G.at(4), G.at(4), G.at(5), 1.0 });
 }

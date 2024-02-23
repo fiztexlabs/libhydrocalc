@@ -4,11 +4,17 @@ string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}" is_top_
 
 # set(MATHCAD_ROOT "d:\\Users\\Mathcad\\Mathcad 14\\")
 
+if(NOT CMAKE_SIZEOF_VOID_P EQUAL 4)
+    message(FATAL_ERROR "Mathcad wrapper must be 32 bit")
+endif()
+
 set(ext_sources
     src/mathcad_api.h
     src/mathcad_api.cpp
     src/create_hydraulic_resistance.h
     src/create_composite.h
+    src/delete.h
+    src/clear.h
     src/evaluate.h
 
     src/get_diagram.h
@@ -31,6 +37,13 @@ set(ext_sources
     src/set_re.h
     src/set_rou.h
     src/set_viscosity.h
+
+    src/composite_erase.h
+    src/composite_get.h
+    src/composite_getall.h
+    src/composite_pushback.h
+    src/composite_size.h
+
 )
 add_library(libhydrocalcmcad SHARED ${ext_sources})
 
@@ -70,6 +83,8 @@ if(NOT is_top_level)
         static-libhydrocalc
     )
 endif()
+
+set_target_properties(libhydrocalcmcad PROPERTIES VERSION 0.0.1)
 
 # set_target_properties(libhydrocalcmcad PROPERTIES LINK_FLAGS "/ENTRY:\"DllMain\"")
 # set_target_properties(libhydrocalcmcad PROPERTIES PREFIX "")

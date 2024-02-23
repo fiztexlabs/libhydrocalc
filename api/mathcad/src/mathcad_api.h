@@ -9,10 +9,11 @@
 #include <string>
 #include <exception>
 #include <iostream>
+#include <algorithm>
 
 namespace hydrocalc::mathcad
 {
-	std::vector<std::unique_ptr<hydrocalc::HydraulicResistance>> hr_vec;
+	inline std::vector<std::unique_ptr<hydrocalc::HydraulicResistance>> hr_vec;
 }
 
 const int ERR_NUM = 15;
@@ -31,7 +32,7 @@ char* HydrocalcFunctionErrors[ERR_NUM] =
   "Flow out of range throw eveluating in the element", // 10
   "Reversed flow in the element", // 11
   "Not enougth memory", // 12
-  "", // 13
+  "Element is not in the composite", // 13
   "", // 14
   "", // 15
 };

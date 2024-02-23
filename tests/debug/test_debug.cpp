@@ -12,7 +12,7 @@ namespace hr = hydrocalc;
 
 int main()
 {
-    /*hr::CylindricalFriction tube(1.e6, { 2.e-5, 35.e-3, 1.0 }, "tube");
+    hr::CylindricalFriction tube(1.e6, { 2.e-5, 35.e-3, 1.0 }, "tube");
 
     tube.evaluate();
 
@@ -49,6 +49,7 @@ int main()
         "confuser"
     );
 
+
     confuser.setGeometry(
         {
             2.e-5,
@@ -75,29 +76,60 @@ int main()
             &bend,
             &confuser
         },
-        "composite"
+        "composite",
+        1.0,
+        0
     );
 
-    composite.evaluate();*/
+    composite.evaluate();
 
+    std::unique_ptr<hr::HydraulicResistance> ptr_composite(new hr::Composite(
+        3.e6,
+        {
+            50.e-3,
+            1.0
+        },
+        {
+            &tube,
+            &bend,
+            &confuser
+        },
+        "composite",
+        1.0,
+        0
+    ));
 
-    try
+    ptr_composite.get()->setName("composite2");
+
+    ptr_composite.get()->evaluate();
+
+    std::cout << ptr_composite.get()->getLocalResistanceCoeff();
+
+   /* std::unique_ptr<hr::HydraulicResistance> tube_ptr(std::make_unique<hr::CylindricalFriction>(tube));
+
+    if (tube_ptr.get() == &tube)
     {
-        std::unique_ptr<hydrocalc::HydraulicResistance> tube1(hydrocalc::createHydraulicResistance(
-            "CylindricalFriction",
-            1.e6,
-            { 2.e-5, 35.e-3 }
-        ));
+        std::cout << "tube == tube" << std::endl;
+    }*/
 
-        tube1->evaluate();
 
-        std::cout << tube1->getLocalResistanceCoeff() << std::endl;
-    }
-    catch (const std::exception& exec)
-    //catch (const hydrocalc::Exception& exec)
-    {
-        std::cout << "fail "<< std::endl;
-    }
+    //try
+    //{
+    //    std::unique_ptr<hydrocalc::HydraulicResistance> tube1(hydrocalc::createHydraulicResistance(
+    //        "CylindricalFriction",
+    //        1.e6,
+    //        { 2.e-5, 35.e-3 }
+    //    ));
+
+    //    tube1->evaluate();
+
+    //    std::cout << tube1->getLocalResistanceCoeff() << std::endl;
+    //}
+    //catch (const std::exception& exec)
+    ////catch (const hydrocalc::Exception& exec)
+    //{
+    //    std::cout << "fail "<< std::endl;
+    //}
 
     return 0;
 }

@@ -154,15 +154,83 @@ namespace hydrocalc
 		/// @see HydraulicResistance::setRe()
 		virtual void setRe(const real Re) override;
 
-		void push_back(const HydraulicResistance* hr);
+		/**
+		* @brief Add element to the composite
+		* @details If is_unique_, then method place to composite copy of hr,
+		* else - pointer to hr
+		* @param hr: Pointer to hydraulic resistance
+		*/
+		void push_back(HydraulicResistance* hr);
 
+		/**
+		* @brief Add few elements to the composite
+		* @details If is_unique_, then method place to composite copies of elements,
+		* else - pointer to hr
+		* @param elements: Vector of elements
+		*/
+		void push_back(const std::vector<HydraulicResistance*>& elements);
+
+		/**
+		* @brief Erase element from composite by index (in composite)
+		* @details If is_unique_, cal delete for destruct element, else
+		* only erase element from composite internal elements
+		* @param idx: Element index in the composite
+		* @throw ExceptionInvalidElementId
+		*/
 		void erase(const size_t idx);
 
-		HydraulicResistance* get(const size_t idx);
+		/**
+		* @brief Erase element from composite by pointer
+		* @details If is_unique_, cal delete for destruct element, else
+		* only erase element from composite internal elements
+		* @param hr: Pointer to the hydraulic resistance element
+		* @throw ExceptionInvalidElementId
+		*/
+		void erase(HydraulicResistance* hr);
 
-		void getAll(std::vector<HydraulicResistance*>& elements);
+		/**
+		* @brief Erase elements from composite by index
+		* @details If is_unique_, cal delete for destruct element, else
+		* only erase element from composite internal elements
+		* @param elements: Vector of elements indices to be erased
+		* @throw ExceptionInvalidElementId
+		*/
+		void erase(const std::vector<size_t>& elements);
 
+		/**
+		* @brief Erase elements from composite by pointer
+		* @details If is_unique_, cal delete for destruct element, else
+		* only erase element from composite internal elements
+		* @param elements: Vector of elements to be erased
+		* @throw ExceptionInvalidElementId
+		*/
+		void erase(const std::vector<HydraulicResistance*>& elements);
+
+		/**
+		* @brief Get element pointer by index in the composite
+		* @param idx: Index of element in composite
+		* @param copy: If 0, get return pointer to element in the composite, 
+		* else get return pointer to the
+		*/
+		HydraulicResistance* get(const size_t idx, const bool copy = 0);
+
+		/**
+		* @brief Return vector of pointers to all hydraulic resistances in the composite
+		* @param[out] elements: Vector of composite hydraulic elements
+		* @param copy: If 0, get return pointer to element in the composite, 
+		* else get return pointer to the
+		*/
+		void get(std::vector<HydraulicResistance*>& elements, const bool copy = 0);
+
+		/**
+		* @brief Count of elements in the composite
+		*/
 		size_t size();
+
+		/**
+		* @brief Check, if composite contains elements pointers, or its copies
+		*/
+		bool isUnique();
 	};
 }
 

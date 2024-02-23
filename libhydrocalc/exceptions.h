@@ -125,6 +125,20 @@ namespace hydrocalc
 	};
 
 	/**
+	* @brief Exception invalid element id in composite
+	*/
+	class ExceptionInvalidElementId :
+		public ExceptionInvalidValue
+	{
+	public:
+		ExceptionInvalidElementId(const std::string& m)
+			: ExceptionInvalidValue(m)
+		{
+			type_ = "InvalidElementId";
+		}
+	};
+
+	/**
 	* @brief Exception invalid element type
 	*/
 	class ExceptionInvalidElementType :

@@ -41,7 +41,7 @@ void hydrocalc::ComplexResistance::setRou(const real rou)
 	{
 		if (rou < 0.0)
 		{
-			rou_ = procInvalidValue("Try to set rou < 0.0", ExceptionInvalidRou("%%err element: " + name_ + " Try to set rou < 0.0"));
+			rou_ = procInvalidValue("Try to set rou < 0.0", ExceptionInvalidRou(type_+ " element: " + name_ + " Try to set rou < 0.0"));
 		}
 		else
 		{
@@ -67,7 +67,7 @@ void hydrocalc::ComplexResistance::setLength(const real L)
 	{
 		if (L < 0.0)
 		{
-			err = procInvalidValue("setLength L < 0.0", ExceptionInvalidValue("Friction element " + name_ + ": try to set L < 0.0"));
+			err = procInvalidValue("setLength L < 0.0", ExceptionInvalidValue(type_ + " element " + name_ + ": try to set L < 0.0"));
 
 			if (std::isnan(err))
 			{
@@ -87,5 +87,29 @@ void hydrocalc::ComplexResistance::setLength(const real L)
 	for (auto& hr : internal_resistances_)
 	{
 		hr->setLength(L);
+	}
+}
+
+void hydrocalc::ComplexResistance::setViscosity(const real vis)
+{
+	if (CurrentSettings_.checkInputs)
+	{
+		if (vis <= 0.0)
+		{
+			vis_ = procInvalidValue("Try to set vis (kinematic viscosity) <= 0.0", ExceptionInvalidRou(type_ + " element: " + name_ + " Try to set vis (kinematic viscosity) <= 0.0"));
+		}
+		else
+		{
+			vis_ = vis;
+		}
+	}
+	else
+	{
+		vis_ = vis;
+	}
+
+	for (auto& hr : internal_resistances_)
+	{
+		hr->setViscosity(vis);
 	}
 }

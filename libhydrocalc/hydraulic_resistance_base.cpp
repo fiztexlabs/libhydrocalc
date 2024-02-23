@@ -200,7 +200,7 @@ void HydraulicResistanceBase::setRou(const real rou)
 	{
 		if (rou < 0.0)
 		{
-			rou_ = procInvalidValue("Try to set rou (roughness) < 0.0", ExceptionInvalidRou("%%err element: " + name_ + " Try to set rou (roughness) < 0.0"));
+			rou_ = procInvalidValue("Try to set rou (roughness) < 0.0", ExceptionInvalidRou(type_ + " element: " + name_ + " Try to set rou (roughness) < 0.0"));
 		}
 		else
 		{
@@ -224,7 +224,7 @@ void HydraulicResistanceBase::setViscosity(const real vis)
 	{
 		if (vis <= 0.0)
 		{
-			vis_ = procInvalidValue("Try to set vis (kinematic viscosity) <= 0.0", ExceptionInvalidRou("%%err element: " + name_ + " Try to set vis (kinematic viscosity) <= 0.0"));
+			vis_ = procInvalidValue("Try to set vis (kinematic viscosity) <= 0.0", ExceptionInvalidRou(type_ + " element: " + name_ + " Try to set vis (kinematic viscosity) <= 0.0"));
 		}
 		else
 		{
