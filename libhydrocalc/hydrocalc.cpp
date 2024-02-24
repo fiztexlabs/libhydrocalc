@@ -10,6 +10,7 @@
 #include <libhydrocalc/cylindrical_diffuser_curve.h>
 #include <libhydrocalc/cylindrical_diffuser_straight.h>
 #include <libhydrocalc/composite.h>
+#include <libhydrocalc/hydraulic_resistance_defined.h>
 #include <deque>
 #include <cmath>
 #include <algorithm>
@@ -59,6 +60,10 @@ HydraulicResistance* hydrocalc::createHydraulicResistance(
 	if (type == "CylindricalDiffuserStraight")
 	{
 		return new CylindricalDiffuserStraight(Re, G, name, vis);
+	}
+	if (type == "HydraulicResistanceDefined")
+	{
+		return new HydraulicResistanceDefined(Re, G, name, vis);
 	}
 	
 	// if user-defined element type incorrect, determine most likely correct element type
