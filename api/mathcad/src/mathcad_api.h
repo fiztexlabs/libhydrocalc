@@ -33,6 +33,6 @@ char* HydrocalcFunctionErrors[ERR_NUM] =
   "Reversed flow in the element", // 11
   "Not enougth memory", // 12
   "Element is not in the composite", // 13
-  "", // 14
+  "Element is not a composite", // 14
   "", // 15
 };

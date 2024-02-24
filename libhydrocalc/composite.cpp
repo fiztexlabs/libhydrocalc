@@ -220,6 +220,9 @@ void hydrocalc::Composite::push_back(const std::vector<HydraulicResistance*>& el
 	for (auto hr : elements)
 	{
 		(*this).push_back(hr);
+
+		// mark hr, that its included to this composite
+		dynamic_cast<HydraulicResistanceBase*>(hr)->composites_.push_back(this);
 	}
 }
 
@@ -233,12 +236,17 @@ void hydrocalc::Composite::erase(const size_t idx)
 	{
 		if (is_unique_)
 		{
-			delete internal_resistances_.at(idx);
+			//delete internal_resistances_.at(idx);
 			internal_resistances_.erase(internal_resistances_.begin() + idx);
 		}
 		else
 		{
 			internal_resistances_.at(idx)->setExternalElementName("");
+
+			// delete this composite from any elements, which this composite include
+			auto hr_b = dynamic_cast<HydraulicResistanceBase*>(internal_resistances_.at(idx));
+			(hr_b->composites_).erase(std::find((hr_b->composites_).begin(), (hr_b->composites_).end(), this));
+
 			internal_resistances_.erase(internal_resistances_.begin() + idx);
 		}
 	}
@@ -246,7 +254,7 @@ void hydrocalc::Composite::erase(const size_t idx)
 
 void hydrocalc::Composite::erase(HydraulicResistance* hr)
 {
-	if (isInComposite(hr))
+	if (!isInComposite(hr))
 	{
 		throw(ExceptionInvalidElementId(type_ + " element: try to get element, which is not in the composite by pointer"));
 	}
@@ -256,12 +264,16 @@ void hydrocalc::Composite::erase(HydraulicResistance* hr)
 
 		if (is_unique_)
 		{
-			delete* el;
 			internal_resistances_.erase(el);
 		}
 		else
 		{
 			(*el)->setExternalElementName("");
+
+			// delete this composite from any elements, which this composite include
+			auto hr_b = dynamic_cast<HydraulicResistanceBase*>(*el);
+			(hr_b->composites_).erase(std::find((hr_b->composites_).begin(), (hr_b->composites_).end(), this));
+
 			internal_resistances_.erase(el);
 		}
 	}

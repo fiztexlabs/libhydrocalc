@@ -17,26 +17,33 @@ LRESULT composite_getAll_impl(
 		return MAKELRESULT(1, 1);
 	}
 
+	// check, that element is composite
+	std::string type = hydrocalc::mathcad::hr_vec.at(static_cast<size_t>(_id->real))->getType();
+	if (type != "[Composite]")
+	{
+		return MAKELRESULT(14, 1);
+	}
+
 	try
 	{
 		auto composite{ dynamic_cast<hydrocalc::Composite*>(hydrocalc::mathcad::hr_vec.at(static_cast<size_t>(_id->real)).get()) };
 
 		std::vector<hydrocalc::HydraulicResistance*> in_elements;
 
-		composite->get(in_elements, 1);
-
-		// allocate memory
-		_result->cols = 1;
-		_result->rows = in_elements.size();
-
-		if (!MathcadArrayAllocate(_result, _result->rows, _result->cols, TRUE, TRUE))
-		{
-			return MAKELRESULT(12, 0);
-		}
-
 		size_t i = 0;
 		if (composite->isUnique())
 		{
+			composite->get(in_elements, 1);
+
+			// allocate memory
+			_result->cols = 1;
+			_result->rows = in_elements.size();
+
+			if (!MathcadArrayAllocate(_result, _result->rows, _result->cols, TRUE, TRUE))
+			{
+				return MAKELRESULT(12, 0);
+			}
+
 			for (auto hr : in_elements)
 			{
 				// put copy of internal object
@@ -48,6 +55,17 @@ LRESULT composite_getAll_impl(
 		}
 		else
 		{
+			composite->get(in_elements, 0);
+
+			// allocate memory
+			_result->cols = 1;
+			_result->rows = in_elements.size();
+
+			if (!MathcadArrayAllocate(_result, _result->rows, _result->cols, TRUE, TRUE))
+			{
+				return MAKELRESULT(12, 0);
+			}
+
 			for (auto hr : in_elements)
 			{
 				_result->hReal[0][i] = static_cast<int>(std::distance(
@@ -55,7 +73,7 @@ LRESULT composite_getAll_impl(
 					std::find_if(
 						hydrocalc::mathcad::hr_vec.begin(),
 						hydrocalc::mathcad::hr_vec.end(),
-						[hr](const std::unique_ptr<hydrocalc::HydraulicResistance>& hr_f) { return hr_f.get() == hr ? 1 : 0; }
+						[&](std::unique_ptr<hydrocalc::HydraulicResistance>& hr_f) { return hr_f.get() == hr; }
 					)
 				));
 				++i;

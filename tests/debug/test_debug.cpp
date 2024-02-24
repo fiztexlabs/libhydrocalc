@@ -83,6 +83,17 @@ int main()
 
     composite.evaluate();
 
+    composite.push_back(&tube);
+
+    std::string type(composite.getType());
+
+    if (type == "[Composite]")
+    {
+        std::cout << "equal";
+        composite.erase((size_t)3);
+    }
+
+
     /*std::unique_ptr<hr::HydraulicResistance> ptr_composite(new hr::Composite(
         3.e6,
         {

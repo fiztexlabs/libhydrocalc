@@ -17,6 +17,13 @@ LRESULT composite_size_impl(
 		return MAKELRESULT(1, 1);
 	}
 
+	// check, that element is composite
+	std::string type = hydrocalc::mathcad::hr_vec.at(static_cast<size_t>(_id->real))->getType();
+	if (type != "[Composite]")
+	{
+		return MAKELRESULT(14, 1);
+	}
+
 	try
 	{
 		_result->real = dynamic_cast<hydrocalc::Composite*>(hydrocalc::mathcad::hr_vec.at(static_cast<size_t>(_id->real)).get())->size();
