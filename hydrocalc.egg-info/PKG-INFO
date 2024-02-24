@@ -1,0 +1,9 @@
+Metadata-Version: 2.1
+Name: hydrocalc
+Version: 2.0.1
+Summary: Library of hydraulic resistances
+Author: Ilya Konovalov
+Author-email: mailto@konovalov-ia.ru
+Requires-Python: >=3.7
+Provides-Extra: test
+Requires-Dist: pytest>=6.0; extra == "test"
