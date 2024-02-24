@@ -7,8 +7,8 @@ out*/
 _out*/
 cmake-build*/
 doc/doxygen*/
-rsp.egg-info/
-rsp.egg-info*/
+hydrocalc.egg-info/
+hydrocalc.egg-info*/
 
 # CMake
 CMakeUserPresets.json

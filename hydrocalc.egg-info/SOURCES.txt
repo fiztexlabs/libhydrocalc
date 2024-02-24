@@ -1,8 +1,0 @@
-README.md
-setup.py
-hydrocalc.egg-info/PKG-INFO
-hydrocalc.egg-info/SOURCES.txt
-hydrocalc.egg-info/dependency_links.txt
-hydrocalc.egg-info/not-zip-safe
-hydrocalc.egg-info/requires.txt
-hydrocalc.egg-info/top_level.txt
