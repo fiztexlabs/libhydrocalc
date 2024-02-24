@@ -159,6 +159,9 @@ set(sources
     libhydrocalc/composite.h
     libhydrocalc/composite.cpp
 
+    libhydrocalc/hydraulic_resistance_defined.h
+    libhydrocalc/hydraulic_resistance_defined.cpp
+
 )
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 

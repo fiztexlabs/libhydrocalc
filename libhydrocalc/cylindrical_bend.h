@@ -142,7 +142,7 @@ namespace hydrocalc
 
 		virtual ~CylindricalBend() {};
 
-		/// @see HydraulicResistance::calculateElement()
+		/// @see HydraulicResistance::evaluate()
 		virtual void evaluate() override;
 
 		/// @see HydraulicResistance::setGeometry()

@@ -13,7 +13,8 @@ HydraulicResistance* hydrocalc::CylindricalBendNiche::copy() const
 			delta_,
 			L0_
 		},
-		name_
+		name_,
+		vis_
 	);
 }
 

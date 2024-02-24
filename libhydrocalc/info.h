@@ -24,7 +24,8 @@ namespace hydrocalc::info
 		"CylindricalConfuserCurve",
 		"CylindricalConfuserStraight",
 		"CylindricalDiffuserCurve",
-		"CylindricalDiffuserStraight"
+		"CylindricalDiffuserStraight",
+		"HydraulicResistanceDefined"
 	};
 
 	/**
