@@ -9,6 +9,8 @@ if(NOT CMAKE_SIZEOF_VOID_P EQUAL 4)
 endif()
 
 set(ext_sources
+    src/libhydrocalcmcad.rc
+
     src/mathcad_api.h
     src/mathcad_api.cpp
     src/create_hydraulic_resistance.h
