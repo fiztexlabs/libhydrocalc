@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 project(libhydrocalc
-    VERSION 2.0.1
+    VERSION 2.0.2
     DESCRIPTION "Library of hydraulic resistances"
     LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
@@ -23,8 +23,8 @@ set(HR_SHARED_LIBS " ")
 
 # set(CMAKE_BUILD_TYPE Debug)
 option(HR_BUILD_TESTS "Build libhydrocalc tests" ON)
-option(HR_BUILD_PYTHON_EXT "Build libhydrocalc python extension" ON)
-option(HR_BUILD_MATHCAD_EXT "Build libhydrocalc Mathcad extension" OFF)
+option(HR_BUILD_PYTHON_EXT "Build libhydrocalc python extension" OFF)
+option(HR_BUILD_MATHCAD_EXT "Build libhydrocalc Mathcad extension" ON)
 option(HR_BUILD_EXAMPLES "Build libhydrocalc examples" OFF)
 option(HR_BUILD_DOCS "Build libhydrocalc documentation" OFF)
 option(HR_USE_DOUBLE_PRECISION "Use double precision for calculations" ON)

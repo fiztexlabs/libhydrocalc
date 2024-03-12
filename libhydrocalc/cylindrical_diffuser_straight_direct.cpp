@@ -60,10 +60,10 @@ real CylindricalDiffuserStraightDirect::checkGeometry(const std::vector<real>& G
 		}
 
 		// check diffuser diameters and length consistency
-		real d_out = G.at(1) + 2.0 * G.at(3) * std::atan(0.5 * G.at(7) / (180.0 / M_PI));
+		real d_out = G.at(1) + 2.0 * G.at(3) * std::tan(0.5 * G.at(7) / (180.0 / M_PI));
 		if (!math::isEqual(G.at(5), d_out))
 		{
-			err += procInvalidValue("Inconsistent geometry. Dout (diffuser outlet diameter) != D0 + 2*L*atan(0.5*alpha)", ExceptionInvalidValue(type_ + " element " + name_ + ": Inconsistent geometry. Dout (diffuser outlet diameter) != D0 + 2*L*atan(0.5*alpha)"));
+			err += procInvalidValue("Inconsistent geometry. Dout (diffuser outlet diameter) != D0 + 2*L*atan(0.5*alpha)", ExceptionInvalidValue(type_ + " element " + name_ + ": Inconsistent geometry. Dout (diffuser outlet diameter) != D0 + 2*L*tan(0.5*alpha)"));
 		}
 	}
 
