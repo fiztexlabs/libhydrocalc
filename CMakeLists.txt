@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 project(libhydrocalc
-    VERSION 2.0.2
+    VERSION 2.0.3
     DESCRIPTION "Library of hydraulic resistances"
     LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
