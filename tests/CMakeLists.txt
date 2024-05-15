@@ -73,6 +73,7 @@ else()
            static-libhydrocalc
            gtest
            gtest_main
+           libmath::libmath
     )
 #    target_link_libraries( libhydrocalc-capi-test
 #        PRIVATE
@@ -124,6 +125,7 @@ endif()
 
 set(BasicTestSources
     #tests_main.cc 
+    basics/test_curve_confuser.cpp
     basics/test_validation.cpp
 )
 
