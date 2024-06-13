@@ -8,7 +8,29 @@
 namespace hydrocalc
 {
 	/**
-	* @brief 
+	* @brief Composite hydraulic resistance
+	* @details Composite hydraulic resistance evaluates in approach of constant mass flow throw all internal elements: $ G = const $. 
+	* Mark all values, related to hydraulic composite (reduced parameters) by index 1, and all values relate to internal element of hydraulic composite by index 2.
+	* So elements in composite have equal mass flow:
+	* @f[ G_1 = G_2 = w_1 A_1 \rho_1 = w_2 A_2 \rho_2 @f]
+	* from where
+	* @f[ \frac{w_1}{w_2} = \frac{A_2 \rho_2}{A_1 \rho_1} \quad \text{(1)} @f]
+	* Elements Reynolds numbers:
+	* @f[ Re_1 = \frac{w_1 {D_1}^G}{\nu_1}, Re_2 = \frac{w_2 {D_2}^G}{\nu_2} @f]
+	* from where
+	* @f[ \frac{Re_1}{Re_2} = \frac{w_1}{w_2} \cdot \frac{{D_1}^G}{{D_2}^G} \cdot \frac{\nu_2}{\nu_1} \quad \text{(2)} @f]
+	* After substitution (1) in (2):
+	* @f[ \frac{Re_1}{Re_2} = \frac{A_2}{A_1} \cdot \frac{{D_1}^G}{{D_2}^G} \cdot \frac{\nu_2 \rho_2}{\nu_1 \rho_1} @f]
+	* or
+	* @f[ \frac{Re_1}{Re_2} = \frac{A_2}{A_1} \cdot \frac{{D_1}^G}{{D_2}^G} \cdot \frac{\mu_2}{\mu_1} \quad \text{(3)} @f]
+	* In the formulas, presented above:
+	* - @f$w@f$ - flow velocity, m/s
+	* - @f$A@f$ - cross-section area, m2
+	* - @f$D^G@f$ - hydraulic diameter, m
+	* - @f$\rho@f$ - flow density, kg/m3
+	* - @f$\nu@f$ - dynamic viscosity, m2/s
+	* - @f$\mu@f$ - kinematic viscosity, Pa*s
+	* 
 	* @author Ilya Konovalov
 	* @date Released 19.02.2024
 	*/
@@ -47,7 +69,7 @@ namespace hydrocalc
 		bool isInComposite(HydraulicResistance* Element);
 
 		/**
-		* @bpief Proceed FlowOutOfRange accidents
+		* @brief Proceed FlowOutOfRange accidents
 		* @param msg: Error message
 		* @param exec: Type of exception to raise
 		* @return NaN or 0.0 correspond to CurrentSettings_.OutOfRangeMode
@@ -152,7 +174,13 @@ namespace hydrocalc
 			}
 		};
 
-		/// @see HydraulicResistance::evaluate()
+		/**
+		* @brief Evaluate hydraulic composite values
+		* @details Hydraulic resistances of internal elements reduced to composite hydraulic diameter. Hydraulic
+		* resistance of composite evaluates as sum of reduced resistances of internal elements:
+		* @f$ \xi = \displaystyle\sum_{i=1}^{N} \xi_i \left(\frac{{D_1}^G}{{D_i}^G}\right)^4 @f$
+		* @see HydraulicResistance::evaluate()
+		*/
 		virtual void evaluate() override;
 
 		/// @see HydraulicResistance::setGeometry()
@@ -161,7 +189,12 @@ namespace hydrocalc
 		/// @see HydraulicResistance::getGeometry()
 		virtual void getGeometry(std::vector<real>& G) override;
 
-		/// @see HydraulicResistance::setRe()
+		/**
+		* @brief Set Reynolds number for hydraulic resistance element.
+		* @details Function set reduce Re for each chydraulic resistance in composite
+		* in order to complain mass conservation law (@f$ G = const @f$).
+		* @see HydraulicResistance::setRe()
+		*/
 		virtual void setRe(const real Re) override;
 
 		/**

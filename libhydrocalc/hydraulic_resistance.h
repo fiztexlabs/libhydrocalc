@@ -245,8 +245,6 @@ namespace hydrocalc
 		* @details Negative Re correspond to negative flow, in elements with direction
 		* independent geometry Re computse as @f$ Re = |Re| @f$. Otherwise element create correspond
 		* element (or set of elements) for negative flow and calculate it.
-		* In HydraulicComposite element for each element in HydraulicComposite Re
-		* calculated as @f$ Re_i=Re\frac{(D_0)_i}{D_0}@f$, where @f$i@f$ - index of element.
 		* @param Re: Reynolds number
 		* @see HydraulicComposite
 		*/
